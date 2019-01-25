@@ -3,4 +3,30 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+
+    <color name="c_333333">#333333</color>
+    <color name="c_555555">#555555</color>
+    <color name="c_777777">#777777</color>
+    <color name="c_e6e6e6">#e6e6e6</color>
+    <color name="c_cccccc">#cccccc</color>
+    <color name="c_dddddd">#dddddd</color>
+    <color name="c_ffffff">#ffffff</color>
+    <color name="c_efedf2">#efedf2</color>
+    <color name="c_f2edf9">#f2edf9</color>
+    <color name="c_c5b6d3">#c5b6d3</color>
+    <color name="c_e4d7f1">#e4d7f1</color>
+    <color name="c_d9bef1">#d9bef1</color>
+    <color name="c_b384d4">#b384d4</color>
+    <color name="c_8d58b1">#8d58b1</color>
+    <color name="c_3571d6">#3571d6</color>
+    <color name="c_dbdbdb">#dbdbdb</color>
+    <color name="c_f13e51">#f13e51</color>
+    <color name="c_f7b52c">#f7b52c</color>
+    <color name="c_004680">#004680</color>
+    <color name="c_a1dee9">#a1dee9</color>
+    <color name="c_cee59a">#cee59a</color>
+    <color name="c_cba8de">#cba8de</color>
+    <color name="c_9dabe2">#9dabe2</color>
+    <color name="c_fdc480">#fdc480</color>
 </resources>

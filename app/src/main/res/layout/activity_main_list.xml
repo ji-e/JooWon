@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.MainListActivity">
+
+    <!--상단 타이틀 및 아이콘 바-->
+    <com.example.uohih.joowon.view.TopTitleView
+        android:id="@+id/main_list_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp45"
+        android:gravity="center_vertical"
+        app:btnLogo="true"
+        app:btnSetting="true"
+        app:btnWrite="true" />
+
+
+    <ListView
+        android:id="@+id/main_list_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/main_list_title_view"/>
+
+
+    <!--추가버튼-->
+    <ImageButton
+        android:id="@+id/main_list_btn_plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/dp16"
+        android:background="@drawable/btn_plus_selector" />
+
+</RelativeLayout>

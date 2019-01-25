@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/top_title_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp45">
+
+
+    <ImageButton
+        android:id="@+id/top_btn_logo"
+        android:layout_width="@dimen/dp30"
+        android:layout_height="@dimen/dp30"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp10"
+        android:background="@drawable/logo2" />
+
+    <ImageButton
+        android:id="@+id/top_btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="@drawable/btn_close_selector" />
+
+
+    <TextView
+        android:id="@+id/top_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/c_333333"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textAlignment="center"
+        android:textSize="@dimen/dp20"
+        android:text="@string/name"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_alignParentRight="true">
+
+        <ImageButton
+            android:id="@+id/top_btn_write"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_write_selector"/>
+
+        <ImageButton
+            android:id="@+id/top_btn_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_list_selector"/>
+
+        <ImageButton
+            android:id="@+id/top_btn_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_calendar_selector"/>
+
+        <ImageButton
+            android:id="@+id/top_btn_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_setting_selector"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

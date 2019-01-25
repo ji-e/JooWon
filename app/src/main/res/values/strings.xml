@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">JooWon</string>
+    <string name="name">주원산업</string>
+
+    <!--button-->
+    <string name="btn01">확인</string>
+    <string name="btn02">취소</string>
+
+
+    <!--MainListActivity-->
+    <string name="MainListName">Name</string>
+    <string name="MainListJoin">Join</string>
+    <string name="MainListPhone">Phone</string>
+    <string name="MainListBalance">Balance</string>
+    <string name="MainListVacation">Vacation</string>
+
+    <!--WorkerInsertActivity-->
+    <string name="WorkerInsertTitle">직원등록</string>
+    <string name="WorkerInsertName">이름</string>
+    <string name="WorkerInsertName2">이름을 입력해주세요.</string>
+    <string name="WorkerInsertJoin">입사 날짜</string>
+    <string name="WorkerInsertPhone">핸드폰 번호</string>
+    <string name="WorkerInsertPhone2">핸드폰 번호를 입력해주세요.</string>
+    <string name="WorkerInsertVacation">총 휴가일</string>
+
 </resources>
