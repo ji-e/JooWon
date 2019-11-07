@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/c_e6e6e6"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/c_ffffff">
 
     <LinearLayout
         android:id="@+id/main_list_item"
@@ -13,13 +13,20 @@
 
 
         <!--Image-->
-        <ImageView
+        <com.example.uohih.joowon.view.CircularImageView
+            android:id="@+id/main_list_img_people"
+            android:layout_width="@dimen/dp70"
+            android:layout_height="@dimen/dp70"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/dp16"
+            android:background="@drawable/people" />
+      <!--  <ImageView
             android:id="@+id/main_list_img_people"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/dp16"
-            android:src="@drawable/people" />
+            android:src="@drawable/people" />-->
 
         <!--Item-->
         <LinearLayout
@@ -34,7 +41,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/MainListName"
+                android:text="@string/mainList_name"
                 android:textColor="@color/c_333333"
                 android:textSize="@dimen/dp15"
                 android:textStyle="bold" />
@@ -43,7 +50,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/MainListJoin"
+                android:text="@string/mainList_join"
                 android:textColor="@color/c_333333"
                 android:textSize="@dimen/dp15"
                 android:textStyle="bold" />
@@ -52,7 +59,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/MainListPhone"
+                android:text="@string/mainList_phone"
                 android:textColor="@color/c_333333"
                 android:textSize="@dimen/dp15"
                 android:textStyle="bold" />
@@ -61,7 +68,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/MainListVacation"
+                android:text="@string/mainList_vacation"
                 android:textColor="@color/c_333333"
                 android:textSize="@dimen/dp15"
                 android:textStyle="bold" />
@@ -80,7 +87,7 @@
                 android:id="@+id/main_list_tv_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/MainListName"
+                android:text="@string/mainList_name"
                 android:textColor="@color/c_333333"
                 android:textSize="@dimen/dp15" />
 
@@ -89,7 +96,7 @@
                 android:id="@+id/main_list_tv_join"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/MainListJoin"
+                android:text="@string/mainList_join"
                 android:textColor="@color/c_333333"
                 android:textSize="@dimen/dp15" />
 
@@ -98,7 +105,7 @@
                 android:id="@+id/main_list_tv_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/MainListPhone"
+                android:text="@string/mainList_phone"
                 android:textColor="@color/c_333333"
                 android:textSize="@dimen/dp15" />
 
@@ -107,25 +114,37 @@
                 android:id="@+id/main_list_tv_vacation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/MainListVacation"
+                android:text="@string/mainList_vacation"
                 android:textColor="@color/c_333333"
                 android:textSize="@dimen/dp15" />
         </LinearLayout>
 
         <!--Next-->
-        <ImageButton
+        <ImageView
             android:id="@+id/main_list_btn_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/dp16"
-            android:background="@drawable/btn_next_selector" />
+            android:background="@drawable/btn_next_selector" />-->
+
+        <!--CheckBox-->
+        <CheckBox
+            android:id="@+id/main_list_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:buttonTint="@color/c_004680"
+            android:visibility="gone"
+            android:layout_marginRight="@dimen/dp11"/>
     </LinearLayout>
 
     <!--Line-->
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp01"
-        android:background="@color/c_cccccc" />
+        android:background="@color/c_cccccc"
+        android:layout_marginLeft="@dimen/dp16"
+        android:layout_marginRight="@dimen/dp16"/>
 
 </LinearLayout>

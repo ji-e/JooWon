@@ -4,24 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/c_ffffff"
     tools:context=".main.MainListActivity">
 
     <!--상단 타이틀 및 아이콘 바-->
     <com.example.uohih.joowon.view.TopTitleView
         android:id="@+id/main_list_title_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp45"
+        android:layout_height="@dimen/dp60"
         android:gravity="center_vertical"
-        app:btnLogo="true"
-        app:btnSetting="true"
-        app:btnWrite="true" />
+        app:btnLogo="true" />
 
 
     <ListView
         android:id="@+id/main_list_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/main_list_title_view"/>
+        android:layout_below="@id/main_list_title_view"
+        android:dividerHeight="@dimen/dp01"
+        android:divider="@color/c_ffffff"/>
 
 
     <!--추가버튼-->

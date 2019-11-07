@@ -2,11 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/intro_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.IntroActivity"
-    android:id="@+id/intro_activity"
-    android:gravity="center">
+    android:gravity="center"
+    tools:context=".main.IntroActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -21,11 +21,13 @@
         <TextView
             android:layout_width="@dimen/dp100"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp10"
             android:text="@string/name"
-            android:textStyle="bold"
+            android:textAlignment="center"
             android:textColor="@color/c_333333"
             android:textSize="@dimen/dp25"
-            android:layout_marginTop="@dimen/dp10"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp250"
+    android:layout_height="match_parent"
+    android:background="@color/c_ffffff"
+    android:orientation="vertical">
+
+
+    <!--타이틀-->
+    <LinearLayout
+        android:id="@+id/daiog_list_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp40"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/daiog_list_tv_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/dp16"
+            android:textColor="@color/c_333333"
+            android:textSize="@dimen/dp16"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/daiog_list_btn_close"
+            android:layout_width="@dimen/dp40"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp10"
+            android:background="@drawable/btn_close_selector" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/daiog_list_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp01"
+        android:background="@color/c_f2edf9"
+        android:visibility="gone"/>
+
+    <ListView
+        android:id="@+id/dailog_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/c_ffffff"/>
+
+
+</LinearLayout>

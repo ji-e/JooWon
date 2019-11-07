@@ -10,15 +10,16 @@
     <RelativeLayout
         android:id="@+id/calendar_top"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp60">
+        android:layout_height="@dimen/dp45"
+        android:layout_marginTop="@dimen/dp10">
 
         <ImageButton
             android:id="@+id/calendar_btn_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp35"
+            android:layout_height="@dimen/dp35"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_margin="@dimen/dp03"
+            android:layout_marginRight="@dimen/dp05"
             android:background="@drawable/btn_close_selector"
             android:visibility="visible" />
 

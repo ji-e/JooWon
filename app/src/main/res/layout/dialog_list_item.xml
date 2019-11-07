@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dailog_list_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp55"
+            android:textColor="@color/c_333333"
+            android:paddingLeft="@dimen/dp16"
+            android:paddingRight="@dimen/dp16"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/dp15" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp01"
+            android:background="@color/c_cccccc"
+            android:layout_marginLeft="@dimen/dp16"
+            android:layout_marginRight="@dimen/dp16"/>
+
+</LinearLayout>

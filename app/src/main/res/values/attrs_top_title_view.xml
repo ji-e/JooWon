@@ -2,10 +2,7 @@
     <declare-styleable name="TopTitleView">
         <attr name="tvTitle" format="reference|string" />
         <attr name="btnLogo" format="boolean" />
-        <attr name="btnClose" format="boolean" />/>
-        <attr name="btnWrite" format="boolean" />
-        <attr name="btnCalendar" format="boolean" />
-        <attr name="btnList" format="boolean" />
-        <attr name="btnSetting" format="boolean" />
+        <attr name="btnClose" format="boolean" />
+        <attr name="btnCheck" format="boolean" />
     </declare-styleable>
 </resources>

@@ -64,29 +64,12 @@ class TopTitleView : RelativeLayout {
             top_tv_title.text = at.getText(R.styleable.TopTitleView_tvTitle)
         }
 
-
-        // 상단 바 연필
-        if (!at.hasValue(R.styleable.TopTitleView_btnWrite)) {
-            top_btn_write.visibility = View.GONE
+        // 상단 바 체크
+        if (!at.hasValue(R.styleable.TopTitleView_btnCheck)) {
+            top_btn_check.visibility = View.GONE
         }
 
 
-        // 상단 바 캘린더
-        if (!at.hasValue(R.styleable.TopTitleView_btnCalendar)) {
-            top_btn_calendar.visibility = View.GONE
-        }
-
-        // 상단 바 리스트
-        if (!at.hasValue(R.styleable.TopTitleView_btnList)) {
-            top_btn_list.visibility = View.GONE
-        }
-
-        // 상단 바 세팅
-        if (!at.hasValue(R.styleable.TopTitleView_btnSetting)) {
-            top_btn_setting.visibility = View.GONE
-        } else {
-            top_btn_setting.setOnClickListener(mSettingBtnClickListener)
-        }
     }
 
 
@@ -99,31 +82,17 @@ class TopTitleView : RelativeLayout {
         }
     }
 
+
     /**
-     * 연필 버튼
+     * 상단바 로고 -> 닫기
      */
-    fun setWriteBtnClickListener(mWriteBtnClickListener: View.OnClickListener) {
-        top_btn_write.setOnClickListener(mWriteBtnClickListener)
+    fun setClose() {
+        top_btn_logo.setImageResource(R.drawable.btn_close_selector)
+        top_btn_logo.setOnClickListener(mCloseBtnClickListener)
+
     }
 
-    /**
-     * 캘린더 버튼
-     */
-    fun setCalendarBtnClickListener(mCalendarBtnClickListener: View.OnClickListener) {
-        top_btn_calendar.setOnClickListener(mCalendarBtnClickListener)
-    }
-
-    /**
-     * 리스트 버튼
-     */
-    fun setListBtnClickListener(mListBtnClickListener: View.OnClickListener) {
-        top_btn_list.setOnClickListener(mListBtnClickListener)
-    }
-
-    /**
-     * 세팅 버튼
-     */
-    private var mSettingBtnClickListener: View.OnClickListener = OnClickListener {
-
+    fun setCloseBtnClickListener(mCloseBtnClickListener: View.OnClickListener) {
+        top_btn_logo.setOnClickListener(mCloseBtnClickListener)
     }
 }

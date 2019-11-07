@@ -14,13 +14,7 @@ open class JWBaseActivity : Activity() {
 
     var mContext: Context? = null
 
-    // PasswordCheckActivity requestCode
-    val passwordCheck = 1000
 
-    // Preference value
-    val activitySetting = "activitySetting"
-    val passwordSetting = "passwordSetting"
-    val passwordTemp = "passwordTemp"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,18 +98,18 @@ open class JWBaseActivity : Activity() {
         //현재 년도
         val year = instance.get(Calendar.YEAR).toString()
         //현재 월
-        var month = (instance.get(Calendar.MONTH) + 1).toString()
+        var month = String.format("%02d", (instance.get(Calendar.MONTH) + 1))
         //현재 날짜
-        var date = instance.get(Calendar.DAY_OF_MONTH).toString()
+        var date = String.format("%02d",instance.get(Calendar.DAY_OF_MONTH))
         //현재 월의 주
         val week = instance.get(Calendar.WEEK_OF_MONTH).toString()
         //현재 요일
         var day = instance.get(Calendar.DAY_OF_WEEK).toString()
 
 
-        // 한자리수 앞에 0표기
-        if (month.toInt() < 10) month = "0$month"
-        if (date.toInt() < 10) date = "0$date"
+//        // 한자리수 앞에 0표기
+//        if (month.toInt() < 10) month = "0$month"
+//        if (date.toInt() < 10) date = "0$date"
 
         // 요일로 변환
         when (day) {
@@ -126,7 +120,6 @@ open class JWBaseActivity : Activity() {
             "5" -> day = "목"
             "6" -> day = "금"
             "7" -> day = "토"
-
         }
 
         jsonCalendar.put("year", year)
