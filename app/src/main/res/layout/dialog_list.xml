@@ -27,8 +27,8 @@
 
         <ImageButton
             android:id="@+id/daiog_list_btn_close"
-            android:layout_width="@dimen/dp40"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp35"
+            android:layout_height="@dimen/dp35"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp10"

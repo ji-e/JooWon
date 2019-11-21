@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.uohih.dailylog.view.CalendarDayInfo
+import com.example.uohih.joowon.view.CalendarDayInfo
 import com.example.uohih.joowon.R
 
 import java.util.*

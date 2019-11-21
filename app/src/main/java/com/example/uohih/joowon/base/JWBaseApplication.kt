@@ -1,7 +1,8 @@
-package com.example.uohih.dailylog.base
+package com.example.uohih.joowon.base
 
 import android.app.Application
 import android.graphics.Bitmap
+import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.LogUtil
 
 

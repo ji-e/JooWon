@@ -6,8 +6,8 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import com.example.uohih.dailylog.base.JWBaseActivity
-import com.example.uohih.dailylog.database.DBHelper
+import com.example.uohih.joowon.base.JWBaseActivity
+import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.LogUtil

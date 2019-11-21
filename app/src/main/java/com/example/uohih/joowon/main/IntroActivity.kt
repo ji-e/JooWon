@@ -6,9 +6,9 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import com.example.uohih.dailylog.base.JWBaseActivity
-import com.example.uohih.dailylog.database.DBHelper
-import com.example.uohih.dailylog.setting.PasswordCheckActivity
+import com.example.uohih.joowon.base.JWBaseActivity
+import com.example.uohih.joowon.database.DBHelper
+import com.example.uohih.joowon.setting.PasswordCheckActivity
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.LogUtil
@@ -100,10 +100,11 @@ class IntroActivity : JWBaseActivity() {
 
     private fun goMainActivity() {
         val dbHelper = DBHelper(this)
-        if (dbHelper.getTableExiste(dbHelper.tableNameWorkerJW).count <= 0)
+//        LogUtil.d(dbHelper.getTableExiste(dbHelper.tableNameVacationJW).count)
+//        if (dbHelper.getTableExiste(dbHelper.tableNameVacationJW).count <= 0)
             dbHelper.createVacationTable()
 
-        var intent = Intent(this, MainListActivity::class.java)
+        val intent = Intent(this, MainListActivity::class.java)
         startActivity(intent)
         finish()
     }

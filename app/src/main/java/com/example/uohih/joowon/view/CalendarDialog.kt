@@ -1,4 +1,4 @@
-package com.example.uohih.dailylog.view
+package com.example.uohih.joowon.view
 
 import android.app.Activity
 import android.app.Dialog
@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.AdapterView
 import android.widget.GridView
-import com.example.uohih.dailylog.base.JWBaseActivity
-import com.example.uohih.dailylog.base.JWBaseApplication
+import com.example.uohih.joowon.base.JWBaseActivity
+import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.CalendarAdapter
 import com.example.uohih.joowon.base.LogUtil

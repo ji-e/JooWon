@@ -1,4 +1,4 @@
-package com.example.uohih.dailylog.database
+package com.example.uohih.joowon.database
 
 import android.content.Context
 import android.database.Cursor
@@ -62,7 +62,7 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
      */
     fun createVacationTable() {
         val db = writableDatabase
-        val queryCreate = "create table $tableNameVacationJW (no integer primary key autoincrement, name, phone, date integer, content, use integer, total integer)"
+        val queryCreate = "CREATE TABLE IF NOT EXISTS $tableNameVacationJW (no integer primary key autoincrement, name, phone, date integer, content, use integer, total integer)"
         LogUtil.d(queryCreate)
         db.execSQL(queryCreate)
         db.close()
@@ -117,24 +117,24 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
         db.close()
         LogUtil.d(queryUpdate)
     }
-//
-//    /**
-//     * 데이터 삭제
-//     */
-//    fun delete(array: ArrayList<String>, index: String) {
-//        val db = writableDatabase
+
+    /**
+     * 데이터 삭제
+     */
+    fun delete(tableName: String,  no: String) {
+        val db = writableDatabase
 //        for (i in 0 until array.size) {
 //            val no = array[i]
-////            var queryDelete = "delete from $tableName where $index=\'$no\'"
-////            if(index.equals("no")){
-//            var queryDelete = "delete from $tableName where $index=$no"
-////            }
-//            db.execSQL(queryDelete)
-//            LogUtil.d(queryDelete)
+//            var queryDelete = "delete from $tableName where $index=\'$no\'"
+//            if(index.equals("no")){
+            var queryDelete = "delete from $tableName where no=$no"
+//            }
+            db.execSQL(queryDelete)
+            LogUtil.d(queryDelete)
 //        }
-//        db.close()
-//    }
-//
+        db.close()
+    }
+
     /**
      * 데이터 검색
      */
@@ -191,7 +191,7 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
      */
     fun getTableExiste(tableName: String): Cursor {
         val db = writableDatabase
-        val querySelect = "select count(*) from sqlite_master Where Name = \'$tableName\'"
+        val querySelect = "select count(*) from sqlite_master Where Type = 'table' AND Name = \'$tableName\'"
         db.rawQuery(querySelect, null)
         LogUtil.d(querySelect)
         return db.rawQuery(querySelect, null)

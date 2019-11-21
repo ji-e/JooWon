@@ -1,4 +1,4 @@
-package com.example.uohih.dailylog.view
+package com.example.uohih.joowon.view
 
 import java.text.SimpleDateFormat
 import java.util.*

@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.example.uohih.dailylog.base.JWBaseApplication
+import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.main.PictureActivity

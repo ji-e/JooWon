@@ -1,4 +1,4 @@
-package com.example.uohih.dailylog.setting
+package com.example.uohih.joowon.setting
 
 import android.app.Activity
 import android.os.Bundle
@@ -7,7 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import com.example.uohih.dailylog.base.JWBaseActivity
+import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.KeyPadAdapter
@@ -30,7 +30,7 @@ class PasswordCheckActivity : JWBaseActivity() {
 
 
         // 상단바 닫기 버튼
-        pwcheck_title_view.setClose()
+//        pwcheck_title_view.setClose()
         pwcheck_title_view.setCloseBtnClickListener(View.OnClickListener {
             setResult(Activity.RESULT_CANCELED)
             finish()

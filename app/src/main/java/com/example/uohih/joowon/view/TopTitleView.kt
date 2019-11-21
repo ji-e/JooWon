@@ -2,18 +2,21 @@ package com.example.uohih.joowon.view
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
 import com.example.uohih.joowon.R
+import com.example.uohih.joowon.setting.SettingActivity
 import kotlinx.android.synthetic.main.view_top_title.view.*
 
 /**
  * 타이틀 바
  *
  */
-class TopTitleView : RelativeLayout {
+class TopTitleView : RelativeLayout, View.OnClickListener {
+
     private lateinit var mContext: Context
     private lateinit var mRootView: View
 
@@ -47,6 +50,15 @@ class TopTitleView : RelativeLayout {
         // 상단 바 로고
         if (!at.hasValue(R.styleable.TopTitleView_btnLogo)) {
             top_btn_logo.visibility = View.GONE
+        } else {
+            top_tv_jw.visibility = View.VISIBLE
+        }
+
+        // 상단 바 뒤로가기
+        if (!at.hasValue(R.styleable.TopTitleView_btnBack)) {
+            top_btn_back.visibility = View.GONE
+        } else {
+            top_btn_back.setOnClickListener(mCloseBtnClickListener)
         }
 
         // 상단 바 닫기
@@ -69,6 +81,20 @@ class TopTitleView : RelativeLayout {
             top_btn_check.visibility = View.GONE
         }
 
+        // 상단 바 휴가작성
+        if (!at.hasValue(R.styleable.TopTitleView_btnWrite)) {
+            top_btn_write.visibility = View.GONE
+        } else {
+            top_btn_write.setOnClickListener(this)
+        }
+
+        // 상단 바 환경설정
+        if (!at.hasValue(R.styleable.TopTitleView_btnSetting)) {
+            top_btn_setting.visibility = View.GONE
+        } else {
+            top_btn_setting.setOnClickListener(this)
+        }
+
 
     }
 
@@ -83,16 +109,38 @@ class TopTitleView : RelativeLayout {
     }
 
 
-    /**
-     * 상단바 로고 -> 닫기
-     */
-    fun setClose() {
-        top_btn_logo.setImageResource(R.drawable.btn_close_selector)
-        top_btn_logo.setOnClickListener(mCloseBtnClickListener)
+//    /**
+//     * 상단바 로고 -> 닫기
+//     */
+//    fun setClose() {
+//        top_btn_logo.setImageResource(R.drawable.btn_close_selector)
+//        top_btn_logo.setOnClickListener(mCloseBtnClickListener)
+//
+//    }
 
+    fun setBackBtn() {
+        top_btn_close.visibility = View.GONE
+        top_btn_back.visibility = View.VISIBLE
     }
 
     fun setCloseBtnClickListener(mCloseBtnClickListener: View.OnClickListener) {
-        top_btn_logo.setOnClickListener(mCloseBtnClickListener)
+        top_btn_close.setOnClickListener(mCloseBtnClickListener)
     }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            top_btn_back -> {
+
+            }
+            top_btn_write -> {
+//                val intent = Intent(mContext, WorkerInsertActivity::class.java)
+//                mContext.startActivity(intent)
+            }
+            top_btn_setting -> {
+                val intent = Intent(mContext, SettingActivity::class.java)
+                mContext.startActivity(intent)
+            }
+        }
+    }
+
 }

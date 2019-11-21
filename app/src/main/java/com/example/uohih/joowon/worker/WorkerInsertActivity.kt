@@ -23,13 +23,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.TextView
-import com.example.uohih.dailylog.base.JWBaseActivity
-import com.example.uohih.dailylog.base.JWBaseApplication
-import com.example.uohih.dailylog.database.DBHelper
-import com.example.uohih.dailylog.view.CalendarDialog
+import com.example.uohih.joowon.base.JWBaseActivity
+import com.example.uohih.joowon.base.JWBaseApplication
+import com.example.uohih.joowon.database.DBHelper
+import com.example.uohih.joowon.view.CalendarDialog
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.DialogListAdapter
+import com.example.uohih.joowon.main.MainListActivity
 import com.example.uohih.joowon.view.CircularImageView
 import com.example.uohih.joowon.view.CustomDialog
 import com.example.uohih.joowon.view.CustomListDialog
@@ -59,23 +60,28 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
     private var workerUpdate: String = "N" //변경하기
     private var workerBundle = Bundle()
 
+    private lateinit var customDialog: CustomDialog
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker_insert)
+        customDialog = CustomDialog(this, android.R.style.Theme_Material_Dialog_MinWidth)
 
         if (intent.hasExtra("workerUpdate")) {
             workerUpdate = intent.getStringExtra("workerUpdate")
         }
 
         if ("Y" == workerUpdate) {
+            worker_insert_title_view.setBackBtn()
+
             workerBundle = intent.getBundleExtra("workerBundle")
-            name = workerBundle.getString("name", "")                                      //이름
-            imageFilePath = workerBundle.getString("picture", "")                                 //사진
-            phoneNum = workerBundle.getString("phone", "")                                 //핸드폰번호
-            use = workerBundle.getString("use", "0")                       //사용한 휴가일수
-            total = workerBundle.getString("total", "15")                      //잔여 휴가일수
-            joinDate = workerBundle.getString("join", "")                                  //입사날짜
+            name = workerBundle.getString("name", "")                     //이름
+            imageFilePath = workerBundle.getString("picture", "")         //사진
+            phoneNum = workerBundle.getString("phone", "")                //핸드폰번호
+            use = workerBundle.getString("use", "0")                      //사용한 휴가일수
+            total = workerBundle.getString("total", "15")                 //잔여 휴가일수
+            joinDate = workerBundle.getString("join", "")                 //입사날짜
             no = workerBundle.getString("no", "0")
 
             worker_layout_delete.visibility = View.VISIBLE
@@ -127,6 +133,7 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
         worker_insert_edt_join.setOnClickListener(this)                                             //입사일자 설정 ClickListener
         worker_insert_btn_bottom.setOnClickListener(this)                                           //확인버튼 ClickListener
         worker_insert_plus.setOnClickListener(this)                                                 //사진설정 ClickListener
+        worker_layout_delete.setOnClickListener(this)                                               //삭제하기 ClickListener
 
         worker_insert_edt_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(todayJson.get("yyyymmdd").toString(), "$1-$2-$3")
     }
@@ -255,6 +262,19 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
                 })!!
                 customDialogList.show()
             }
+            worker_layout_delete -> {
+                customDialog.showDialog(this, String.format(resources.getString(R.string.workerUpdate_delete_msg), name),
+                        resources.getString(R.string.btn02), null,
+                        resources.getString(R.string.btn01), DialogInterface.OnClickListener { dialog, which ->
+                    dbHelper.delete(dbHelper.tableNameWorkerJW, no)
+
+
+                    val intent = Intent(this, MainListActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
+
+                })
+            }
         }
 
     }
@@ -274,7 +294,6 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
      * 검증
      */
     private fun varification() {
-        val customDialog = CustomDialog(this, android.R.style.Theme_Material_Dialog_MinWidth)
         // 이름
         if (worker_insert_edt_name.text.toString().isEmpty()) {
             customDialog.showDialog(this, resources.getString(R.string.workerInsert_name2), resources.getString(R.string.btn01), null)

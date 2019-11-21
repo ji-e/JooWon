@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">JooWon</string>
     <string name="name">주원산업</string>
+    <string name="name2">주원</string>
+    <string name="exit_msg">한번 더 누르시면 종료 됩니다.</string>
 
     <!--button-->
     <string name="btn01">확인</string>
@@ -33,6 +35,7 @@
 
     <string name="workerUpdate_delete">삭제하기</string>
     <string name="workerUpdate_update">변경하기</string>
+    <string name="workerUpdate_delete_msg">%s님을 삭제하시겠습니까?</string>
 
     <!--PasswordCheckActivity-->
     <string name="pwcheck_text01">비밀번호를 입력해주세요.</string>
@@ -52,4 +55,14 @@
     <string name="reset_data">데이터 초기화</string>
     <string name="reset_msg">비밀번호 초기화가 완료되었습니다.</string>
 
+    <!--SettingActivity-->
+    <string name="setting_title">환경설정</string>
+    <string name="setting_version">앱 정보</string>
+    <string name="setting_cur_version">현재 버전</string>
+    <string name="setting_new_version">최신 버전</string>
+    <string name="setting_development">제작</string>
+    <string name="setting_password">비밀번호 설정</string>
+    <string name="setting_excel">엑셀로 내보내기</string>
+    <string name="setting_excel2">엑셀 가져오기</string>
+    <string name="setting_reset">초기화</string>
 </resources>

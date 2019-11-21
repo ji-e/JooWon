@@ -1,4 +1,4 @@
-package com.example.uohih.dailylog.base
+package com.example.uohih.joowon.base
 
 import android.app.Activity
 import android.content.Context

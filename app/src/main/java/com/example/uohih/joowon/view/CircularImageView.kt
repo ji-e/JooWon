@@ -17,14 +17,16 @@ class CircularImageView : android.support.v7.widget.AppCompatImageView {
         if (width == 0 || height == 0) {
             return
         }
-        var b = (drawable as BitmapDrawable).bitmap
-        var bitmap = b.copy(Bitmap.Config.ARGB_8888, true)
+        val b = (drawable as BitmapDrawable).bitmap
+        if(b!=null) {
+            val bitmap = b.copy(Bitmap.Config.ARGB_8888, true)
 
-        var w = width
-        var h = height
+            val w = width
+            var h = height
 
-        var roundBitmap = getRoundedCroppedBitmap(bitmap, w)
-        canvas?.drawBitmap(roundBitmap, 0f, 0f, null)
+            val roundBitmap = getRoundedCroppedBitmap(bitmap, w)
+            canvas?.drawBitmap(roundBitmap, 0f, 0f, null)
+        }
 
     }
 
@@ -38,12 +40,12 @@ class CircularImageView : android.support.v7.widget.AppCompatImageView {
             finalBitmap = bitmap
         }
 
-        var output = Bitmap.createBitmap(finalBitmap.width,
+        val output = Bitmap.createBitmap(finalBitmap.width,
                 finalBitmap.height, Bitmap.Config.ARGB_8888)
-        var canvas = Canvas(output)
+        val canvas = Canvas(output)
 
-        var paint = Paint()
-        var rect = Rect(0, 0, finalBitmap.width,
+        val paint = Paint()
+        val rect = Rect(0, 0, finalBitmap.width,
                 finalBitmap.height)
 
         paint.isAntiAlias = true
