@@ -15,24 +15,24 @@
         android:gravity="center_vertical"
         app:btnLogo="true"
         app:btnWrite="true"
-        app:btnSetting="true"
-        />
+        app:btnSetting="true" />
 
 
-    <ListView
-        android:id="@+id/main_list_list_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/main_list_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/main_list_title_view"
         android:dividerHeight="@dimen/dp01"
-        android:divider="@color/c_ffffff"/>
+        android:divider="@color/c_ffffff"
+        tools:listitem="@layout/list_item_main_list"/>
 
 
     <!--추가버튼-->
     <ImageButton
         android:id="@+id/main_list_btn_plus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp40"
+        android:layout_height="@dimen/dp40"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/dp16"

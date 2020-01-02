@@ -1,3 +1,4 @@
+/*
 package com.example.uohih.joowon.view
 
 import android.content.Context
@@ -62,4 +63,4 @@ class CircularImageView : android.support.v7.widget.AppCompatImageView {
         return output
     }
 
-}
+}*/

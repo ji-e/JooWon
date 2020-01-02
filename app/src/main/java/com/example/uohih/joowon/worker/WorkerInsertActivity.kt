@@ -12,7 +12,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.support.v4.content.FileProvider
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.text.Editable
 import android.text.TextWatcher
@@ -22,7 +21,9 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.FileProvider
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.database.DBHelper
@@ -31,7 +32,6 @@ import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.DialogListAdapter
 import com.example.uohih.joowon.main.MainListActivity
-import com.example.uohih.joowon.view.CircularImageView
 import com.example.uohih.joowon.view.CustomDialog
 import com.example.uohih.joowon.view.CustomListDialog
 import kotlinx.android.synthetic.main.activity_worker_insert.*
@@ -463,7 +463,7 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
                     exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
                     exifDegree = exifOrientationToDegrees(exifOrientation)
 
-                    (findViewById<CircularImageView>(R.id.worker_img)).setImageBitmap(rotate(bitmap, exifDegree.toFloat()))
+                    (findViewById<ImageView>(R.id.worker_img)).setImageBitmap(rotate(bitmap, exifDegree.toFloat()))
 
                     worker_img_plus.visibility = View.GONE
                 }
@@ -478,7 +478,7 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
                         out.close()
 
                         inputStream.close()
-                        (findViewById<CircularImageView>(R.id.worker_img)).setImageBitmap(img)
+                        (findViewById<ImageView>(R.id.worker_img)).setImageBitmap(img)
 
                     } catch (e: Exception) {
                         e.printStackTrace()

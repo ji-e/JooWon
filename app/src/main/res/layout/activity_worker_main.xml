@@ -24,7 +24,7 @@
         android:gravity="center">
 
         <!--Image-->
-        <com.example.uohih.joowon.view.CircularImageView
+        <ImageView
             android:id="@+id/img_worker_people"
             android:layout_width="@dimen/dp90"
             android:layout_height="@dimen/dp90"

@@ -42,7 +42,7 @@
                 android:layout_margin="@dimen/dp04">
 
 
-                <com.example.uohih.joowon.view.CircularImageView
+                <ImageView
                     android:id="@+id/worker_img"
                     android:layout_width="@dimen/dp80"
                     android:layout_height="@dimen/dp80"

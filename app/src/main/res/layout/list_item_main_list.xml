@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ru.rambler.libs.swipe_layout.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/c_ffffff"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix"
+    android:id="@+id/main_list_swipe_layout">
+
+    <LinearLayout
+        android:id="@+id/main_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <!--Image-->
+        <ImageView
+            android:id="@+id/main_list_img_people"
+            android:layout_width="@dimen/dp60"
+            android:layout_height="@dimen/dp60"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/dp16"
+            android:background="@drawable/people" />
+
+        <!--Item-->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp12"
+            android:layout_marginBottom="@dimen/dp12"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!--Name-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mainList_name"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp14"
+                android:textStyle="bold" />
+
+            <!--Join-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mainList_join"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp14"
+                android:textStyle="bold" />
+
+            <!--Phone-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mainList_phone"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp14"
+                android:textStyle="bold" />
+
+            <!--Vacation-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mainList_vacation"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp14"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!--Data-->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp12"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <!--Name-->
+            <TextView
+                android:id="@+id/main_list_tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp14"
+                tools:text="@string/mainList_name" />
+
+            <!--Join-->
+            <TextView
+                android:id="@+id/main_list_tv_join"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp14"
+                tools:text="@string/mainList_join" />
+
+            <!--Phone-->
+            <TextView
+                android:id="@+id/main_list_tv_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp14"
+                tools:text="@string/mainList_phone" />
+
+            <!--Vacation-->
+            <TextView
+                android:id="@+id/main_list_tv_vacation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp14"
+                tools:text="@string/mainList_vacation" />
+        </LinearLayout>
+
+        <!--Next-->
+        <ImageView
+            android:id="@+id/main_list_btn_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/dp16"
+            android:background="@drawable/btn_next_selector" />-->
+
+        <!--CheckBox-->
+        <CheckBox
+            android:id="@+id/main_list_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/dp11"
+            android:buttonTint="@color/c_004680"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+    <!--RIGHT-->
+    <FrameLayout
+        android:id="@+id/main_list_right_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/c_e6e6e6"
+        android:padding="@dimen/dp10"
+        app:bring_to_clamp="@dimen/dp150"
+        app:clamp="self"
+        app:gravity="right"
+        app:sticky="none">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/btn_trash_selector" />
+    </FrameLayout>
+
+    <!--LEFT-->
+    <FrameLayout
+        android:id="@+id/main_list_left_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/c_004680"
+        android:padding="@dimen/dp10"
+        app:bring_to_clamp="@dimen/dp150"
+        app:clamp="self"
+        app:gravity="left"
+        app:sticky="none">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/btn_trash_selector" />
+    </FrameLayout>
+
+</ru.rambler.libs.swipe_layout.SwipeLayout>

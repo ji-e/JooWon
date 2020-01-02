@@ -2,6 +2,8 @@ package com.example.uohih.joowon.main
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.database.DBHelper
@@ -16,7 +18,7 @@ class MainListActivity : JWBaseActivity() {
     private val base = JWBaseApplication()
     val dbHelper = DBHelper(this)
 
-    lateinit var mAadapter: MainListAdapter
+    private lateinit var mAadapter: MainListAdapter
 
     // back key exit
     private lateinit var backPressCloseHandler: BackPressCloseHandler
@@ -62,8 +64,13 @@ class MainListActivity : JWBaseActivity() {
             mainList.add(StaffData(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3), cursor.getInt(4), cursor.getInt(5), cursor.getString(6)))
         }
 
-        mAadapter = MainListAdapter(this, mainList)
-        main_list_list_view.adapter = mAadapter
+        main_list_recyclerView.setHasFixedSize(true)
+        main_list_recyclerView.layoutManager = LinearLayoutManager(this)
+
+        mAadapter = MainListAdapter(mainList)
+        main_list_recyclerView.adapter = mAadapter
+
+        main_list_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
 
