@@ -144,7 +144,7 @@
         android:layout_height="match_parent"
         android:background="@color/c_e6e6e6"
         android:padding="@dimen/dp10"
-        app:bring_to_clamp="@dimen/dp150"
+        app:bring_to_clamp="@dimen/dp100"
         app:clamp="self"
         app:gravity="right"
         app:sticky="none">
@@ -163,7 +163,7 @@
         android:layout_height="match_parent"
         android:background="@color/c_004680"
         android:padding="@dimen/dp10"
-        app:bring_to_clamp="@dimen/dp150"
+        app:bring_to_clamp="@dimen/dp100"
         app:clamp="self"
         app:gravity="left"
         app:sticky="none">

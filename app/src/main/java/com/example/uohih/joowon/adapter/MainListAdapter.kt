@@ -1,26 +1,43 @@
 package com.example.uohih.joowon.adapter
 
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.BitmapFactory
+import android.media.ExifInterface
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
+import com.example.uohih.joowon.base.JWBaseActivity
+import com.example.uohih.joowon.database.DBHelper
+import com.example.uohih.joowon.main.MainListActivity
+import com.example.uohih.joowon.main.PictureActivity
+import com.example.uohih.joowon.view.CustomDialog
+import com.example.uohih.joowon.worker.WorkerMainActivity
+import kotlinx.android.synthetic.main.activity_worker_insert.*
 import kotlinx.android.synthetic.main.list_item_main_list.view.*
+import ru.rambler.libs.swipe_layout.SwipeLayout
+import java.io.IOException
 import java.util.*
 
 /**
  * MainListActivity 아답터(직원 리스트)
  */
-class MainListAdapter( private val workerList: ArrayList<StaffData>) : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
+class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
 
     /*private var base = JWBaseApplication()
     // 체크 된 항목
     private var checked = ArrayList<Boolean>(count)
 
-    *//** ----------- 전체 선택 체크박스 리스너 start ----------- *//*
+    */
+    /** ----------- 전체 선택 체크박스 리스너 start ----------- *//*
 
     private var mListener: mCheckboxListener? = null
 
@@ -31,10 +48,12 @@ class MainListAdapter( private val workerList: ArrayList<StaffData>) : RecyclerV
     fun setmCheckboxListener(listener: mCheckboxListener) {
         this.mListener = listener
     }
-    *//** ----------- 전체 선택 체크박스 리스너 end ----------- *//*
+    */
+    /** ----------- 전체 선택 체크박스 리스너 end ----------- *//*
 
 
-    *//**
+    */
+    /**
      * 전체 선택 및 해제
      * isCheck: Boolean: 체크 상태 값
      *//*
@@ -46,7 +65,8 @@ class MainListAdapter( private val workerList: ArrayList<StaffData>) : RecyclerV
         notifyDataSetChanged()
     }
 
-    *//**
+    */
+    /**
      * 체크 된 항목
      *//*
     fun check() {
@@ -71,104 +91,114 @@ class MainListAdapter( private val workerList: ArrayList<StaffData>) : RecyclerV
     }
 
     private val itemsOffset = IntArray(itemCount)
+    private lateinit var mContext: Context
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private var view: View = v
         val mSwipeLayout = view.main_list_swipe_layout
+        val mLayoutLeft = itemView.main_list_left_view      //왼쪽 스와이프
+        val mLayoutRight = itemView.main_list_right_view    //오른쪽 스와이프
 
-        fun bind(listener: View.OnClickListener, item: StaffData) {
-            view.main_list_tv_name.text = item.name
-            view.main_list_tv_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(item.joinDate.toString(), "$1-$2-$3")
-            view.main_list_tv_phone.text = (Constants.PHONE_NUM_PATTERN).toRegex().replace(item.phone, "$1-$2-$3")
-            view.main_list_tv_vacation.append(item.use.toString())
-            view.main_list_tv_vacation.append(" / ")
-            view.main_list_tv_vacation.append(item.total.toString())
+        val mTvName = view.main_list_tv_name                //이름
+        val mTvJoin = view.main_list_tv_join                //입사날짜
+        val mTvPhone = view.main_list_tv_phone              //핸드폰번호
+        val mTvVacation = view.main_list_tv_vacation        //휴가
+        val mImgPeople = view.main_list_img_people          //프로필 사진
+
+
+        fun bind(listener: View.OnClickListener, item: StaffData, mContext:Context) {
+            mTvName.text = item.name
+            mTvJoin.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(item.joinDate.toString(), "$1-$2-$3")
+            mTvPhone.text = (Constants.PHONE_NUM_PATTERN).toRegex().replace(item.phone, "$1-$2-$3")
+            mTvVacation.append(item.use.toString())
+            mTvVacation.append(" / ")
+            mTvVacation.append(item.total.toString())
 
             if (!item.picture.isNullOrEmpty()) {
-            val bitmap = BitmapFactory.decodeFile(item.picture)
-                view.main_list_img_people.setImageBitmap(bitmap)
+                val bitmap = BitmapFactory.decodeFile(item.picture)
+                lateinit var exif: ExifInterface
+
+                try {
+                    exif = ExifInterface(item.picture)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+
+                val exifOrientation: Int
+                val exifDegree: Int
+
+                exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+                exifDegree = JWBaseActivity().exifOrientationToDegrees(exifOrientation)
+
+//                mImgPeople.setImageBitmap(bitmap)
+                Glide.with(mContext).load(JWBaseActivity().rotate(bitmap, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(mImgPeople)
             }
-            view.main_list_img_people.setOnClickListener(listener)
+            mImgPeople.setOnClickListener(listener)
+            view.main_list_item.setOnClickListener(listener)
+
+            mLayoutLeft.isClickable = true
+            mLayoutLeft.setOnClickListener(listener)
+
+            mLayoutRight.isClickable = true
+            mLayoutRight.setOnClickListener(listener)
+
         }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_main_list, parent, false)
+        mContext = parent.context
+        val itemView = LayoutInflater.from(mContext).inflate(R.layout.list_item_main_list, parent, false)
         return ViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = workerList[position]
-        val listener = View.OnClickListener {it ->
+        val listener = View.OnClickListener {
+            when (it.id) {
+                R.id.main_list_img_people -> { //프로필사진
+                    val intent = Intent(mContext, PictureActivity::class.java)
+                    intent.putExtra("picture", workerList[position].picture)
+                    mContext.startActivity(intent)
+                }
+                R.id.main_list_item -> { //리스트 아이템
+                    val intent = Intent(mContext, WorkerMainActivity::class.java)
 
-            Toast.makeText(it.context, "Clicked: ${item.name}", Toast.LENGTH_SHORT).show()
+                    val bundle = Bundle()
+                    bundle.putString("name", holder.mTvName.text.toString())          //이름
+                    bundle.putString("phone", holder.mTvPhone.text.toString())        //핸드폰번호
+
+                    intent.putExtra("worker", bundle)
+                    mContext.startActivity(intent)
+                }
+                R.id.main_list_left_view -> { //왼쪽 스와이프 (즐겨찾기)
+                    holder.mSwipeLayout.animateReset()
+                }
+                R.id.main_list_right_view -> { //오른쪽 스와이프 (삭제)
+                    holder.mSwipeLayout.animateReset()
+                    val dbHelper = DBHelper(mContext)
+                    val customDialog = CustomDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
+                    customDialog.showDialog(mContext, String.format(mContext.resources.getString(R.string.workerUpdate_delete_msg),
+                            holder.mTvName.text.toString()),
+                            mContext.resources.getString(R.string.btn02), null,
+                            mContext.resources.getString(R.string.btn01), DialogInterface.OnClickListener { dialog, which ->
+                        dbHelper.delete(dbHelper.tableNameWorkerJW, workerList[position].no.toString())
+
+
+                        val intent = Intent(mContext, MainListActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        mContext.startActivity(intent)
+
+                    })
+
+                }
+            }
         }
+
+
         holder.apply {
-            bind(listener, item)
+            bind(listener, item, mContext)
             itemView.tag = item
-
         }
-
-//        val onClick = View.OnClickListener { holder.mSwipeLayout.animateReset() }
-//
-//        holder.mLayoutLeft.isClickable = true
-//        holder.mLayoutLeft.setOnClickListener(onClick)
-//
-//        holder.mLayoutRight.isClickable = true
-//        holder.mLayoutRight.setOnClickListener(onClick)
-//
-//        holder.mSwipeLayout.setOnSwipeListener(object : SwipeLayout.OnSwipeListener {
-//            override fun onBeginSwipe(swipeLayout: SwipeLayout, moveToRight: Boolean) {}
-//
-//            override fun onSwipeClampReached(swipeLayout: SwipeLayout, moveToRight: Boolean) {
-//                //todo
-//            }
-//
-//            override fun onLeftStickyEdge(swipeLayout: SwipeLayout, moveToRight: Boolean) {}
-//
-//            override fun onRightStickyEdge(swipeLayout: SwipeLayout, moveToRight: Boolean) {}
-//        })
-//
-//        // 이름
-//        holder.mTvName.text = workerList[position].name
-//
-//        // 입사날짜
-//        val joinDate = (Constants.YYYYMMDD_PATTERN).toRegex().replace(workerList[position].joinDate.toString(), "$1-$2-$3")
-//        holder.mTvJoinDate.text = joinDate
-//
-//        // 핸드폰 번호
-//        val phoneNum = (Constants.PHONE_NUM_PATTERN).toRegex().replace(workerList[position].phone, "$1-$2-$3")
-//        holder.mTvPhoneNum.text = phoneNum
-//
-//        // 휴가
-//        holder.mTvVacationCnt.append(workerList[position].use.toString())
-//        holder.mTvVacationCnt.append(" / ")
-//        holder.mTvVacationCnt.append(workerList[position].total.toString())
-//
-//        // 사진
-//        if (!workerList[position].picture.isNullOrEmpty()) {
-//            var bitmap = BitmapFactory.decodeFile(workerList[position].picture)
-//            holder.mImgImage.setImageBitmap(bitmap)
-//        }
-//        holder.mImgImage.setOnClickListener {
-//            val intent = Intent(mContext, PictureActivity::class.java)
-//            intent.putExtra("picture", workerList[position].picture)
-//            mContext.startActivity(intent)
-//        }
-//
-//
-//        // 아이템 클릭 이벤트
-//        holder.mLayoutItem.setOnClickListener {
-//            val intent = Intent(mContext, WorkerMainActivity::class.java)
-//
-//            val bundle = Bundle()
-//            bundle.putString("name", workerList[position].name)          //이름
-//            bundle.putString("phone", phoneNum)                          //핸드폰번호
-//
-//
-//            intent.putExtra("worker", bundle)
-//            mContext.startActivity(intent)
-//        }
-
 
     }
 
@@ -181,151 +211,7 @@ class MainListAdapter( private val workerList: ArrayList<StaffData>) : RecyclerV
             itemsOffset[holder.adapterPosition] = holder.mSwipeLayout.offset
         }
     }
-
-
-    /*override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var convertView = convertView
-
-        if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_main_list, parent, false)
-        }
-
-
-        val mLayoutItem = convertView?.findViewById<LinearLayout>(R.id.main_list_item)                   // 직원
-        val mImgImage = convertView?.findViewById<ImageView>(R.id.main_list_img_people)     // 이미지
-        val mTvName = convertView?.findViewById<TextView>(R.id.main_list_tv_name)                           // 이름
-        val mTvJoinDate = convertView?.findViewById<TextView>(R.id.main_list_tv_join)                       // 입사 일
-        val mTvPhoneNum = convertView?.findViewById<TextView>(R.id.main_list_tv_phone)                      // 핸드폰 번호
-        val mTvVacationCnt = convertView?.findViewById<TextView>(R.id.main_list_tv_vacation)                // 휴가
-        val mCheckbox = convertView?.findViewById<CheckBox>(R.id.main_list_check)                          // 체크
-        val mImgNext = convertView?.findViewById<ImageView>(R.id.main_list_btn_next)                      // 다음 버튼
-
-
-        // 이름
-        mTvName?.text = workerList[position].name
-
-        // 입사날짜
-        val joinDate = (Constants.YYYYMMDD_PATTERN).toRegex().replace(workerList[position].joinDate.toString(), "$1-$2-$3")
-        mTvJoinDate?.text = joinDate
-
-        // 핸드폰 번호
-        val phoneNum = (Constants.PHONE_NUM_PATTERN).toRegex().replace(workerList[position].phone, "$1-$2-$3")
-        mTvPhoneNum?.text = phoneNum
-
-        // 휴가
-        mTvVacationCnt?.text = workerList[position].use.toString() + " / " + workerList[position].total.toString()
-
-        // 사진
-        if (!workerList[position].picture.isNullOrEmpty()) {
-            var bitmap = BitmapFactory.decodeFile(workerList[position].picture)
-            mImgImage?.setImageBitmap(bitmap)
-        }
-        mImgImage?.setOnClickListener {
-            val intent = Intent(mContext, PictureActivity::class.java)
-            intent.putExtra("picture", workerList[position].picture)
-            mContext.startActivity(intent)
-        }
-
-        // 체크 초기값 세팅 (false)
-        for (i in 0 until count) {
-            checked.add(false)
-        }
-
-        // 체크박스 일 때
-        if (mCheckbox != null) {
-            if (mCheckbox.isChecked) {
-                mCheckbox.isChecked = false
-            } else {
-                // 전체 선택 해제 리스너
-                if (mListener != null) {
-                    mListener?.onmClickEvent()
-                }
-                mCheckbox.isChecked = true
-            }
-
-
-            // 체크 박스 클릭 이벤트
-            mCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
-                // 체크 상태값 변환
-                checked[position] = isChecked
-                // 전체 선택 해제 리스너
-                if (!isChecked && mListener != null) {
-                    mListener?.onmClickEvent()
-                }
-            }
-
-
-            // 체크 상태 설정
-            if (checked.isNotEmpty()) {
-                mCheckbox.isChecked = checked[position]
-            } else {
-                mCheckbox.isChecked = false
-            }
-        }
-
-        // 아이템 클릭 이벤트
-        mLayoutItem?.setOnClickListener {
-            val intent = Intent(mContext, WorkerMainActivity::class.java)
-
-            val bundle = Bundle()
-            bundle.putString("name", workerList[position].name)          //이름
-            bundle.putString("phone", phoneNum)                          //핸드폰번호
-
-
-            intent.putExtra("worker", bundle)
-            mContext.startActivity(intent)
-        }
-
-        convertView?.tag = workerList[position]
-
-        return convertView!!
-
-    }
-
-
-    override fun getItem(position: Int): Any? {
-        return if (position >= count) null else workerList[position]
-    }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getCount(): Int {
-        return workerList.size
-    }*/
-
-
-
-
 }
-//class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView!!) {
-////
-////    val mLayoutItem: LinearLayout       // 직원
-////    val mImgImage: ImageView            // 이미지
-////    val mTvName: TextView               // 이름
-////    val mTvJoinDate: TextView           // 입사 일
-////    val mTvPhoneNum: TextView           // 핸드폰 번호
-////    val mTvVacationCnt: TextView        // 휴가
-////    val mLayoutLeft: FrameLayout        // 왼쪽 스와이프
-////    val mLayoutRight: FrameLayout       // 오른쪽 스와이프
-////    val mSwipeLayout: SwipeLayout       // 스와이프 레이아웃
-//
-//
-////    init {
-//    val mLayoutItem = itemView.main_list_item
-//        val mImgImage = itemView.main_list_img_people
-//        val mTvName = itemView.main_list_tv_name
-//        val mTvJoinDate = itemView.main_list_tv_join
-//        val mTvPhoneNum = itemView.main_list_tv_phone
-//        val mTvVacationCnt = itemView.main_list_tv_vacation
-//        val mLayoutLeft = itemView.main_list_left_view
-//        val mLayoutRight = itemView.main_list_right_view
-//        val mSwipeLayout = itemView.main_list_swipe_layout
-////    }
-//
-//}
-
 
 /**
  * 직원 정보 데이타

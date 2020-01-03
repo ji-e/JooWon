@@ -95,61 +95,6 @@ class CalendarDialog(context: Context, theme: Int) : Dialog(context, theme) {
         }
 
 
-        private fun getCalendar(dateForCurrentMonth: Date) {
-            var dayOfWeek: Int
-            val thisMonthLastDay: Int
-
-            arrayListDayInfo.clear()
-
-            val calendar = Calendar.getInstance()
-            calendar.time = dateForCurrentMonth
-
-            calendar.set(Calendar.DATE, 1)//1일로 변경
-            dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)//1일의 요일 구하기
-            LogUtil.d("dayOfWeek = $dayOfWeek")
-
-            if (dayOfWeek == Calendar.SUNDAY) { //현재 달의 1일이 무슨 요일인지 검사
-                dayOfWeek += 7
-            }
-
-            thisMonthLastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-
-
-            var day: CalendarDayInfo
-
-            calendar.add(Calendar.DATE, -1 * (dayOfWeek - 1)) //현재 달력화면에서 보이는 지난달의 시작일
-            for (i in 0 until dayOfWeek - 1) {
-                day = CalendarDayInfo()
-                day.setDate(calendar.time)
-                day.setInMonth(false)
-                arrayListDayInfo.add(day)
-
-                calendar.add(Calendar.DATE, +1)
-            }
-
-            for (i in 1..thisMonthLastDay) {
-                day = CalendarDayInfo()
-                day.setDate(calendar.time)
-                day.setInMonth(true)
-                arrayListDayInfo.add(day)
-
-                calendar.add(Calendar.DATE, +1)
-            }
-
-            for (i in 1 until 42 - (thisMonthLastDay + dayOfWeek - 1) + 1) {
-                day = CalendarDayInfo()
-                day.setDate(calendar.time)
-                day.setInMonth(false)
-                arrayListDayInfo.add(day)
-
-                calendar.add(Calendar.DATE, +1)
-            }
-
-            calendarAdapter = CalendarAdapter(context, arrayListDayInfo, selectedDate)
-            gridView.adapter = calendarAdapter
-
-        }
-
 
         /**
          * 커스텀 다이얼로그 생성
@@ -256,17 +201,19 @@ class CalendarDialog(context: Context, theme: Int) : Dialog(context, theme) {
             return dialog
         }
 
+        fun getCalendar(dateForCurrentMonth: Date){
+            calendarAdapter = CalendarAdapter(context, JWBaseActivity().getCalendar(dateForCurrentMonth), selectedDate, R.layout.dialog_calendar_cell)
+            gridView.adapter = calendarAdapter
+        }
     }
+
+
 
 
     /**
      * 캘린더 다이얼로그
      */
     fun showDialogCalendar(context: Context, date: String?): CalendarDialog? {
-        if (context == null) {
-            return null
-        }
-
         if (context is Activity) {
             val activity = context as Activity?
 

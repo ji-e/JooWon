@@ -70,7 +70,7 @@ class MainListActivity : JWBaseActivity() {
         mAadapter = MainListAdapter(mainList)
         main_list_recyclerView.adapter = mAadapter
 
-        main_list_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+//        main_list_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
 

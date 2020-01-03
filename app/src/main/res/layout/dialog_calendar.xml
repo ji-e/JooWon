@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white"
     android:gravity="center_vertical"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <RelativeLayout
@@ -175,7 +176,8 @@
             android:layout_marginTop="@dimen/dp05"
             android:gravity="center"
             android:numColumns="7"
-            android:stretchMode="columnWidth" />
+            android:stretchMode="columnWidth"
+            tools:listitem="@layout/dialog_calendar_cell"/>
     </LinearLayout>
 
 

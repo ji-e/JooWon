@@ -5,11 +5,11 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.ViewTreeObserver
+import android.widget.*
 import com.example.uohih.joowon.view.CalendarDayInfo
 import com.example.uohih.joowon.R
+import kotlinx.android.synthetic.main.grid_item_worker_main.view.*
 
 import java.util.*
 
@@ -20,7 +20,8 @@ import java.util.*
  * arrayListDayInfo: ArrayList<CalendarDayInfo>: 캘린더 날짜 정보 리스트
  * date: Date
  */
-class CalendarAdapter(private val mContext: Context, private val arrayListDayInfo: ArrayList<CalendarDayInfo>, val date: Date) : BaseAdapter() {
+class CalendarAdapter(private val mContext: Context, private val arrayListDayInfo: ArrayList<CalendarDayInfo>,
+                      val date: Date, val layout:Int) : BaseAdapter() {
     var selectedDate = date
 
     override fun getCount(): Int {
@@ -40,13 +41,13 @@ class CalendarAdapter(private val mContext: Context, private val arrayListDayInf
         var convertView = convertView
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.dialog_calendar_cell, parent, false)
+            convertView = LayoutInflater.from(mContext).inflate(layout, parent, false)
         }
 
         // 캘린더 날짜
-        val cell = convertView?.findViewById<TextView>(R.id.calendar_cell)
+        val cell = convertView?.calendar_cell
         // 오늘 동그라미 이미지
-        val today = convertView?.findViewById<ImageView>(R.id.calendar_today)
+        val today = convertView?.calendar_today
 
 
         /**
@@ -76,6 +77,8 @@ class CalendarAdapter(private val mContext: Context, private val arrayListDayInf
          */
 
         convertView?.tag = day
+
+
 
         return convertView!!
 

@@ -7,6 +7,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
@@ -24,6 +26,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.FileProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.database.DBHelper
@@ -31,6 +35,7 @@ import com.example.uohih.joowon.view.CalendarDialog
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.DialogListAdapter
+import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.main.MainListActivity
 import com.example.uohih.joowon.view.CustomDialog
 import com.example.uohih.joowon.view.CustomListDialog
@@ -44,11 +49,11 @@ import java.util.*
 /**
  * 직원추가
  */
-class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.OnEditorActionListener, View.OnClickListener {
+class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextView.OnEditorActionListener, View.OnClickListener {
 
     private val base = JWBaseApplication()
     private val dbHelper = DBHelper(this)
-    private val todayJson = JWBaseActivity().getToday()
+    private val todayJson = getToday()
     private var imageFilePath: String = ""
     private lateinit var name: String
     private lateinit var phoneNum: String
@@ -81,7 +86,7 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
             phoneNum = workerBundle.getString("phone", "")                //핸드폰번호
             use = workerBundle.getString("use", "0")                      //사용한 휴가일수
             total = workerBundle.getString("total", "15")                 //잔여 휴가일수
-            joinDate = workerBundle.getString("join", "")                 //입사날짜
+            joinDate = workerBundle.getString("joinDate", "")             //입사날짜
             no = workerBundle.getString("no", "0")
 
             worker_layout_delete.visibility = View.VISIBLE
@@ -90,7 +95,23 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
 
 
             if (imageFilePath != "") {
-                worker_img.setImageBitmap(BitmapFactory.decodeFile(imageFilePath))
+                val bitmap = BitmapFactory.decodeFile(imageFilePath)
+                lateinit var exif: ExifInterface
+
+                try {
+                    exif = ExifInterface(imageFilePath)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+
+                val exifOrientation: Int
+                val exifDegree: Int
+
+                exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+                exifDegree = exifOrientationToDegrees(exifOrientation)
+
+                Glide.with(this).load(rotate(bitmap, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(worker_img)
+
             }
 
             worker_insert_edt_name.hint = name
@@ -102,40 +123,56 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
             worker_insert_edt_vacation.setText(total)
             worker_insert_edt_use.hint = use
             worker_insert_edt_use.setText(use)
+
+
         }
 
 
+        //이름
+        worker_insert_edt_name.onFocusChangeListener = this
+        worker_insert_edt_name.setOnEditorActionListener(this)
+        worker_insert_edt_name.addTextChangedListener(editTextWatcher(worker_insert_edt_name))
+
+        //핸드폰번호
+        worker_insert_edt_phone.onFocusChangeListener = this
+        worker_insert_edt_phone.setOnEditorActionListener(this)
+        worker_insert_edt_phone.addTextChangedListener(editTextWatcher(worker_insert_edt_phone))
+        worker_insert_edt_phone.addTextChangedListener(PhoneNumberFormattingTextWatcher())
+
+        //입사날짜
+        worker_insert_edt_join.onFocusChangeListener = this
         worker_insert_edt_join.isFocusableInTouchMode = true
         worker_insert_edt_join.isFocusable = true
-
-        worker_insert_edt_name.onFocusChangeListener = this                                         //이름 FocusChangeListener
-        worker_insert_edt_phone.onFocusChangeListener = this                                        //핸드폰번호 FocusChangeListener
-        worker_insert_edt_join.onFocusChangeListener = this                                         //입사일자 FocusChangeListener
-        worker_insert_edt_vacation.onFocusChangeListener = this                                     //총휴가 FocusChangeListener
-        worker_insert_edt_use.onFocusChangeListener = this                                          //사용휴가 FocusChangeListener
-
-        worker_insert_edt_name.setOnEditorActionListener(this)                                      //이름 EditorActionListener
-        worker_insert_edt_phone.setOnEditorActionListener(this)                                     //핸드폰번호 EditorActionListener
-        worker_insert_edt_vacation.setOnEditorActionListener(this)                                  //총휴가 EditorActionListener
-        worker_insert_edt_use.setOnEditorActionListener(this)                                       //사용휴가 EditorActionListener
-
-        worker_insert_edt_name.addTextChangedListener(editTextWatcher(worker_insert_edt_name))      //이름 TextChangedListener
-        worker_insert_edt_phone.addTextChangedListener(editTextWatcher(worker_insert_edt_phone))    //핸드폰번호 TextChangedListener
-        worker_insert_edt_phone.addTextChangedListener(PhoneNumberFormattingTextWatcher())
-        worker_insert_edt_vacation.addTextChangedListener(editTextWatcher(worker_insert_edt_vacation))//총휴가 TextChangedListener
-        worker_insert_edt_use.addTextChangedListener(editTextWatcher(worker_insert_edt_use))        //사용휴가 TextChangedListener
+        worker_insert_edt_join.setOnClickListener(this)
+        worker_insert_edt_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(joinDate, "$1-$2-$3")
 
 
-        worker_insert_btn_delete1.setOnClickListener(this)                                          //이름 삭제 ClickListener
-        worker_insert_btn_delete2.setOnClickListener(this)                                          //핸드폰번호 삭제 ClickListener
-        worker_insert_btn_delete3.setOnClickListener(this)                                          //총휴가 삭제 ClickListener
-        worker_insert_btn_delete4.setOnClickListener(this)                                          //사용휴가 삭제 ClickListener
-        worker_insert_edt_join.setOnClickListener(this)                                             //입사일자 설정 ClickListener
-        worker_insert_btn_bottom.setOnClickListener(this)                                           //확인버튼 ClickListener
-        worker_insert_plus.setOnClickListener(this)                                                 //사진설정 ClickListener
-        worker_layout_delete.setOnClickListener(this)                                               //삭제하기 ClickListener
+        //총휴가개수
+        worker_insert_edt_vacation.onFocusChangeListener = this
+        worker_insert_edt_vacation.setOnEditorActionListener(this)
+        worker_insert_edt_vacation.addTextChangedListener(editTextWatcher(worker_insert_edt_vacation))
 
-        worker_insert_edt_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(todayJson.get("yyyymmdd").toString(), "$1-$2-$3")
+        //사용한휴가개수
+        worker_insert_edt_use.setOnEditorActionListener(this)
+        worker_insert_edt_use.onFocusChangeListener = this
+        worker_insert_edt_use.addTextChangedListener(editTextWatcher(worker_insert_edt_use))
+
+
+        //EditText 삭제 버튼
+        worker_insert_btn_delete1.setOnClickListener(this)
+        worker_insert_btn_delete2.setOnClickListener(this)
+        worker_insert_btn_delete3.setOnClickListener(this)
+        worker_insert_btn_delete4.setOnClickListener(this)
+
+        //등록 및 변경 버튼
+        worker_insert_btn_bottom.setOnClickListener(this)
+
+        //프로필 사진 등록
+        worker_insert_plus.setOnClickListener(this)
+
+        //삭제하기
+        worker_layout_delete.setOnClickListener(this)
+
     }
 
 
@@ -341,7 +378,7 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
      */
     private fun showCalendarDialog() {
         var calendarDialog = CalendarDialog(this, android.R.style.Theme_Material_Dialog_MinWidth)
-        var date = worker_insert_edt_join.text.toString()
+        val date = worker_insert_edt_join.text.toString()
         calendarDialog = calendarDialog.showDialogCalendar(this, date)!!
         calendarDialog.show()
         calendarDialog.setOnDismissListener {
@@ -417,33 +454,6 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
     }
 
 
-    /**
-     * 사진 각도
-     * exifOrientation: Int
-     * return Int
-     */
-    private fun exifOrientationToDegrees(exifOrientation: Int): Int {
-        return when (exifOrientation) {
-            ExifInterface.ORIENTATION_ROTATE_90 -> 90
-            ExifInterface.ORIENTATION_ROTATE_180 -> 180
-            ExifInterface.ORIENTATION_ROTATE_270 -> 270
-            else -> 0
-        }
-    }
-
-    /**
-     * 각도 회전
-     * bitmap: Bitmap
-     * degree: Float
-     * return Bitemap
-     */
-    private fun rotate(bitmap: Bitmap, degree: Float): Bitmap {
-        val matrix = Matrix()
-        matrix.postRotate(degree)
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-    }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
@@ -463,9 +473,9 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
                     exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
                     exifDegree = exifOrientationToDegrees(exifOrientation)
 
-                    (findViewById<ImageView>(R.id.worker_img)).setImageBitmap(rotate(bitmap, exifDegree.toFloat()))
-
-                    worker_img_plus.visibility = View.GONE
+//                    (findViewById<ImageView>(R.id.worker_img)).setImageBitmap(rotate(bitmap, exifDegree.toFloat()))
+                    Glide.with(this).load(rotate(bitmap, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(worker_img)
+//                    worker_img_plus.visibility = View.GONE
                 }
                 REQUEST_IMAGE_GALLERY -> {
                     try {
@@ -478,7 +488,8 @@ class WorkerInsertActivity : Activity(), View.OnFocusChangeListener, TextView.On
                         out.close()
 
                         inputStream.close()
-                        (findViewById<ImageView>(R.id.worker_img)).setImageBitmap(img)
+//                        (findViewById<ImageView>(R.id.worker_img)).setImageBitmap(img)
+                        Glide.with(this).load(img).apply(RequestOptions().circleCrop()).into(worker_img)
 
                     } catch (e: Exception) {
                         e.printStackTrace()

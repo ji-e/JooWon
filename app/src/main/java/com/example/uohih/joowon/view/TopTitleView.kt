@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
 import com.example.uohih.joowon.R
+import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.setting.SettingActivity
 import kotlinx.android.synthetic.main.view_top_title.view.*
 
@@ -103,24 +104,16 @@ class TopTitleView : RelativeLayout, View.OnClickListener {
      * 닫기 버튼
      */
     private val mCloseBtnClickListener: View.OnClickListener = OnClickListener {
-        if (mContext != null && mContext is Activity) {
+        if (mContext is Activity) {
             (mContext as Activity).finish()
         }
     }
 
 
-//    /**
-//     * 상단바 로고 -> 닫기
-//     */
-//    fun setClose() {
-//        top_btn_logo.setImageResource(R.drawable.btn_close_selector)
-//        top_btn_logo.setOnClickListener(mCloseBtnClickListener)
-//
-//    }
-
     fun setBackBtn() {
         top_btn_close.visibility = View.GONE
         top_btn_back.visibility = View.VISIBLE
+        top_btn_back.setOnClickListener(mCloseBtnClickListener)
     }
 
     fun setCloseBtnClickListener(mCloseBtnClickListener: View.OnClickListener) {
@@ -129,9 +122,6 @@ class TopTitleView : RelativeLayout, View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            top_btn_back -> {
-
-            }
             top_btn_write -> {
 //                val intent = Intent(mContext, WorkerInsertActivity::class.java)
 //                mContext.startActivity(intent)

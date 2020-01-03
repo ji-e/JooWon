@@ -3,8 +3,14 @@ package com.example.uohih.joowon.base
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageInfo
+import android.graphics.Bitmap
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.os.Bundle
 import android.os.Handler
+import com.example.uohih.joowon.R
+import com.example.uohih.joowon.adapter.CalendarAdapter
+import com.example.uohih.joowon.view.CalendarDayInfo
 import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
@@ -13,7 +19,6 @@ import kotlin.collections.ArrayList
 open class JWBaseActivity : Activity() {
 
     var mContext: Context? = null
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,7 +105,7 @@ open class JWBaseActivity : Activity() {
         //현재 월
         var month = String.format("%02d", (instance.get(Calendar.MONTH) + 1))
         //현재 날짜
-        var date = String.format("%02d",instance.get(Calendar.DAY_OF_MONTH))
+        var date = String.format("%02d", instance.get(Calendar.DAY_OF_MONTH))
         //현재 월의 주
         val week = instance.get(Calendar.WEEK_OF_MONTH).toString()
         //현재 요일
@@ -132,6 +137,85 @@ open class JWBaseActivity : Activity() {
         return jsonCalendar
     }
 
+    /**
+     * 사진 각도
+     * exifOrientation: Int
+     * return Int
+     */
+    fun exifOrientationToDegrees(exifOrientation: Int): Int {
+        return when (exifOrientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> 90
+            ExifInterface.ORIENTATION_ROTATE_180 -> 180
+            ExifInterface.ORIENTATION_ROTATE_270 -> 270
+            else -> 0
+        }
+    }
+
+    /**
+     * 각도 회전
+     * bitmap: Bitmap
+     * degree: Float
+     * return Bitemap
+     */
+    fun rotate(bitmap: Bitmap, degree: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(degree)
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    }
+
+
+    fun getCalendar(dateForCurrentMonth: Date): java.util.ArrayList<CalendarDayInfo> {
+        var dayOfWeek: Int
+        val thisMonthLastDay: Int
+        val arrayListDayInfo = java.util.ArrayList<CalendarDayInfo>()
+
+        val calendar = Calendar.getInstance()
+        calendar.time = dateForCurrentMonth
+
+        calendar.set(Calendar.DATE, 1)//1일로 변경
+        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)//1일의 요일 구하기
+        LogUtil.d("dayOfWeek = $dayOfWeek")
+
+        if (dayOfWeek == Calendar.SUNDAY) { //현재 달의 1일이 무슨 요일인지 검사
+            dayOfWeek += 7
+        }
+
+        thisMonthLastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+
+        var day: CalendarDayInfo
+
+        calendar.add(Calendar.DATE, -1 * (dayOfWeek - 1)) //현재 달력화면에서 보이는 지난달의 시작일
+        for (i in 0 until dayOfWeek - 1) {
+            day = CalendarDayInfo()
+            day.setDate(calendar.time)
+            day.setInMonth(false)
+            arrayListDayInfo.add(day)
+
+            calendar.add(Calendar.DATE, +1)
+        }
+
+        for (i in 1..thisMonthLastDay) {
+            day = CalendarDayInfo()
+            day.setDate(calendar.time)
+            day.setInMonth(true)
+            arrayListDayInfo.add(day)
+
+            calendar.add(Calendar.DATE, +1)
+        }
+
+        for (i in 1 until 42 - (thisMonthLastDay + dayOfWeek - 1) + 1) {
+            day = CalendarDayInfo()
+            day.setDate(calendar.time)
+            day.setInMonth(false)
+            arrayListDayInfo.add(day)
+
+            calendar.add(Calendar.DATE, +1)
+        }
+
+        return arrayListDayInfo
+
+    }
 
 
 }
