@@ -101,72 +101,103 @@
         </LinearLayout>
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp01"
+        android:layout_marginBottom="@dimen/dp02"
+        android:background="@color/c_e6e6e6" />
+
 
     <!-- 년/월 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dp03"
-        android:background="@color/c_dddddd"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <!-- 년 -->
-        <ImageButton
-            android:id="@+id/grid_worker_btn_backy"
-            android:layout_width="@dimen/dp16"
-            android:layout_height="@dimen/dp16"
-            android:background="@drawable/btn_back_selector" />
-
-        <TextView
-            android:id="@+id/grid_worker_tv_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp03"
-            android:layout_marginRight="@dimen/dp03"
-            android:gravity="center"
-            android:textColor="@color/c_333333"
-            android:textSize="@dimen/dp16"
-            tools:text="2014" />
-
-        <ImageButton
-            android:id="@+id/grid_worker_btn_nexty"
-            android:layout_width="@dimen/dp16"
-            android:layout_height="@dimen/dp16"
-            android:background="@drawable/btn_next_selector" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/dp16">
 
 
         <!-- 월 -->
-        <ImageButton
-            android:id="@+id/grid_worker_btn_backm"
-            android:layout_width="@dimen/dp16"
-            android:layout_height="@dimen/dp16"
-            android:layout_marginLeft="@dimen/dp10"
-            android:background="@drawable/btn_back_selector" />
-
         <TextView
             android:id="@+id/grid_worker_tv_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp03"
-            android:layout_marginRight="@dimen/dp03"
+            android:layout_marginLeft="@dimen/dp16"
+            android:layout_marginRight="@dimen/dp05"
             android:gravity="center"
             android:textColor="@color/c_333333"
-            android:textSize="@dimen/dp16"
-            tools:text="12" />
+            android:textSize="@dimen/dp20"
+            tools:text="12월" />
 
         <ImageButton
             android:id="@+id/grid_worker_btn_nextm"
-            android:layout_width="@dimen/dp16"
-            android:layout_height="@dimen/dp16"
-            android:background="@drawable/btn_next_selector" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_up_nor"
+            android:onClick="btnOnClick" />
+
+        <ImageButton
+            android:id="@+id/grid_worker_btn_backm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_down_nor"
+            android:onClick="btnOnClick" />
+
+
+        <!-- 년 -->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/grid_worker_edt_year"
+                android:layout_width="@dimen/dp120"
+                android:layout_height="@dimen/dp50"
+                android:layout_alignParentRight="true"
+                android:backgroundTint="@color/c_e6e6e6"
+                android:hint="2020"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxLength="4"
+                android:paddingLeft="@dimen/dp10"
+                android:singleLine="true"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp20" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/grid_worker_btn_search"
+                android:text="년"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp15" />
+
+            <ImageButton
+                android:id="@+id/grid_worker_btn_search"
+                android:layout_width="@dimen/dp30"
+                android:layout_height="@dimen/dp30"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp05"
+                android:background="@drawable/btn_search_nor"
+                android:onClick="btnOnClick" />
+        </RelativeLayout>
+
+
     </LinearLayout>
+    <!--    <View-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="@dimen/dp01"-->
+    <!--        android:background="@color/c_e6e6e6"/>-->
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp03">
 
         <ListView
             android:id="@+id/list_worker"
@@ -175,18 +206,6 @@
             android:visibility="gone"></ListView>
 
         <include layout="@layout/grid_worker_main" />
-
-        <!--        <GridView-->
-        <!--            android:id="@+id/grid_worker"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            tools:listitem="@layout/grid_item_worker_main"-->
-        <!--            android:numColumns="7"-->
-        <!--            android:horizontalSpacing="@dimen/dp01"-->
-        <!--            android:verticalSpacing="@dimen/dp01"-->
-        <!--            android:stretchMode="columnWidth">-->
-
-        <!--        </GridView>-->
 
     </FrameLayout>
 
