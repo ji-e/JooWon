@@ -1,31 +1,27 @@
 package com.example.uohih.joowon.worker
 
+
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.adapter.CalendarAdapter
+import com.example.uohih.joowon.adapter.WorkerMainAdapter
+import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.LogUtil
+import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.main.PictureActivity
-import com.example.uohih.joowon.view.CalendarDayInfo
-import kotlinx.android.synthetic.main.activity_worker_insert.*
-
-
 import kotlinx.android.synthetic.main.activity_worker_main.*
-import kotlinx.android.synthetic.main.dialog_calendar.view.*
-import kotlinx.android.synthetic.main.grid_worker_main.*
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
+
 
 class WorkerMainActivity : JWBaseActivity() {
 
@@ -42,7 +38,8 @@ class WorkerMainActivity : JWBaseActivity() {
     private val instance = Calendar.getInstance()
     private val todayJson = JWBaseActivity().getToday()
 
-    private lateinit var calendarAdapter: CalendarAdapter
+
+    private val workerMainAdapter by lazy { WorkerMainAdapter(supportFragmentManager) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,24 +103,25 @@ class WorkerMainActivity : JWBaseActivity() {
         getBundle.putString("picture", bitmap)
 
 
-
-
-
         //그리드 캘린더
-        setCalendarView(Calendar.getInstance().time, Date())
+//        setCalendarView(Calendar.getInstance().time, Date())
 
 
         //현재 날짜 세팅
-        grid_worker_tv_month.text = todayJson.getString("month")
-        grid_worker_edt_year.setText(todayJson.getString("year"))
+        tv_worker_month.text = todayJson.getString("month")
+        edit_worker_year.setText(todayJson.getString("year"))
+
+
+        //뷰페이저
+        viewpager_worker.adapter = workerMainAdapter
+//        viewpager_worker.addOnAdapterChangeListener();
+
 
     }
 
 
-
-
     fun btnOnClick(v: View) {
-        grid_worker_edt_year.clearFocus() //년도 포커스 제거
+        edit_worker_year.clearFocus() //년도 포커스 제거
 
         when (v) {
             img_worker_people -> {
@@ -153,36 +151,38 @@ class WorkerMainActivity : JWBaseActivity() {
                 intentSetting.putExtra("workerBundle", getBundle)
                 startActivity(intentSetting)
             }
-            grid_worker_btn_backm -> {
+            btn_worker_backm -> {
                 instance.add(Calendar.MONTH, -1)
-                grid_worker_edt_year.setText(instance.get(Calendar.YEAR).toString())
-                grid_worker_tv_month.text = String.format("%02d", instance.get(Calendar.MONTH) + 1)
-
-                setCalendarView(instance.time, Date())
+                edit_worker_year.setText(instance.get(Calendar.YEAR).toString())
+                tv_worker_month.text = String.format("%02d", instance.get(Calendar.MONTH) + 1)
             }
-            grid_worker_btn_nextm -> {
-              instance.add(Calendar.MONTH, +1)
-                grid_worker_edt_year.setText(instance.get(Calendar.YEAR).toString())
-                grid_worker_tv_month.text = String.format("%02d", instance.get(Calendar.MONTH) + 1)
-
-                    setCalendarView(instance.time, Date())
+            btn_worker_nextm -> {
+                instance.add(Calendar.MONTH, +1)
+                edit_worker_year.setText(instance.get(Calendar.YEAR).toString())
+                tv_worker_month.text = String.format("%02d", instance.get(Calendar.MONTH) + 1)
             }
-            grid_worker_btn_search -> {
-                instance.set(Calendar.YEAR, Integer.parseInt(grid_worker_edt_year.text.toString()))
-                setCalendarView(instance.time, Date())
+            btn_worker_search -> {
+                instance.set(Calendar.YEAR, Integer.parseInt(edit_worker_year.text.toString()))
             }
 
+        }
 
+        if (viewpager_worker.currentItem == 0) {
+            val fragment = findFragmentByPosition() as GridWorkerMainFragment
+            fragment.setCalendarView(instance.time, Date())
+        } else {
+            val fragment = findFragmentByPosition() as ListWorkerMainFragment
+            //todo
         }
 
 
     }
 
-    /**
-     * 캘린더뷰 세팅
-     */
-    private fun setCalendarView(date :Date, selectedDate : Date) {
-        calendarAdapter = CalendarAdapter(this, JWBaseActivity().getCalendar(date), selectedDate, R.layout.grid_item_worker_main)
-        grid_worker.adapter = calendarAdapter
+    fun findFragmentByPosition(): Fragment {
+        return supportFragmentManager.findFragmentByTag(
+                workerMainAdapter.getItem(viewpager_worker.currentItem).tag)!!
     }
+
+
+
 }

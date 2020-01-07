@@ -10,7 +10,7 @@
 
     <!--상단 타이틀 및 아이콘 바-->
     <com.example.uohih.joowon.view.TopTitleView
-        android:id="@+id/main_list_title_view"
+        android:id="@+id/worker_main_title_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp60"
         android:gravity="center_vertical"
@@ -107,6 +107,14 @@
         android:layout_marginBottom="@dimen/dp02"
         android:background="@color/c_e6e6e6" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_indicator"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
 
     <!-- 년/월 -->
     <LinearLayout
@@ -120,7 +128,7 @@
 
         <!-- 월 -->
         <TextView
-            android:id="@+id/grid_worker_tv_month"
+            android:id="@+id/tv_worker_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp16"
@@ -131,14 +139,14 @@
             tools:text="12월" />
 
         <ImageButton
-            android:id="@+id/grid_worker_btn_nextm"
+            android:id="@+id/btn_worker_nextm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_up_nor"
             android:onClick="btnOnClick" />
 
         <ImageButton
-            android:id="@+id/grid_worker_btn_backm"
+            android:id="@+id/btn_worker_backm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_down_nor"
@@ -151,7 +159,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/grid_worker_edt_year"
+                android:id="@+id/edit_worker_year"
                 android:layout_width="@dimen/dp120"
                 android:layout_height="@dimen/dp50"
                 android:layout_alignParentRight="true"
@@ -169,13 +177,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/grid_worker_btn_search"
+                android:layout_toLeftOf="@id/btn_worker_search"
                 android:text="년"
                 android:textColor="@color/c_333333"
                 android:textSize="@dimen/dp15" />
 
             <ImageButton
-                android:id="@+id/grid_worker_btn_search"
+                android:id="@+id/btn_worker_search"
                 android:layout_width="@dimen/dp30"
                 android:layout_height="@dimen/dp30"
                 android:layout_alignParentRight="true"
@@ -187,27 +195,11 @@
 
 
     </LinearLayout>
-    <!--    <View-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="@dimen/dp01"-->
-    <!--        android:background="@color/c_e6e6e6"/>-->
 
-    <FrameLayout
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager_worker"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/dp03">
-
-        <ListView
-            android:id="@+id/list_worker"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"></ListView>
-
-        <include layout="@layout/grid_worker_main" />
-
-    </FrameLayout>
+        android:layout_height="match_parent"/>
 
 
 </LinearLayout>

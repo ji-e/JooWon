@@ -8,6 +8,7 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.os.Bundle
 import android.os.Handler
+import androidx.appcompat.app.AppCompatActivity
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.CalendarAdapter
 import com.example.uohih.joowon.view.CalendarDayInfo
@@ -16,7 +17,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-open class JWBaseActivity : Activity() {
+open class JWBaseActivity : AppCompatActivity() {
 
     var mContext: Context? = null
 
