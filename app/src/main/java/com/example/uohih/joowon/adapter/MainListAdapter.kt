@@ -228,6 +228,6 @@ class StaffData(
         val name: String,
         val joinDate: Int,
         val phone: String,
-        val use: Int,
-        val total: Int,
+        val use: String,
+        val total: String,
         val picture: String?)

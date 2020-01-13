@@ -14,11 +14,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".worker.aaaa"
-            android:label="@string/title_activity_aaaa"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.uohih.joowon"

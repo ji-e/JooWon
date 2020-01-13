@@ -66,9 +66,6 @@
     <string name="setting_excel2">엑셀 가져오기</string>
     <string name="setting_reset">초기화</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_aaaa">aaaa</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
+    <!--ListWorkerMainFragment-->
+    <string name="list_worker_main">등록된 연/월차가 없습니다.</string>
 </resources>

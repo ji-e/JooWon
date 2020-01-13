@@ -61,7 +61,7 @@ class MainListActivity : JWBaseActivity() {
         mainList.clear()
 
         while (cursor.moveToNext()) {
-            mainList.add(StaffData(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3), cursor.getInt(4), cursor.getInt(5), cursor.getString(6)))
+            mainList.add(StaffData(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6)))
         }
 
         main_list_recyclerView.setHasFixedSize(true)

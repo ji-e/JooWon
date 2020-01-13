@@ -30,7 +30,7 @@
     <LinearLayout
         android:id="@+id/calendar_text"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp50"
+        android:layout_height="@dimen/dp45"
         android:orientation="vertical">
 
     </LinearLayout>

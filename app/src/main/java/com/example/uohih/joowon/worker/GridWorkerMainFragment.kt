@@ -9,8 +9,7 @@ import androidx.fragment.app.Fragment
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.CalendarAdapter
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.LogUtil
-import kotlinx.android.synthetic.main.grid_worker_main.*
+import kotlinx.android.synthetic.main.fragment_grid_worker_main.*
 import java.util.*
 
 class GridWorkerMainFragment : Fragment() {
@@ -22,11 +21,8 @@ class GridWorkerMainFragment : Fragment() {
         mContext = this.activity!!
     }
 
-    override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        val root = inflater.inflate(R.layout.grid_worker_main, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val root = inflater.inflate(R.layout.fragment_grid_worker_main, container, false)
         return root
     }
 

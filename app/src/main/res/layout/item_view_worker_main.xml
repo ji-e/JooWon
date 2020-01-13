@@ -14,12 +14,12 @@
 
         <!--Image-->
         <ImageView
-            android:id="@+id/main_list_img_people"
-            android:layout_width="@dimen/dp70"
-            android:layout_height="@dimen/dp70"
+            android:id="@+id/worker_main_img_people"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/dp16"
-            android:background="@drawable/people" />
+            android:background="@drawable/indicator_on" />
 
         <!--Item-->
         <LinearLayout

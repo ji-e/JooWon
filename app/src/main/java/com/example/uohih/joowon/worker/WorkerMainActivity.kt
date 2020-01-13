@@ -7,15 +7,17 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.WorkerMainAdapter
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.LogUtil
+import com.example.uohih.joowon.base.SizeConverter
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.main.PictureActivity
 import kotlinx.android.synthetic.main.activity_worker_main.*
@@ -40,6 +42,7 @@ class WorkerMainActivity : JWBaseActivity() {
 
 
     private val workerMainAdapter by lazy { WorkerMainAdapter(supportFragmentManager) }
+    private val mIvDot by lazy { arrayOfNulls<ImageView>(workerMainAdapter.count) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +53,47 @@ class WorkerMainActivity : JWBaseActivity() {
             getBundle = intent.getBundleExtra("worker")
             name = getBundle.getString("name", "")        //이름
             phoneNum = getBundle.getString("phone", "")   //핸드폰번호
+        }
 
+        //현재 날짜 세팅
+        tv_worker_month.text = todayJson.getString("month")
+        edit_worker_year.setText(todayJson.getString("year"))
+
+
+        //뷰페이저
+        //뷰페이저 화면전환 리스너
+        val viewpagerChangeListener = object : OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                for (index in 0 until workerMainAdapter.count) {
+                    if (index == position) {
+                        mIvDot[index]?.setImageResource(R.drawable.indicator_on)
+                    } else {
+                        mIvDot[index]?.setImageResource(R.drawable.indicator_nor)
+                    }
+                }
+
+                if (position == 0) {
+                    tv_worker_month.visibility = View.VISIBLE
+                    btn_worker_nextm.visibility = View.VISIBLE
+                    btn_worker_backm.visibility = View.VISIBLE
+                } else {
+                    tv_worker_month.visibility = View.INVISIBLE
+                    btn_worker_nextm.visibility = View.INVISIBLE
+                    btn_worker_backm.visibility = View.INVISIBLE
+                }
+            }
 
         }
+
+        viewpager_worker.addOnPageChangeListener(viewpagerChangeListener)
+        viewpager_worker.adapter = workerMainAdapter
+        setIndicator() //뷰페이저 인디케이터 설정
 
     }
 
@@ -67,8 +108,8 @@ class WorkerMainActivity : JWBaseActivity() {
         name = cursor.getString(1)
         bitmap = cursor.getString(6)
         phoneNum = (Constants.PHONE_NUM_PATTERN).toRegex().replace(cursor.getString(3).toString(), "$1-$2-$3")
-        use = cursor.getInt(4).toString()
-        total = cursor.getInt(5).toString()
+        use = cursor.getString(4).toString()
+        total = cursor.getString(5).toString()
         joinDate = (Constants.YYYYMMDD_PATTERN).toRegex().replace(cursor.getInt(2).toString(), "$1-$2-$3")
         no = cursor.getInt(0).toString()
 
@@ -101,20 +142,6 @@ class WorkerMainActivity : JWBaseActivity() {
         getBundle.putString("joinDate", joinDate)
         getBundle.putString("no", no)
         getBundle.putString("picture", bitmap)
-
-
-        //그리드 캘린더
-//        setCalendarView(Calendar.getInstance().time, Date())
-
-
-        //현재 날짜 세팅
-        tv_worker_month.text = todayJson.getString("month")
-        edit_worker_year.setText(todayJson.getString("year"))
-
-
-        //뷰페이저
-        viewpager_worker.adapter = workerMainAdapter
-//        viewpager_worker.addOnAdapterChangeListener();
 
 
     }
@@ -178,11 +205,35 @@ class WorkerMainActivity : JWBaseActivity() {
 
     }
 
-    fun findFragmentByPosition(): Fragment {
+    /**
+     * 뷰페이저 프래그먼트 가져오기
+     */
+    private fun findFragmentByPosition(): Fragment {
         return supportFragmentManager.findFragmentByTag(
                 workerMainAdapter.getItem(viewpager_worker.currentItem).tag)!!
     }
 
+    /**
+     * 뷰페이저 인디케이터 설정
+     */
+    private fun setIndicator() {
+        layout_indicator.removeAllViews()
 
+        val layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+                SizeConverter(this).dp(20F), SizeConverter(this).dp(20F))
+
+        for (index in mIvDot.indices) {
+            val ivDot = ImageView(mContext)
+            ivDot.setPadding(10, 0, 10, 0)
+            ivDot.layoutParams = layoutParams
+            if (index == viewpager_worker.currentItem)
+                ivDot.setImageResource(R.drawable.indicator_on)
+            else
+                ivDot.setImageResource(R.drawable.indicator_nor)
+
+            mIvDot[index] = ivDot
+            layout_indicator.addView(mIvDot[index])
+        }
+    }
 
 }
