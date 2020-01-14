@@ -7,6 +7,7 @@
     <!--button-->
     <string name="btn01">확인</string>
     <string name="btn02">취소</string>
+    <string name="btn03">검색</string>
 
     <!--menu-->
     <string name="menu01">카메라</string>
@@ -68,4 +69,14 @@
 
     <!--ListWorkerMainFragment-->
     <string name="list_worker_main">등록된 연/월차가 없습니다.</string>
+
+
+
+
+
+    <!--WorkerVacationActivity-->
+    <string name="worker_vacation_title">휴가작성</string>
+    <string name="worker_vacation_start_date">휴가 시작 기간</string>
+    <string name="worker_vacation_end_date">휴가 마지막 기간</string>
+    <string name="worker_vacation_content">휴가 내용</string>
 </resources>

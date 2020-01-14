@@ -77,6 +77,8 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
             workerUpdate = intent.getStringExtra("workerUpdate")
         }
 
+        joinDate = todayJson.get("yyyymmdd").toString()
+
         if ("Y" == workerUpdate) {
             worker_insert_title_view.setBackBtn()
 
@@ -144,6 +146,7 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
         worker_insert_edt_join.isFocusableInTouchMode = true
         worker_insert_edt_join.isFocusable = true
         worker_insert_edt_join.setOnClickListener(this)
+
         worker_insert_edt_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(joinDate, "$1-$2-$3")
 
 

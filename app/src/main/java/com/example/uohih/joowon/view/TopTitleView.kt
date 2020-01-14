@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.setting.SettingActivity
+import com.example.uohih.joowon.vacation.VacationActivity
 import kotlinx.android.synthetic.main.view_top_title.view.*
 
 /**
@@ -123,8 +123,8 @@ class TopTitleView : RelativeLayout, View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             top_btn_write -> {
-//                val intent = Intent(mContext, WorkerInsertActivity::class.java)
-//                mContext.startActivity(intent)
+                val intent = Intent(mContext, VacationActivity::class.java)
+                mContext.startActivity(intent)
             }
             top_btn_setting -> {
                 val intent = Intent(mContext, SettingActivity::class.java)
