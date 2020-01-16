@@ -1,6 +1,7 @@
 package com.example.uohih.joowon.vacation
 
 import VacationSearchAdapter
+import VacationSearchAdapter.VacationSearchListener
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -84,6 +85,12 @@ class VacationActivity : JWBaseActivity() {
         })
 
         vacation_listview.adapter = mVacationSearchAdapter
+        mVacationSearchAdapter.setmVacationSearchListener(object : VacationSearchListener {
+            override fun onClickItem(position: Int) {
+                subList[position]
+            }
+        })
+
     }
 
     override fun onResume() {

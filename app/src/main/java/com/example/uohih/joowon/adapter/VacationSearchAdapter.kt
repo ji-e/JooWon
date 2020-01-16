@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -18,6 +19,17 @@ import java.io.IOException
 class VacationSearchAdapter(mContext: Context, private val list: List<StaffData>) : BaseAdapter() {
     private val mContext = mContext
     private lateinit var viewHolder: ViewHolder
+
+    interface VacationSearchListener {
+        fun onClickItem(position: Int)
+    }
+
+    lateinit var mVacationSearchListener: VacationSearchListener
+
+    fun setmVacationSearchListener(mListener: VacationSearchListener){
+        mVacationSearchListener = mListener
+    }
+
     override fun getCount(): Int {
         return list.size
     }
@@ -36,6 +48,7 @@ class VacationSearchAdapter(mContext: Context, private val list: List<StaffData>
             viewHolder = ViewHolder()
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_vacation, viewGroup, false)
 
+            viewHolder.mLayout = convertView.findViewById(R.id.item_vacation_layout)
             viewHolder.mImg = convertView.findViewById(R.id.item_vacation_img)
             viewHolder.mName = convertView.findViewById(R.id.item_vacation_name)
             viewHolder.mPhone = convertView.findViewById(R.id.item_vacation_phone)
@@ -68,13 +81,19 @@ class VacationSearchAdapter(mContext: Context, private val list: List<StaffData>
         viewHolder.mName.text = list[position].name
         viewHolder.mPhone.text = list[position].phone
 
+        // 아이템 클릭 리스너
+        viewHolder.mLayout.setOnClickListener {
+            mVacationSearchListener.onClickItem(position)
+        }
+
         convertView?.tag = viewHolder
         return convertView!!
     }
 
     internal inner class ViewHolder {
-        lateinit var mImg: ImageView
-        lateinit var mName: TextView
-        lateinit var mPhone: TextView
+        lateinit var mLayout: LinearLayout
+        lateinit var mImg: ImageView    // 프로필 사진
+        lateinit var mName: TextView    // 이름
+        lateinit var mPhone: TextView   // 핸드폰 번호
     }
 }
