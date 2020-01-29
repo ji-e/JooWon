@@ -243,7 +243,7 @@
 
 
                         <TextView
-                            android:id="@+id/ vacation_tv_startD"
+                            android:id="@+id/vacation_tv_startD"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dp40"
                             android:background="@drawable/input_selector"
@@ -254,7 +254,7 @@
                             android:textSize="@dimen/dp15" />
 
                         <ImageView
-                            android:id="@+id/ vacation_btn_startC"
+                            android:id="@+id/vacation_btn_startC"
                             android:layout_width="@dimen/dp40"
                             android:layout_height="@dimen/dp40"
                             android:layout_alignParentRight="true"
@@ -296,7 +296,7 @@
 
 
                         <TextView
-                            android:id="@+id/ vacation_tv_endD"
+                            android:id="@+id/vacation_tv_endD"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dp40"
                             android:background="@drawable/input_selector"
@@ -307,7 +307,7 @@
                             android:textSize="@dimen/dp15" />
 
                         <ImageView
-                            android:id="@+id/ vacation_btn_endC"
+                            android:id="@+id/vacation_btn_endC"
                             android:layout_width="@dimen/dp40"
                             android:layout_height="@dimen/dp40"
                             android:layout_alignParentRight="true"
@@ -334,7 +334,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/ vacation_edt_content"
+                    android:id="@+id/vacation_edt_content"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp150"
                     android:background="@drawable/input_selector"
@@ -347,7 +347,7 @@
                     android:textSize="@dimen/dp15" />
 
                 <ImageButton
-                    android:id="@+id/ vacation_btn_delete2"
+                    android:id="@+id/vacation_btn_delete2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -361,7 +361,7 @@
 
     <!--확인버튼-->
     <Button
-        android:id="@+id/ vacation_btn_bottom"
+        android:id="@+id/vacation_btn_bottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp50"
         android:background="@drawable/btn_bottom_selector"
