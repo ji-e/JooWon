@@ -1,5 +1,5 @@
-
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ExifInterface
 import android.view.LayoutInflater
@@ -11,24 +11,16 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.StaffData
 import com.example.uohih.joowon.base.JWBaseActivity
+import com.example.uohih.joowon.base.LogUtil
 import java.io.IOException
 
 class VacationSearchAdapter(mContext: Context, private val list: List<StaffData>) : BaseAdapter() {
     private val mContext = mContext
     private lateinit var viewHolder: ViewHolder
-
-    interface VacationSearchListener {
-        fun onClickItem(position: Int)
-    }
-
-    lateinit var mVacationSearchListener: VacationSearchListener
-
-    fun setmVacationSearchListener(mListener: VacationSearchListener){
-        mVacationSearchListener = mListener
-    }
 
     override fun getCount(): Int {
         return list.size
@@ -43,7 +35,7 @@ class VacationSearchAdapter(mContext: Context, private val list: List<StaffData>
     }
 
     override fun getView(position: Int, convertView: View?, viewGroup: ViewGroup?): View {
-        var convertView= convertView
+        var convertView = convertView
         if (convertView == null) {
             viewHolder = ViewHolder()
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_vacation, viewGroup, false)
@@ -54,37 +46,34 @@ class VacationSearchAdapter(mContext: Context, private val list: List<StaffData>
             viewHolder.mPhone = convertView.findViewById(R.id.item_vacation_phone)
 
 
-            convertView.tag=viewHolder
+            convertView.tag = viewHolder
         } else {
             viewHolder = convertView.tag as ViewHolder
         }
 
+        viewHolder.mName.text = list[position].name
+        viewHolder.mPhone.text = (Constants.PHONE_NUM_PATTERN).toRegex().replace(list[position].phone, "$1-$2-$3")
+
+
         if (!list[position].picture.isNullOrEmpty()) {
             val bitmap = BitmapFactory.decodeFile(list[position].picture)
-            lateinit var exif: ExifInterface
 
             try {
-                exif = ExifInterface(list[position].picture)
+                val exif = ExifInterface(list[position].picture)
+                val exifOrientation: Int
+                val exifDegree: Int
+
+                exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+                exifDegree = JWBaseActivity().exifOrientationToDegrees(exifOrientation)
+
+                Glide.with(mContext).load(JWBaseActivity().rotate(bitmap, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(viewHolder.mImg)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
 
-            val exifOrientation: Int
-            val exifDegree: Int
-
-            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-            exifDegree = JWBaseActivity().exifOrientationToDegrees(exifOrientation)
-
-            Glide.with(mContext).load(JWBaseActivity().rotate(bitmap, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(viewHolder.mImg)
         }
 
-        viewHolder.mName.text = list[position].name
-        viewHolder.mPhone.text = list[position].phone
 
-        // 아이템 클릭 리스너
-        viewHolder.mLayout.setOnClickListener {
-            mVacationSearchListener.onClickItem(position)
-        }
 
         convertView?.tag = viewHolder
         return convertView!!
@@ -96,4 +85,5 @@ class VacationSearchAdapter(mContext: Context, private val list: List<StaffData>
         lateinit var mName: TextView    // 이름
         lateinit var mPhone: TextView   // 핸드폰 번호
     }
+
 }

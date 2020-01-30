@@ -79,4 +79,5 @@
     <string name="worker_vacation_start_date">휴가 시작 기간</string>
     <string name="worker_vacation_end_date">휴가 마지막 기간</string>
     <string name="worker_vacation_content">휴가 내용</string>
+    <string name="worker_vacation_nothing">검색 결과가 없습니다.</string>
 </resources>
