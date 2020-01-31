@@ -1,6 +1,7 @@
 package com.example.uohih.joowon.base
 
 import android.util.Log
+import java.lang.StringBuilder
 import java.text.MessageFormat
 
 /**
@@ -9,33 +10,38 @@ import java.text.MessageFormat
 object LogUtil {
     private val TAG = "MY_TAG"
 
-    fun logMethodCalled() {
-        doLog(Log.DEBUG, "called")
+//    fun logMethodCalled() {
+//        doLog(Log.DEBUG, "called")
+//    }
+
+    fun v(vararg text: Any) {
+        doLog(Log.VERBOSE, *text)
     }
 
-    fun v(text: Any) {
-        doLog(Log.VERBOSE, text.toString())
+    fun d(vararg text: Any) {
+        doLog(Log.DEBUG, *text)
     }
 
-    fun d(text: Any) {
-        doLog(Log.DEBUG, text.toString())
+    fun i(vararg text: Any) {
+        doLog(Log.INFO, *text)
     }
 
-    fun i(text: Any) {
-        doLog(Log.INFO, text.toString())
+    fun w(vararg text: Any) {
+        doLog(Log.WARN, *text)
     }
 
-    fun w(text: Any) {
-        doLog(Log.WARN, text.toString())
-    }
-
-    fun e(text: Any) {
-        doLog(Log.ERROR, text.toString())
+    fun e(vararg text: Any) {
+        doLog(Log.ERROR, *text)
     }
 
 
-    private fun doLog(logLevel: Int, logText: String) {
-        var logText = logText
+    private fun doLog(logLevel: Int, vararg logText: Any) {
+        val stb = StringBuilder()
+        for(i in logText.indices){
+            stb.append(logText[i])
+            stb.append(", \t")
+        }
+        var log = stb.toString()
 
         val stackTrace = Thread.currentThread()
                 .stackTrace
@@ -54,11 +60,14 @@ object LogUtil {
             val simpleClassName = fullClassName.substring(fullClassName.lastIndexOf(".") + 1)
 
             //add class and method data to logText
-            logText = MessageFormat.format("T:{0} | {1} , {2}() {3}| {4}", Thread.currentThread()
-                    .id, simpleClassName, element.methodName, element.lineNumber, logText)
+            log = MessageFormat.format("T:{0} | {1} {2}() {3}|" +
+                    "\n------------------------------\n" +
+                    "{4}" +
+                    "\n------------------------------", Thread.currentThread()
+                    .id, simpleClassName, element.methodName, element.lineNumber, stb.toString())
         }
 
-        Log.println(logLevel, TAG, logText)
+        Log.println(logLevel, TAG, log)
     }
 
 }

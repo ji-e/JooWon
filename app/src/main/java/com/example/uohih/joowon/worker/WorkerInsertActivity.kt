@@ -65,13 +65,15 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
     private var workerUpdate: String = "N" //변경하기
     private var workerBundle = Bundle()
 
-    private lateinit var customDialog: CustomDialog
+//    private lateinit var customDialog: CustomDialog
 
+    private val customDialog by lazy {
+        CustomDialog(this, android.R.style.Theme_Material_Dialog_MinWidth)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker_insert)
-        customDialog = CustomDialog(this, android.R.style.Theme_Material_Dialog_MinWidth)
 
         if (intent.hasExtra("workerUpdate")) {
             workerUpdate = intent.getStringExtra("workerUpdate")
@@ -281,12 +283,24 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
      */
     override fun onClick(v: View?) {
         when (v) {
-            worker_insert_btn_delete1 -> worker_insert_edt_name.setText("")
-            worker_insert_btn_delete2 -> worker_insert_edt_phone.setText("")
-            worker_insert_btn_delete3 -> worker_insert_edt_vacation.setText("")
-            worker_insert_btn_delete4 -> worker_insert_edt_use.setText("")
-            worker_insert_edt_join -> showCalendarDialog()
-            worker_insert_btn_bottom -> varification()
+            worker_insert_btn_delete1 -> {
+                worker_insert_edt_name.setText("")
+            }
+            worker_insert_btn_delete2 -> {
+                worker_insert_edt_phone.setText("")
+            }
+            worker_insert_btn_delete3 -> {
+                worker_insert_edt_vacation.setText("")
+            }
+            worker_insert_btn_delete4 -> {
+                worker_insert_edt_use.setText("")
+            }
+            worker_insert_edt_join -> {
+                showCalendarDialog()
+            }
+            worker_insert_btn_bottom -> {
+                varification()
+            }
             worker_insert_plus -> {
                 val listViewAdapter = DialogListAdapter(this, ArrayList())
                 listViewAdapter.setContent(getString(R.string.menu01))
@@ -302,7 +316,7 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
                 })!!
                 customDialogList.show()
             }
-            worker_layout_delete -> {
+            worker_layout_delete       -> {
                 customDialog.showDialog(this, String.format(resources.getString(R.string.workerUpdate_delete_msg), name),
                         resources.getString(R.string.btn02), null,
                         resources.getString(R.string.btn01), DialogInterface.OnClickListener { dialog, which ->

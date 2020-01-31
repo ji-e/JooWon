@@ -15,7 +15,7 @@
         android:layout_height="@dimen/dp60"
         android:gravity="center_vertical"
         app:btnClose="true"
-        app:tvTitle="" />
+        app:tvTitle="@string/worker_vacation_title" />
 
 
     <LinearLayout
@@ -28,16 +28,19 @@
         android:paddingRight="@dimen/dp16"
         android:paddingBottom="@dimen/dp10">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_selector"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/vacation_edt_name"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="@dimen/dp40"
-                android:background="@drawable/input_selector"
-                android:hint="@string/workerInsert_name2"
+                android:background="@null"
+                android:hint="@string/worker_vacation_hint"
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:maxLength="15"
@@ -46,32 +49,12 @@
                 android:textColor="@color/c_333333"
                 android:textSize="@dimen/dp15" />
 
-
-            <!-- <com.pchmn.materialchips.ChipsInput
-                 android:id="@+id/ vacation_edt_name"
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:background="@drawable/input_selector"
-                 android:inputType="text"
-                 android:maxLength="15"
-                 android:singleLine="true"
-                 android:textSize="@dimen/dp15"
-                 app:chip_deletable="true"
-                 app:chip_deleteIconColor="@color/c_ffffff"
-                 app:chip_hasAvatarIcon="true"
-                 app:hint="@string/workerInsert_name2"
-                 app:hintColor="@color/c_cccccc"
-                 app:maxRows="3"
-                 app:textColor="@color/c_333333" />-->
-
             <ImageButton
                 android:id="@+id/vacation_btn_delete1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center"
                 android:layout_marginRight="@dimen/dp10"
-                android:layout_toLeftOf="@id/vacation_btn_search"
                 android:background="@drawable/btn_delete_selector"
                 android:visibility="gone" />
 
@@ -79,12 +62,11 @@
                 android:id="@+id/vacation_btn_search"
                 android:layout_width="@dimen/dp60"
                 android:layout_height="@dimen/dp40"
-                android:layout_alignParentRight="true"
                 android:background="@drawable/rectangle_right_selector"
                 android:text="@string/btn03"
                 android:textColor="@color/c_ffffff"
                 android:textSize="@dimen/dp12" />
-        </RelativeLayout>
+        </LinearLayout>
 
         <ScrollView
             android:id="@+id/vacation_sv"
@@ -102,7 +84,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp10"
                     android:orientation="horizontal">
 
                     <!--Image-->
@@ -239,8 +220,6 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-
-
                             <TextView
                                 android:id="@+id/vacation_tv_startD"
                                 android:layout_width="match_parent"
@@ -292,8 +271,6 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-
-
                             <TextView
                                 android:id="@+id/vacation_tv_endD"
                                 android:layout_width="match_parent"
@@ -315,6 +292,36 @@
                         </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/vacation_ly"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp20"
+                    android:layout_marginBottom="@dimen/dp20"
+                    android:background="@drawable/rectangle_nor3"
+                    android:padding="@dimen/dp02">
+
+                    <ListView
+                        android:id="@+id/vacation_listview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:dividerHeight="0dp"
+                        android:divider="@null"
+                        tools:listitem="@layout/list_item_vacation" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/vacation_tv_use_vc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/c_004680"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:textSize="@dimen/dp15"
+                    android:layout_gravity="right"
+                    android:text="@string/worker_vacation_use_vacation"/>
 
 
                 <!--휴가 내용-->
@@ -359,28 +366,30 @@
         </ScrollView>
 
         <RelativeLayout
-            android:id="@+id/vacation_ly_lv"
+            android:id="@+id/vacation_ly_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/dp20"
             android:layout_marginBottom="@dimen/dp20"
-            android:background="@drawable/rectangle_nor2"
-            android:padding="@dimen/dp02">
+            android:background="@drawable/rectangle_nor3"
+            android:padding="@dimen/dp02"
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/vacation_tv_nothing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/dp14"
-                android:textColor="@color/c_cccccc"
+                android:textColor="@color/c_aaaaaa"
                 android:text="@string/worker_vacation_nothing"
                 android:layout_centerInParent="true"/>
 
             <ListView
-                android:id="@+id/vacation_listview"
+                android:id="@+id/vacation_listview_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:dividerHeight="0dp"
+                android:divider="@null"
                 tools:listitem="@layout/list_item_vacation"
                 android:visibility="gone"/>
         </RelativeLayout>
@@ -394,7 +403,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp50"
         android:background="@drawable/btn_bottom_selector"
-        android:text="@string/btn01"
+        android:text="@string/btn04"
         android:textColor="@color/c_ffffff"
         android:textSize="@dimen/dp20" />
 

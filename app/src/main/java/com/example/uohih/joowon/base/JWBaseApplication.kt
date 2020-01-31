@@ -1,9 +1,6 @@
 package com.example.uohih.joowon.base
 
 import android.app.Application
-import android.graphics.Bitmap
-import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.LogUtil
 
 
 class JWBaseApplication : Application() {

@@ -38,7 +38,7 @@ class VacationSearchAdapter(mContext: Context, private val list: List<StaffData>
         var convertView = convertView
         if (convertView == null) {
             viewHolder = ViewHolder()
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_vacation, viewGroup, false)
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_vacation_search, viewGroup, false)
 
             viewHolder.mLayout = convertView.findViewById(R.id.item_vacation_layout)
             viewHolder.mImg = convertView.findViewById(R.id.item_vacation_img)

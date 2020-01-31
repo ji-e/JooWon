@@ -1,6 +1,5 @@
 package com.example.uohih.joowon.base
 
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.graphics.Bitmap
@@ -9,8 +8,6 @@ import android.media.ExifInterface
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import com.example.uohih.joowon.R
-import com.example.uohih.joowon.adapter.CalendarAdapter
 import com.example.uohih.joowon.view.CalendarDayInfo
 import org.json.JSONObject
 import java.util.*
@@ -165,6 +162,11 @@ open class JWBaseActivity : AppCompatActivity() {
     }
 
 
+
+
+    /**
+     * 캘린더 가져오기
+     */
     fun getCalendar(dateForCurrentMonth: Date): java.util.ArrayList<CalendarDayInfo> {
         var dayOfWeek: Int
         val thisMonthLastDay: Int

@@ -23,11 +23,12 @@ import java.util.*
  * context: Context
  * theme: Int
  */
-class CalendarDialog(context: Context, theme: Int) : Dialog(context, theme) {
+class CalendarDialog(mContext: Context, theme: Int) : Dialog(mContext, theme) {
 
-    class Builder(private val context: Context) {
+    class Builder(private val mContext: Context, future: Boolean) {
         lateinit var dialogTitle: String
         private var close = false
+        private var future = future
 
         lateinit var mClosebtnClickListener: DialogInterface.OnClickListener
         lateinit var mItemClickListener: AdapterView.OnItemClickListener
@@ -95,14 +96,13 @@ class CalendarDialog(context: Context, theme: Int) : Dialog(context, theme) {
         }
 
 
-
         /**
          * 커스텀 다이얼로그 생성
          */
         fun create(): CalendarDialog {
-            val dialog = CalendarDialog((context as Activity), android.R.style.Theme_Material_Dialog_MinWidth)
+            val dialog = CalendarDialog((mContext as Activity), android.R.style.Theme_Material_Dialog_MinWidth)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            val contentView = LayoutInflater.from(context).inflate(R.layout.dialog_calendar, null)
+            val contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog_calendar, null)
 
             dialog.addContentView(contentView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             arrayListDayInfo = ArrayList<CalendarDayInfo>()
@@ -135,7 +135,8 @@ class CalendarDialog(context: Context, theme: Int) : Dialog(context, theme) {
              * 년 다음버튼
              */
             contentView.calendar_btn_nexty.setOnClickListener {
-                if (contentView.calendar_tv_year.text.toString().toInt() < todayJson.getString("year").toInt()) {
+                if (contentView.calendar_tv_year.text.toString().toInt() < todayJson.getString("year").toInt()
+                        || future) {
                     instance.add(Calendar.YEAR, +1)
                     getCalendar(instance.time)
                     contentView.calendar_tv_year.text = instance.get(Calendar.YEAR).toString()
@@ -157,7 +158,9 @@ class CalendarDialog(context: Context, theme: Int) : Dialog(context, theme) {
              * 월 다음버튼
              */
             contentView.calendar_btn_nextm.setOnClickListener {
-                if (contentView.calendar_tv_year.text.toString().toInt() < todayJson.getString("year").toInt() || contentView.calendar_tv_month.text.toString().toInt() < todayJson.getString("month").toInt()) {
+                if (contentView.calendar_tv_year.text.toString().toInt() < todayJson.getString("year").toInt()
+                        || contentView.calendar_tv_month.text.toString().toInt() < todayJson.getString("month").toInt()
+                        || future) {
                     instance.add(Calendar.MONTH, +1)
                     getCalendar(instance.time)
                     contentView.calendar_tv_month.text = String.format("%02d", instance.get(Calendar.MONTH) + 1)
@@ -171,7 +174,8 @@ class CalendarDialog(context: Context, theme: Int) : Dialog(context, theme) {
             contentView.calendar_gridview.setOnItemClickListener { parent, view, position, id ->
 
                 val selectedDate = (view.tag as CalendarDayInfo).getDate()
-                if ((sdf.format(selectedDate)).toInt() <= todayJson.get("yyyymmdd").toString().toInt()) {
+                if ((sdf.format(selectedDate)).toInt() <= todayJson.get("yyyymmdd").toString().toInt()
+                        || future) {
                     setSelectedDate(selectedDate)
                     calendarAdapter.notifyDataSetChanged()
                 }
@@ -201,21 +205,23 @@ class CalendarDialog(context: Context, theme: Int) : Dialog(context, theme) {
             return dialog
         }
 
-        fun getCalendar(dateForCurrentMonth: Date){
-            calendarAdapter = CalendarAdapter(context, JWBaseActivity().getCalendar(dateForCurrentMonth), selectedDate, R.layout.dialog_calendar_cell)
+        private fun getCalendar(dateForCurrentMonth: Date) {
+            calendarAdapter = CalendarAdapter(mContext, JWBaseActivity().getCalendar(dateForCurrentMonth), selectedDate, R.layout.dialog_calendar_cell)
             gridView.adapter = calendarAdapter
         }
     }
 
 
-
-
     /**
      * 캘린더 다이얼로그
      */
-    fun showDialogCalendar(context: Context, date: String?): CalendarDialog? {
-        if (context is Activity) {
-            val activity = context as Activity?
+    fun showDialogCalendar(mContext: Context, date: String?): CalendarDialog? {
+        return showDialogCalendar(mContext, date, false)
+    }
+
+    fun showDialogCalendar(mContext: Context, date: String?, future: Boolean): CalendarDialog? {
+        if (mContext is Activity) {
+            val activity = mContext as Activity?
 
             if (activity!!.isFinishing || activity.isDestroyed) {
                 return null
@@ -223,15 +229,15 @@ class CalendarDialog(context: Context, theme: Int) : Dialog(context, theme) {
         }
 
 
-        val builder = CalendarDialog.Builder(context)
+        val builder = CalendarDialog.Builder(mContext, future)
         if (date != null)
             builder.setDate(date)
-        val dialog = builder.create()
-        return dialog
+        return builder.create()
     }
-
-
 }
+
+
+
 
 
 
