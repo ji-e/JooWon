@@ -80,8 +80,11 @@
     <string name="worker_vacation_start_date">휴가 시작 기간</string>
     <string name="worker_vacation_end_date">휴가 마지막 기간</string>
     <string name="worker_vacation_content">휴가 내용</string>
+    <string name="worker_vacation_content2">연/월차 사용</string>
     <string name="worker_vacation_nothing">검색 결과가 없습니다.</string>
     <string name="worker_vacation_use_vacation">사용 예정 휴가 개수: %s 개</string>
     <string name="worker_vacation_hint">이름/휴대폰번호를 입력해주세요.</string>
+    <string name="worker_vacation_hint2">휴가 내용을 입력해주세요.</string>
     <string name="worker_vacation_dialog">휴가 시작 날짜 이후로 선택해주세요.</string>
+
 </resources>

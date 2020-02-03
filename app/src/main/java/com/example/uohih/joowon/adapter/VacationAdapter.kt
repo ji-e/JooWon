@@ -1,30 +1,51 @@
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.LogUtil
-import com.example.uohih.joowon.base.SizeConverter
 
 class VacationAdapter(mContext: Context, private val list: List<String>) : BaseAdapter() {
     private val mContext = mContext
     private lateinit var viewHolder: ViewHolder
 
-    /** 아이템 높이 리스너 ------*/
-    private lateinit var getItemHeightListener: GetItemHeightListener
+    /** 휴가 등록 리스너 ------*/
+    private lateinit var vacationAdapterListener: VacationAdapterListener
 
-    interface GetItemHeightListener {
+    interface VacationAdapterListener {
         fun getItemHeight(height: Int)
+        fun getVacationCnt(mCheckBoxList: ArrayList<Boolean>, cnt: Double)
     }
 
-    fun setGetItemHeightListener(getItemHeightListener: GetItemHeightListener) {
-        this.getItemHeightListener = getItemHeightListener
+    fun setVacationAdapterListener(vacationAdapterListener: VacationAdapterListener) {
+        this.vacationAdapterListener = vacationAdapterListener
     }
 
-    private lateinit var setVacationCnt: ArrayList<String>
-    private var setCheckBox= ArrayList<Boolean>(count)
+
+    // 반차 체크박스 리스트
+    private var mCheckBoxList = arrayListOf<Boolean>()
+
+    /**
+     * 휴가 개수 가져오기
+     */
+    private fun getVacationCnt(): Double {
+        var cnt = 0.0
+        for (i in 0 until count) {
+            if (mCheckBoxList[i]) cnt += 0.5
+            else cnt ++
+        }
+        return cnt
+    }
+
+    /**
+     * 휴가 체크박스 리스트 가져오기
+     */
+    private fun getCheckBoxList():ArrayList<Boolean>{
+        return mCheckBoxList
+    }
+
+
 
     override fun getCount(): Int {
         return list.size
@@ -49,29 +70,29 @@ class VacationAdapter(mContext: Context, private val list: List<String>) : BaseA
             viewHolder.mCnt = convertView.findViewById(R.id.item_vacation_cnt)
             viewHolder.mCheck = convertView.findViewById(R.id.item_vacation_check)
 
-
             convertView.tag = viewHolder
         } else {
             viewHolder = convertView.tag as ViewHolder
         }
 
-
-//        for(i in 0 until count){
-//            setCheckBox[i] = false
-//        }
-
-        viewHolder.mDate.text = list[position]
-
-        viewHolder.mCheck.setOnCheckedChangeListener { compoundButton, b ->
-           setCheckBox[position] = b
+        for(i in 0 until count){
+            mCheckBoxList.add(false)
         }
 
-        if(setCheckBox[position])viewHolder.mCnt.text = "0.5"
+        viewHolder.mDate.text = list[position]
+        viewHolder.mCheck.isChecked = mCheckBoxList[position]
+        if(mCheckBoxList[position])viewHolder.mCnt.text = "0.5"
         else viewHolder.mCnt.text = "1.0"
+
+        viewHolder.mCheck.setOnCheckedChangeListener { compoundButton, b ->
+            mCheckBoxList[position] = b
+            vacationAdapterListener.getVacationCnt(getCheckBoxList(), getVacationCnt())
+            notifyDataSetChanged()
+        }
 
         viewHolder.mLayout.viewTreeObserver.addOnGlobalLayoutListener {
             var height = viewHolder.mLayout.height
-            getItemHeightListener.getItemHeight((height + 2) * count)
+            vacationAdapterListener.getItemHeight((height + 2) * count)
         }
 
         convertView?.tag = viewHolder

@@ -26,7 +26,7 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
     val tableNameVacationJW = "tb_vacation_jw"
 
     override fun onCreate(db: SQLiteDatabase) {
-        val queryCreate = "create table $tableNameWorkerJW (no integer primary key autoincrement, name, joinDate integer, phone, use integer, total integer, picture)"
+        val queryCreate = "create table $tableNameWorkerJW (no integer primary key autoincrement, name, joinDate integer, phone, use, total, picture)"
         db.execSQL(queryCreate)
     }
 
@@ -43,7 +43,7 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
         val db = writableDatabase
         val queryDrop = "drop table $tableNameWorkerJW"
         db.execSQL(queryDrop)
-        val queryCreate = "create table $tableNameWorkerJW (no integer primary key autoincrement, name, joinDate integer, phone, use integer, total integer, picture )"
+        val queryCreate = "create table $tableNameWorkerJW (no integer primary key autoincrement, name, joinDate integer, phone, use, total, picture )"
         db.execSQL(queryCreate)
         db.close()
     }
@@ -57,12 +57,12 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
      * phone: String: 핸드폰번호
      * date: Integer: 휴가 날짜
      * content: String: 휴가 내용
-     * use: Integer: 사용한 휴가 개수
-     * total: Integer: 총 휴가 개수
+     * use: String: 사용한 휴가 개수
+     * total: String: 총 휴가 개수
      */
     fun createVacationTable() {
         val db = writableDatabase
-        val queryCreate = "CREATE TABLE IF NOT EXISTS $tableNameVacationJW (no integer primary key autoincrement, name, phone, date integer, content, use integer, total integer)"
+        val queryCreate = "CREATE TABLE IF NOT EXISTS $tableNameVacationJW (no integer primary key autoincrement, name, phone, date integer, content, use, total)"
         LogUtil.d(queryCreate)
         db.execSQL(queryCreate)
         db.close()

@@ -2,15 +2,16 @@ package com.example.uohih.joowon.vacation
 
 import VacationAdapter
 import VacationSearchAdapter
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.media.ExifInterface
 import android.os.Bundle
 import android.text.Editable
-import android.text.LoginFilter
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView.OnItemClickListener
+import android.widget.CheckBox
 import android.widget.ListView
 import android.widget.TextView
 import com.bumptech.glide.Glide
@@ -21,24 +22,26 @@ import com.example.uohih.joowon.adapter.StaffData
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.base.LogUtil
-import com.example.uohih.joowon.base.SizeConverter
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.view.CalendarDialog
 import com.example.uohih.joowon.view.CustomDialog
 import kotlinx.android.synthetic.main.activity_vacation.*
-import kotlinx.android.synthetic.main.list_item_vacation.*
 import java.io.IOException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class VacationActivity : JWBaseActivity(), View.OnClickListener {
+    private val dbHelper = DBHelper(this)
 
     // 리스트 뷰
     private var mainList = arrayListOf<StaffData>()
-    private var subList = arrayListOf<StaffData>(
-    )
+    private var subList = arrayListOf<StaffData>()
+    private val vacationList = arrayListOf<String>()
+    private var checkBoxList = arrayListOf<Boolean>(false)
+
     private val todayJson = getToday().get("yyyymmdd").toString()
     private val base = JWBaseApplication()
 
@@ -48,8 +51,9 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
         CustomDialog(this, android.R.style.Theme_Material_Dialog_MinWidth)
     }
 
-    private lateinit var cntSchedule: String //사용예정휴가개수
-    private var cntRemain = 0.0              //남은휴가개수
+    private var cntSchedule = 0.0           //사용예정휴가개수
+    private var cntRemain = 0.0             //남은휴가개수
+    private lateinit var cntTotal: String   //총휴가개수
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,7 +124,11 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
             vacation_tv_join.text = subList[p2].joinDate.toString()
             vacation_tv_phone.text = subList[p2].phone
             vacation_tv_vacation.text = subList[p2].use + "/" + subList[p2].total
-            cntRemain = (subList[p2].total.toDouble() - subList[p2].total.toDouble())
+            cntRemain = (subList[p2].total.toDouble() - subList[p2].use.toDouble())
+            cntTotal = subList[p2].total
+
+            val imm= getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(vacation_edt_name.windowToken, 0)
 
         }
 
@@ -133,7 +141,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
         vacation_tv_endD.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(todayJson, "$1-$2-$3")
         vacation_btn_endC.setOnClickListener(this)
 
-        cntSchedule = (calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString())).toString()
+        cntSchedule = (calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString()))
         vacation_tv_use_vc.text = String.format(getString(R.string.worker_vacation_use_vacation), cntSchedule)
 
         // 하단 등록 버튼
@@ -171,6 +179,8 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
             R.id.vacation_btn_bottom -> {
                 if(validation()){
                     //todo
+                    LogUtil.e("True")
+                    setVacationRegister()
                 }
             }
 
@@ -216,19 +226,17 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
     /**
      * 날짜 사이 평일 수 구하기
      */
-    private fun calDateBetweenAandB(date1: String, date2: String): Int {
+    private fun calDateBetweenAandB(date1: String, date2: String): Double {
         try {
-            val vacationList = arrayListOf<String>()
+            vacationList.clear()
             val mVacationAdapter by lazy { VacationAdapter(this, vacationList) }
             val sdf = SimpleDateFormat("yyyy-MM-dd")
             val start = Calendar.getInstance()
             val end = Calendar.getInstance()
-            var workingDays = 0
+            var workingDays = 0.0
 
             start.time = sdf.parse(date1)
             end.time = sdf.parse(date2)
-
-
 
             while (!start.after(end)) {
                 val day = start.get(Calendar.DAY_OF_WEEK)
@@ -241,12 +249,18 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
             }
 
             vacation_listview.adapter = mVacationAdapter
-            mVacationAdapter.setGetItemHeightListener(object : VacationAdapter.GetItemHeightListener{
+            mVacationAdapter.setVacationAdapterListener(object : VacationAdapter.VacationAdapterListener{
                 override fun getItemHeight(height: Int) {
                     val params = vacation_listview.layoutParams
                     params.height = height
                     vacation_listview.layoutParams = params
                     vacation_listview.requestLayout()
+                }
+
+                override fun getVacationCnt(mCheckBoxList: ArrayList<Boolean>, cnt: Double) {
+                    vacation_tv_use_vc.text = String.format(getString(R.string.worker_vacation_use_vacation), cnt)
+                    workingDays = cnt
+                    checkBoxList = mCheckBoxList
                 }
             })
 
@@ -257,7 +271,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
 
         } catch (e: ParseException) {
             LogUtil.e(e)
-            return 0
+            return 0.0
         }
     }
 
@@ -278,17 +292,9 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
                 }
             }
             mTv.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(base.getSeleteDate(), "$1-$2-$3")
-            cntSchedule = (calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString()).toString())
+            cntSchedule = calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString())
             vacation_tv_use_vc.text = String.format(getString(R.string.worker_vacation_use_vacation), cntSchedule)
         }
-    }
-
-
-    /**
-     * 휴가 날짜 선택 후 set
-     */
-    private fun setVacation(){
-
     }
 
 
@@ -296,12 +302,40 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
      * 검증
      */
     private fun validation(): Boolean {
+        if(vacation_edt_content.text.isNullOrEmpty())
+            vacation_edt_content.setText(getString(R.string.worker_vacation_content2))
+
         // 휴가 개수 확인
-//        if()
-
-
-
+        if(cntRemain < cntSchedule) return false
         return true
+    }
+
+    private fun setVacationRegister() {
+        val name = vacation_tv_name.text.toString()
+        val phone = vacation_tv_phone.text.toString().replace("-", "")
+        val content = vacation_edt_content.text.toString()
+        val joinDate = vacation_tv_join.text.toString().replace("-", "")
+
+        val cursor = dbHelper.selectWorker(name, phone.replace("-", ""))
+        cursor.moveToFirst()
+        val bitmap = cursor.getString(6)
+        var use = cursor.getString(4).toString()
+        val no = cursor.getInt(0).toString()
+
+        for (i in 0 until vacationList.size) {
+            val date = vacationList[i].replace("-", "")
+            val cntUse by lazy {
+                if (checkBoxList[i]) "0.5"
+                else "1.0"
+            }
+
+            use = (use.toDouble() - cntUse.toDouble()).toString()
+
+            dbHelper.insert(dbHelper.tableNameVacationJW, "name", "phone", "date", "content", "use", "total",
+                    name, phone, date, content, cntUse, cntTotal)
+
+            dbHelper.update(dbHelper.tableNameWorkerJW, name, joinDate, phone, use, cntTotal, bitmap, no)
+        }
     }
 
 
