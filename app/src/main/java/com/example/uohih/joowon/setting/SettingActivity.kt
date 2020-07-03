@@ -25,8 +25,8 @@ class SettingActivity : JWBaseActivity() {
     fun btnOnClick(v: View) {
         when (v) {
             setting_layout_password -> {
-//                val intent = Intent(this, PasswordSettingActivity::class.java)
-//                startActivity(intent)
+                val intent = Intent(this, PasswordSettingActivity::class.java)
+                startActivity(intent)
             }
             setting_layout_excel2 -> {
                 val exportExcel=ExportExcel(this)

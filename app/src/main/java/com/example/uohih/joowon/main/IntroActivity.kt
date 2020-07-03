@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_intro.*
  * 2초 후 MainListActivity()로 이동
  */
 class IntroActivity : JWBaseActivity() {
-    lateinit var mListener: mPermissionListener
+    private lateinit var mListener: PermissionListener
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,8 +29,6 @@ class IntroActivity : JWBaseActivity() {
 
         //step1
         permissionCheck()
-
-
     }
 
     /**
@@ -58,7 +56,7 @@ class IntroActivity : JWBaseActivity() {
         if (!arrayList.isEmpty()) {
             ActivityCompat.requestPermissions(this, arry, 0)
 
-            setmPermissionListener(object : mPermissionListener {
+            setmPermissionListener(object : PermissionListener {
                 override fun onFail() {
                     finish()
                 }
@@ -88,7 +86,7 @@ class IntroActivity : JWBaseActivity() {
 
             //설정된 비밀번호가 존재할 경우
             if ("" != getPreference(Constants.passwordSetting)) {
-                var intent = Intent(this, PasswordCheckActivity::class.java)
+                val intent = Intent(this, PasswordCheckActivity::class.java)
                 startActivityForResult(intent, Constants.passwordCheck)
             }
             //설정된 비밀번호가 존재하지 않을 경우
@@ -102,7 +100,7 @@ class IntroActivity : JWBaseActivity() {
         val dbHelper = DBHelper(this)
 //        LogUtil.d(dbHelper.getTableExiste(dbHelper.tableNameVacationJW).count)
 //        if (dbHelper.getTableExiste(dbHelper.tableNameVacationJW).count <= 0)
-            dbHelper.createVacationTable()
+        dbHelper.createVacationTable()
 
         val intent = Intent(this, MainListActivity::class.java)
         startActivity(intent)
@@ -137,13 +135,16 @@ class IntroActivity : JWBaseActivity() {
         }
     }
 
-    interface mPermissionListener {
+    interface PermissionListener {
         fun onFail()
         fun onSuccess()
     }
 
-    fun setmPermissionListener(listener: mPermissionListener) {
+    private fun setmPermissionListener(listener: PermissionListener) {
         mListener = listener
     }
+
     /** ----------- permission check end ----------*/
+
+
 }

@@ -195,7 +195,7 @@ class ExportExcel(mContext: Context) {
                         }
                     }
                 }
-                dataListWorker.add(WorkerData(no.toInt(), name, joinDate.toInt(), phone, use.toInt(), total.toInt(), picture))
+                dataListWorker.add(WorkerData(no.toInt(), name, joinDate.toInt(), phone, use.toDouble(), total.toDouble(), picture))
                 LogUtil.d(dataListWorker)
             }
         }
@@ -258,7 +258,7 @@ class ExportExcel(mContext: Context) {
                 LogUtil.d(cursor.getString(0) + "  :   " + cursor.getString(1) + "  :   " + cursor.getString(2) + "  :   "
                         + cursor.getString(3) + "  :   " + cursor.getString(4) + "  :   " + cursor.getString(5) + "  :   " + cursor.getString(6))
                 dataListWorker.add(WorkerData(cursor.getInt(0), cursor.getString(1), cursor.getInt(2),
-                        cursor.getString(3), cursor.getInt(4), cursor.getInt(5), cursor.getString(6)))
+                        cursor.getString(3), cursor.getDouble(4), cursor.getDouble(5), cursor.getString(6)))
             }
         }
 
@@ -269,7 +269,7 @@ class ExportExcel(mContext: Context) {
                 LogUtil.d(cursor.getString(0) + "  :   " + cursor.getString(1) + "  :   " + cursor.getString(2) + "  :   "
                         + cursor.getString(3) + "  :   " + cursor.getString(4) + "  :   " + cursor.getString(5) + "  :   " + cursor.getString(6))
                 dataListVacation.add(VacationData(cursor.getInt(0), cursor.getString(1), cursor.getString(2),
-                        cursor.getInt(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6)))
+                        cursor.getInt(3), cursor.getString(4), cursor.getDouble(5), cursor.getDouble(6)))
             }
         }
     }

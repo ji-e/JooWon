@@ -2,21 +2,35 @@ package com.example.uohih.joowon.main
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.JWBaseApplication
-import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.MainListAdapter
 import com.example.uohih.joowon.adapter.StaffData
 import com.example.uohih.joowon.base.BackPressCloseHandler
+import com.example.uohih.joowon.base.JWBaseActivity
+import com.example.uohih.joowon.base.JWBaseApplication
+import com.example.uohih.joowon.base.LogUtil
+import com.example.uohih.joowon.database.DBHelper
+import com.example.uohih.joowon.setting.SettingActivity
 import com.example.uohih.joowon.worker.WorkerInsertActivity
+import com.kakao.kakaolink.v2.KakaoLinkResponse
+import com.kakao.kakaolink.v2.KakaoLinkService
+import com.kakao.message.template.ButtonObject
+import com.kakao.message.template.ContentObject
+import com.kakao.message.template.FeedTemplate
+import com.kakao.message.template.LinkObject
+import com.kakao.message.template.SocialObject
+import com.kakao.network.ErrorResult
+import com.kakao.network.callback.ResponseCallback
 import kotlinx.android.synthetic.main.activity_main_list.*
+
+//import sun.jvm.hotspot.utilities.IntArray
+//import javax.swing.UIManager.put
+
 
 class MainListActivity : JWBaseActivity() {
     private val base = JWBaseApplication()
-    val dbHelper = DBHelper(this)
+    private val dbHelper = DBHelper(this)
 
     private lateinit var mAadapter: MainListAdapter
 
@@ -36,8 +50,21 @@ class MainListActivity : JWBaseActivity() {
 
 
         main_list_btn_plus.setOnClickListener {
-            var intent = Intent(this, WorkerInsertActivity::class.java)
+            val intent = Intent(this, WorkerInsertActivity::class.java)
             startActivity(intent)
+        }
+
+        val boardId = if (intent.action == Intent.ACTION_VIEW)
+            intent.data.getQueryParameter("key").toString()
+        else ""
+        LogUtil.e(boardId)
+
+        if ("setting" == boardId) {
+            val intent = Intent(this, SettingActivity::class.java)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+//            finish()
+
         }
     }
 
@@ -45,6 +72,8 @@ class MainListActivity : JWBaseActivity() {
     override fun onResume() {
         super.onResume()
         setData()
+
+
     }
 
     override fun onBackPressed() {
