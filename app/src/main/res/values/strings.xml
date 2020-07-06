@@ -41,15 +41,16 @@
 
     <!--PasswordCheckActivity-->
     <string name="pwcheck_text01">비밀번호를 입력해주세요.</string>
-    <string name="pwcheck_text02">비밀번호가 일치하지 않습니다.\n다시 한 번 입력해주세요.</string>
+    <string name="pwcheck_text02">비밀번호가 일치하지 않습니다.\n다시 입력해주세요.</string>
 
     <!--PasswordSettingActivity-->
     <string name="pwsetting_text01">사용하실 비밀번호를 입력해주세요.</string>
     <string name="pwsetting_text02">사용하실 비밀번호를 다시 한 번 입력해주세요.</string>
+    <string name="pwsetting_text03">기존과 같은 비밀번호를 사용할 수 없습니다.\n다시 입력해주세요.</string>
     <string name="pwsetting_text_complete">비밀번호 설정이 완료되었습니다.</string>
-    <string name="pwsetting_text_inconsistency">입력하신 비밀번호와 일치 하지 않습니다.</string>
+    <string name="pwsetting_text_inconsistency">입력하신 비밀번호와 일치하지 않습니다.</string>
     <string name="pwsetting_text_confirm">기존의 비밀번호를 입력해주세요.</string>
-    <string name="pwsetting_text_cInconsistency">비밀번호가 일치 하지 않습니다.</string>
+    <string name="pwsetting_text_cInconsistency">비밀번호가 일치하지 않습니다.</string>
 
     <!--SettingResetActivity-->
     <string name="reset_title">초기화</string>

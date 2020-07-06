@@ -38,4 +38,22 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/keypad_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/dp20"
+            android:layout_height="@dimen/dp20"
+            android:src="@drawable/btn_refresh" />
+
+    </RelativeLayout>
+
+
 </RelativeLayout>

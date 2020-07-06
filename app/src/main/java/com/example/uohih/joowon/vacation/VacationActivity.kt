@@ -28,6 +28,7 @@ import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.view.CalendarDialog
 import com.example.uohih.joowon.view.CustomDialog
 import kotlinx.android.synthetic.main.activity_vacation.*
+import kotlinx.android.synthetic.main.inflater_vacation.*
 import java.io.IOException
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -128,6 +129,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
                 vacation_btn_delete1.visibility = View.GONE
                 vacation_sv.visibility = View.GONE
                 vacation_ly_search.visibility = View.VISIBLE
+                vacation_btn_bottom.visibility = View.GONE
             }
 
             vacation_edt_name.setSelection(vacation_edt_name.text.length)
@@ -140,6 +142,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
         override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
             vacation_sv.visibility = View.VISIBLE
             vacation_ly_search.visibility = View.GONE
+            vacation_btn_bottom.visibility = View.VISIBLE
 
             val bitmap = subList[p2].picture
             if (bitmap != "") {
@@ -224,6 +227,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
     private fun setSearch(charText: String) {
         vacation_sv.visibility = View.GONE
         vacation_ly_search.visibility = View.VISIBLE
+        vacation_btn_bottom.visibility = View.GONE
 
         subList.clear()
         for (i in 0 until mainList.size) {

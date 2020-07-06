@@ -41,8 +41,6 @@ open class JWBaseActivity : AppCompatActivity() {
         val arrayList = ArrayList<String>()
         val randomList = ArrayList<String>()
 
-
-
         for (i in 0 until 12) {
             when (i) {
                 9 -> arrayList.add("왼")
@@ -50,38 +48,28 @@ open class JWBaseActivity : AppCompatActivity() {
                 11 -> arrayList.add("오")
                 else -> arrayList.add((i + 1).toString())
             }
-            randomList.add(i.toString())
         }
 
         arrayList.shuffle()
         var tempIndex = 0
+        var index10 = ""
         for (i in 0 until 12) {
 
             val temp = arrayList[i]
-            if (temp == "왼") {
-                if (i == 10) {
-                    randomList.add(tempIndex++, temp)
-                } else {
-                    randomList.add(9, "왼")
-                }
-
-            } else if (temp == "오") {
-                randomList.add(11, "오")
-
-            } else {
+            if (temp != "왼" && temp != "오") {
                 if (tempIndex == 9) {
                     tempIndex++
                 } else {
                     randomList.add(tempIndex++, temp)
                 }
-
+                index10 = temp
             }
 
         }
+        randomList.add(9, "왼")
+        randomList.add(10, index10)
+        randomList.add(11, "오")
 
-        for (i in 0 until 12) {
-            LogUtil.e(i, arrayList[i], randomList[i])
-        }
         return randomList
     }
 

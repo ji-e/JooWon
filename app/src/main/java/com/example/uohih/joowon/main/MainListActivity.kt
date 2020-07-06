@@ -13,15 +13,6 @@ import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.setting.SettingActivity
 import com.example.uohih.joowon.worker.WorkerInsertActivity
-import com.kakao.kakaolink.v2.KakaoLinkResponse
-import com.kakao.kakaolink.v2.KakaoLinkService
-import com.kakao.message.template.ButtonObject
-import com.kakao.message.template.ContentObject
-import com.kakao.message.template.FeedTemplate
-import com.kakao.message.template.LinkObject
-import com.kakao.message.template.SocialObject
-import com.kakao.network.ErrorResult
-import com.kakao.network.callback.ResponseCallback
 import kotlinx.android.synthetic.main.activity_main_list.*
 
 //import sun.jvm.hotspot.utilities.IntArray

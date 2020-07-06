@@ -15,7 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".setting.PasswordSettingActivity"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -34,27 +33,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.MainListActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="@string/kakaolink_host"
-                    android:scheme="@string/kakao_scheme" />
-            </intent-filter>
-        </activity>
-
-        <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="@string/kakao_app_key" />
-
+        <activity android:name=".main.MainListActivity" />
         <activity android:name=".worker.WorkerInsertActivity" />
         <activity android:name=".main.PictureActivity" />
         <activity android:name=".worker.WorkerMainActivity" />
         <activity android:name=".setting.SettingActivity" />
+        <activity android:name=".setting.PasswordSettingActivity"></activity>
+        <activity android:name=".setting.PasswordCheckActivity"></activity>
         <activity
             android:name=".vacation.VacationActivity"
             android:windowSoftInputMode="adjustNothing" />

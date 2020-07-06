@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.KeyPadAdapter
@@ -20,7 +21,9 @@ class PasswordSettingActivity : JWBaseActivity() {
     private val mIvPwResId = intArrayOf(R.id.iv_pin0, R.id.iv_pin1, R.id.iv_pin2, R.id.iv_pin3, R.id.iv_pin4, R.id.iv_pin5)
     private var mIvPw = arrayOfNulls<ImageView>(mIvPwResId.size)
 
-    private var str: String = ""
+    private var tempPw = ""
+    private var firstPw = ""
+    private var resetPw = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,19 +34,31 @@ class PasswordSettingActivity : JWBaseActivity() {
     }
 
     private fun initView() {
+        resetPw = getPreference(Constants.passwordSetting)
+        if (resetPw.isNotEmpty()) {
+            pwcheck_tv.text = getString(R.string.pwsetting_text_confirm)
+        } else {
+            pwcheck_tv.text = getString(R.string.pwsetting_text01)
+        }
+
         keypad_grid.adapter = mAadapter
         /**
          * 키패드 클릭 리스너
          */
         mAadapter.setKeyPadListener(object : KeyPadAdapter.KeyPadListener {
             override fun onEraserClickEvent() {
-                str = removeLastChar()
-                pwcheck_input.text = str
+                tempPw = removeLastChar()
+                pwcheck_input.text = tempPw
             }
 
             override fun onNumClickEvent(index: String) {
-                str += index
-                pwcheck_input.text = str
+                tempPw += index
+                pwcheck_input.text = tempPw
+            }
+
+            override fun onRefreshClickEvent() {
+                tempPw = ""
+                pwcheck_input.text = tempPw
             }
         })
 
@@ -56,7 +71,6 @@ class PasswordSettingActivity : JWBaseActivity() {
         for (i in mIvPwResId.indices) {
             val view: ImageView = pwcheck_linear_pin_input.findViewById(mIvPwResId[i])
             mIvPw[i] = view
-            LogUtil.d(mIvPw[i].toString())
         }
 
 
@@ -113,31 +127,52 @@ class PasswordSettingActivity : JWBaseActivity() {
      * 지움 버튼 클릭시 마지막 글자 지움
      */
     private fun removeLastChar(): String {
-        if (str.isNotEmpty()) {
-            return str.substring(0, str.length - 1)
+        if (tempPw.isNotEmpty()) {
+            return tempPw.substring(0, tempPw.length - 1)
         }
-        return str
+        return tempPw
     }
 
     /**
      * 비밀 번호 6자리 입력시
      */
     fun setPassword() {
-        LogUtil.d(str)
-        val pw = getPreference(Constants.passwordSetting)
-        if (pw == str) {
-//            if (reset) {
-//                setPreference(Constants.passwordSetting, "")
-//                Toast.makeText(this, resources.getString(R.string.reset_msg), Toast.LENGTH_SHORT).show()
-//            } else
-            setResult(Activity.RESULT_OK)
-            finish()
-        } else {
-            pwcheck_tv.text = getString(R.string.pwcheck_text02)
+        // 비밀번호 재설정
+        if (resetPw.isNotEmpty()) {
+            if (resetPw == tempPw) {
+                pwcheck_tv.text = getString(R.string.pwsetting_text01)
+                resetPw = ""
+            } else {
+                pwcheck_tv.text = getString(R.string.pwcheck_text02)
+            }
             pwcheck_input.text = ""
-            str = ""
+            tempPw = ""
+            return
         }
+
+        if (firstPw.isEmpty()) {
+            if (tempPw == getPreference(Constants.passwordSetting)) {
+                // 기존과 같은 비밀번호를 입력시
+                pwcheck_tv.text = getString(R.string.pwsetting_text03)
+            } else {
+                firstPw = tempPw
+                pwcheck_tv.text = getString(R.string.pwsetting_text02)
+            }
+            pwcheck_input.text = ""
+        } else {
+            if (firstPw == tempPw) {
+                setPreference(Constants.passwordSetting, firstPw)
+                Toast.makeText(this, resources.getString(R.string.pwsetting_text_complete), Toast.LENGTH_SHORT).show()
+                setResult(Activity.RESULT_OK)
+                finish()
+            } else {
+                pwcheck_tv.text = getString(R.string.pwsetting_text_cInconsistency)
+                pwcheck_input.text = ""
+                firstPw = ""
+            }
+
+        }
+
+        tempPw = ""
     }
-
-
 }

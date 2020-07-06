@@ -85,7 +85,7 @@ class IntroActivity : JWBaseActivity() {
             LogUtil.d((getPreference(Constants.passwordSetting)))
 
             //설정된 비밀번호가 존재할 경우
-            if ("" != getPreference(Constants.passwordSetting)) {
+            if (getPreference(Constants.passwordSetting).isNotEmpty()) {
                 val intent = Intent(this, PasswordCheckActivity::class.java)
                 startActivityForResult(intent, Constants.passwordCheck)
             }
