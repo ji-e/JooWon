@@ -187,7 +187,7 @@ class CalendarDialog(mContext: Context, theme: Int) : Dialog(mContext, theme) {
              */
             contentView.calendar_btn_confirm.setOnClickListener {
                 val base = JWBaseApplication()
-                base.setSeleteDate(sdf.format(selectedDate))
+                base.setSelectDate(sdf.format(selectedDate))
                 dialog.dismiss()
             }
 

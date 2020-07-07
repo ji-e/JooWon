@@ -9,35 +9,30 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.example.uohih.joowon.view.CalendarDayInfo
+import com.example.uohih.joowon.view.CustomLoadingBar
 import org.json.JSONObject
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 open class JWBaseActivity : AppCompatActivity() {
 
-    var mContext: Context? = null
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mContext = applicationContext
-//        setContentView(R.layout.activity_intro)
-    }
+    val mContext: Context by lazy { applicationContext }
 
 
     /**
      * 앱 버전 정보 가져오기
      */
     fun getVersionInfo(): String {
-        val info: PackageInfo? = mContext?.packageManager?.getPackageInfo(mContext?.packageName, 0)
+        val info: PackageInfo? = mContext.packageManager.getPackageInfo(mContext.packageName, 0)
         return info?.versionName.toString()
     }
 
     /**
      * 키패드 데이터 세팅
      */
-    fun setkeyPadData(): ArrayList<String> {
+    fun setKeyPadData(): ArrayList<String> {
         val arrayList = ArrayList<String>()
         val randomList = ArrayList<String>()
 
@@ -78,9 +73,8 @@ open class JWBaseActivity : AppCompatActivity() {
      */
     fun setPreference(key: String, str: String) {
         val pref = getSharedPreferences(key, MODE_PRIVATE)
-        var editor = pref.edit()
-        editor.putString(key, str)
-        editor.commit()
+        val editor = pref.edit().apply { putString(key, str) }
+        editor.apply()
     }
 
     /**
@@ -115,7 +109,7 @@ open class JWBaseActivity : AppCompatActivity() {
      * return JSONObject
      */
     fun getToday(date: String?): JSONObject {
-        var jsonCalendar = JSONObject()
+        val jsonCalendar = JSONObject()
         val instance = Calendar.getInstance()
         if (date != null) {
             instance.set(date.substring(0, 4).toInt(), date.substring(4, 6).toInt() - 1, date.substring(6).toInt())
@@ -124,9 +118,9 @@ open class JWBaseActivity : AppCompatActivity() {
         //현재 년도
         val year = instance.get(Calendar.YEAR).toString()
         //현재 월
-        var month = String.format("%02d", (instance.get(Calendar.MONTH) + 1))
+        val month = String.format("%02d", (instance.get(Calendar.MONTH) + 1))
         //현재 날짜
-        var date = String.format("%02d", instance.get(Calendar.DAY_OF_MONTH))
+        val date = String.format("%02d", instance.get(Calendar.DAY_OF_MONTH))
         //현재 월의 주
         val week = instance.get(Calendar.WEEK_OF_MONTH).toString()
         //현재 요일
@@ -241,6 +235,25 @@ open class JWBaseActivity : AppCompatActivity() {
 
         return arrayListDayInfo
 
+    }
+
+    /**
+     * show loading
+     */
+    fun showLoading() {
+        CustomLoadingBar.showLoadingBar(this)
+    }
+
+    /**
+     * hide loading
+     */
+    fun hideLoading() {
+        try {
+            LogUtil.e("<<<<<<<hideLoading>>>>>>")
+            CustomLoadingBar.hideLoadingBar()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 

@@ -2,6 +2,7 @@ package com.example.uohih.joowon.database
 
 import android.content.Context
 import android.widget.Toast
+import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.LogUtil
 import org.apache.poi.ss.usermodel.Font
 import org.apache.poi.ss.usermodel.IndexedColors
@@ -61,6 +62,7 @@ class ExportExcel(mContext: Context) {
      * 엑셀파일 만들기
      */
     fun makeExcelFile() {
+
         // 파일 존재 확인
         fileExists(false)
 
@@ -75,7 +77,7 @@ class ExportExcel(mContext: Context) {
         val workerHeaderRow = workerSheet.createRow(0)
 
 
-        for (i in 0 until workerColumns.size) {
+        for (i in workerColumns.indices) {
             val cell = workerHeaderRow.createCell(i)
             cell.setCellValue(workerColumns[i])
             cell.cellStyle = headerCellStyle
@@ -84,15 +86,14 @@ class ExportExcel(mContext: Context) {
 //        insertSheetData("worker")
 
         val vacationHeaderRow = vacationSheet.createRow(0)
-        for (i in 0 until vacationColumns.size) {
+        for (i in vacationColumns.indices) {
             val cell = vacationHeaderRow.createCell(i)
             cell.setCellValue(vacationColumns[i])
             cell.cellStyle = headerCellStyle
         }
-
         // 엑셀시트에 데이터 삽입
-
         insertSheetData()
+
     }
 
     /**
@@ -102,41 +103,48 @@ class ExportExcel(mContext: Context) {
         // DB 데이터 List로 가져오기
         SQLiteToList()
 
-        val dateCellStyle = workbook.createCellStyle()
-        dateCellStyle.dataFormat = createHelper.createDataFormat().getFormat("yyyy-mm-dd")
+        val asyncExecutor = AsyncExecutor(mContext)
+        asyncExecutor.setAsyncCallback(object : AsyncCallback {
+            override fun onPostExecute() {
+                writeExcelFile()
+            }
+
+            override fun doInBackground() {
+                val dateCellStyle = workbook.createCellStyle()
+                dateCellStyle.dataFormat = createHelper.createDataFormat().getFormat("yyyy-mm-dd")
 
 //        if (type == "worker") {
-            var rowNum = 1
-            for (data in dataListWorker) {
-                val row = workerSheet.createRow(rowNum++)
+                var rowNum = 1
+                for (data in dataListWorker) {
+                    val row = workerSheet.createRow(rowNum++)
 
-                row.createCell(0).setCellValue(data.no.toString())               //no
-                val dateCell = row.createCell(1)                      //name
-                dateCell.setCellValue(data.name)
-                dateCell.cellStyle = dateCellStyle
-                row.createCell(2).setCellValue(data.joinDate.toString())        //joinDate
-                row.createCell(3).setCellValue(data.phone)                      //phone
-                row.createCell(4).setCellValue(data.use.toString())             //use
-                row.createCell(5).setCellValue(data.total.toString())           //total
-                row.createCell(6).setCellValue(data.picture)                    //picture
-            }
-            workerSheet.setColumnWidth(1, 3000)
-            workerSheet.setColumnWidth(2, 4000)
+                    row.createCell(0).setCellValue(data.no.toString())               //no
+                    val dateCell = row.createCell(1)                      //name
+                    dateCell.setCellValue(data.name)
+                    dateCell.cellStyle = dateCellStyle
+                    row.createCell(2).setCellValue(data.joinDate.toString())        //joinDate
+                    row.createCell(3).setCellValue(data.phone)                      //phone
+                    row.createCell(4).setCellValue(data.use.toString())             //use
+                    row.createCell(5).setCellValue(data.total.toString())           //total
+                    row.createCell(6).setCellValue(data.picture)                    //picture
+                }
+                workerSheet.setColumnWidth(1, 3000)
+                workerSheet.setColumnWidth(2, 4000)
 //        } else {
-             rowNum = 1
-            for (data in dataListVacation) {
-                val row = vacationSheet.createRow(rowNum++)
+                rowNum = 1
+                for (data in dataListVacation) {
+                    val row = vacationSheet.createRow(rowNum++)
 
-                row.createCell(0).setCellValue(data.no.toString())               //no
-                val dateCell = row.createCell(1)                      //name
-                dateCell.setCellValue(data.name)
-                dateCell.cellStyle = dateCellStyle
-                row.createCell(2).setCellValue(data.phone)                      //phone
-                row.createCell(3).setCellValue(data.date.toString())            //date
-                row.createCell(4).setCellValue(data.content)                    //content
-                row.createCell(5).setCellValue(data.use.toString())             //use
-                row.createCell(6).setCellValue(data.total.toString())           //total
-            }
+                    row.createCell(0).setCellValue(data.no.toString())               //no
+                    val dateCell = row.createCell(1)                      //name
+                    dateCell.setCellValue(data.name)
+                    dateCell.cellStyle = dateCellStyle
+                    row.createCell(2).setCellValue(data.phone)                      //phone
+                    row.createCell(3).setCellValue(data.date.toString())            //date
+                    row.createCell(4).setCellValue(data.content)                    //content
+                    row.createCell(5).setCellValue(data.use.toString())             //use
+                    row.createCell(6).setCellValue(data.total.toString())           //total
+                }
 //            vacationSheet.setColumnWidth(1, 3000)
 //            vacationSheet.setColumnWidth(3, 4000)
 //            vacationSheet.setColumnWidth(4, 5000)
@@ -146,8 +154,12 @@ class ExportExcel(mContext: Context) {
 //        for (i in 0 until columns.size) {
 //            sheet.autoSizeColumn(i)
 //        }
-        writeExcelFile()
+            }
+        })
+        asyncExecutor.execute("excel")
+
     }
+
 
     /**
      * 엑셀 파일 쓰기
@@ -157,48 +169,56 @@ class ExportExcel(mContext: Context) {
         workbook.write(fileout)
         fileout.close()
         Toast.makeText(mContext, "엑셀로 내보내기가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+//        JWBaseActivity().hideLoading()
     }
 
     /**
      * 엑셀 파일 읽기
      */
     fun readExcelFile() {
-        if (!fileExists(true)) {
-            return
-        }
+        val asyncExecutor = AsyncExecutor(mContext)
+        asyncExecutor.setAsyncCallback(object : AsyncCallback {
+            override fun onPostExecute() {
+                Toast.makeText(mContext, "엑셀 가져오기가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+            }
 
-        val excelFile = FileInputStream(File(totalName))
-        val workbook = XSSFWorkbook(excelFile)
-        var sheet = workbook.getSheet("worker_sheet")
+            override fun doInBackground() {
+                if (!fileExists(true)) {
+                    return
+                }
 
-        for (rowIndex in 1 until sheet.physicalNumberOfRows) {
-            val row = sheet.getRow(rowIndex)
-            if (row != null) {
-                var no = ""
-                var name = ""
-                var joinDate = ""
-                var phone = ""
-                var use = "0"
-                var total = "15"
-                var picture = ""
-                for (columnIndex in 0 until row.physicalNumberOfCells) {
-                    val cell = row.getCell(columnIndex)
-                    if (cell != null) {
-                        when (columnIndex) {
-                            0 -> no = cell.stringCellValue
-                            1 -> name = cell.stringCellValue
-                            2 -> joinDate = cell.stringCellValue
-                            3 -> phone = cell.stringCellValue
-                            4 -> use = cell.stringCellValue
-                            5 -> total = cell.stringCellValue
-                            6 -> picture = cell.stringCellValue
+                val excelFile = FileInputStream(File(totalName))
+                val workbook = XSSFWorkbook(excelFile)
+                var sheet = workbook.getSheet("worker_sheet")
+
+                for (rowIndex in 1 until sheet.physicalNumberOfRows) {
+                    val row = sheet.getRow(rowIndex)
+                    if (row != null) {
+                        var no = ""
+                        var name = ""
+                        var joinDate = ""
+                        var phone = ""
+                        var use = "0"
+                        var total = "15"
+                        var picture = ""
+                        for (columnIndex in 0 until row.physicalNumberOfCells) {
+                            val cell = row.getCell(columnIndex)
+                            if (cell != null) {
+                                when (columnIndex) {
+                                    0 -> no = cell.stringCellValue
+                                    1 -> name = cell.stringCellValue
+                                    2 -> joinDate = cell.stringCellValue
+                                    3 -> phone = cell.stringCellValue
+                                    4 -> use = cell.stringCellValue
+                                    5 -> total = cell.stringCellValue
+                                    6 -> picture = cell.stringCellValue
+                                }
+                            }
                         }
+                        dataListWorker.add(WorkerData(no.toInt(), name, joinDate.toInt(), phone, use.toDouble(), total.toDouble(), picture))
+                        LogUtil.d(dataListWorker)
                     }
                 }
-                dataListWorker.add(WorkerData(no.toInt(), name, joinDate.toInt(), phone, use.toDouble(), total.toDouble(), picture))
-                LogUtil.d(dataListWorker)
-            }
-        }
 
 //        sheet = workbook.getSheet("vacation_sheet")
 //        for (rowIndex in 1 until sheet.physicalNumberOfRows) {
@@ -229,22 +249,26 @@ class ExportExcel(mContext: Context) {
 //                LogUtil.d(dataListVacation)
 //            }
 //        }
-        excelFile.close()
+                excelFile.close()
 
-        db.onReset()
+                db.onReset()
 
-        for (i in 0 until dataListWorker.size) {
-            db.insert(db.tableNameWorkerJW, "name", "joinDate", "phone", "use", "total", "picture",
-                    dataListWorker[i].name, dataListWorker[i].joinDate.toString(), dataListWorker[i].phone, dataListWorker[i].use.toString(), dataListWorker[i].total.toString(), dataListWorker[i].picture)
-        }
+                for (i in 0 until dataListWorker.size) {
+                    db.insert(db.tableNameWorkerJW, "name", "joinDate", "phone", "use", "total", "picture",
+                            dataListWorker[i].name, dataListWorker[i].joinDate.toString(), dataListWorker[i].phone, dataListWorker[i].use.toString(), dataListWorker[i].total.toString(), dataListWorker[i].picture)
+                }
 
-        for (i in 0 until dataListVacation.size) {
-            db.insert(db.tableNameVacationJW, "name", "phone", "date", "content", "use", "total",
-                    dataListVacation[i].name, dataListVacation[i].phone, dataListVacation[i].date.toString(), dataListVacation[i].content, dataListVacation[i].use.toString(), dataListVacation[i].total.toString())
-        }
+                for (i in 0 until dataListVacation.size) {
+                    db.insert(db.tableNameVacationJW, "name", "phone", "date", "content", "use", "total",
+                            dataListVacation[i].name, dataListVacation[i].phone, dataListVacation[i].date.toString(), dataListVacation[i].content, dataListVacation[i].use.toString(), dataListVacation[i].total.toString())
+                }
+
+            }
+        })
+
+        asyncExecutor.execute("excel")
 
 
-        Toast.makeText(mContext, "엑셀 가져오기가 완료되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
     /**

@@ -29,7 +29,7 @@
             android:layout_height="@dimen/dp90"
             android:layout_marginBottom="@dimen/dp10"
             android:background="@drawable/people"
-            android:onClick="btnOnClick" />
+            android:onClick="onClickWorkerMain" />
 
         <TextView
             android:id="@+id/tv_worker_name"
@@ -68,21 +68,21 @@
                 android:layout_width="@dimen/dp40"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_write_selector"
-                android:onClick="btnOnClick" />
+                android:onClick="onClickWorkerMain" />
 
             <ImageButton
                 android:id="@+id/btn_worker_list"
                 android:layout_width="@dimen/dp40"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_list_selector"
-                android:onClick="btnOnClick" />
+                android:onClick="onClickWorkerMain" />
 
             <ImageButton
                 android:id="@+id/btn_worker_calendar"
                 android:layout_width="@dimen/dp40"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_calendar_selector"
-                android:onClick="btnOnClick"
+                android:onClick="onClickWorkerMain"
                 android:visibility="gone" />
 
             <ImageButton
@@ -90,14 +90,14 @@
                 android:layout_width="@dimen/dp40"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_call_selector"
-                android:onClick="btnOnClick" />
+                android:onClick="onClickWorkerMain" />
 
             <ImageButton
                 android:id="@+id/btn_worker_setting"
                 android:layout_width="@dimen/dp40"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_setting_selector"
-                android:onClick="btnOnClick" />
+                android:onClick="onClickWorkerMain" />
         </LinearLayout>
     </LinearLayout>
 
@@ -146,14 +146,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_up_nor"
-            android:onClick="btnOnClick" />
+            android:onClick="onClickWorkerMain" />
 
         <ImageButton
             android:id="@+id/btn_worker_backm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_down_nor"
-            android:onClick="btnOnClick" />
+            android:onClick="onClickWorkerMain" />
 
 
         <!-- 년 -->
@@ -193,7 +193,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp05"
                 android:background="@drawable/btn_search_nor"
-                android:onClick="btnOnClick" />
+                android:onClick="onClickWorkerMain" />
         </RelativeLayout>
 
 

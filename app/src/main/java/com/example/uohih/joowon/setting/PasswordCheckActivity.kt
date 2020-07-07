@@ -12,24 +12,28 @@ import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.KeyPadAdapter
-import com.example.uohih.joowon.base.LogUtil
 import kotlinx.android.synthetic.main.activity_password_check.*
 
 /**
  * 비밀번호 확인
  */
 class PasswordCheckActivity : JWBaseActivity() {
-    private val mAadapter by lazy { KeyPadAdapter(this, setkeyPadData()) }
+    private val mAadapter by lazy { KeyPadAdapter(this, setKeyPadData()) }
 
     private val mIvPwResId = intArrayOf(R.id.iv_pin0, R.id.iv_pin1, R.id.iv_pin2, R.id.iv_pin3, R.id.iv_pin4, R.id.iv_pin5)
     private var mIvPw = arrayOfNulls<ImageView>(mIvPwResId.size)
 
     private var tempPw = ""
-    private var reset = false
+    private var reset = "N"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_password_check)
+
+        val arg = intent
+        if (arg !== null) {
+            reset = arg.getStringExtra("PW_RESET")
+        }
 
         initView()
     }
@@ -37,31 +41,13 @@ class PasswordCheckActivity : JWBaseActivity() {
     private fun initView() {
 
         keypad_grid.adapter = mAadapter
-        /**
-         * 키패드 클릭 리스너
-         */
-        mAadapter.setKeyPadListener(object : KeyPadAdapter.KeyPadListener {
-            override fun onEraserClickEvent() {
-                tempPw = removeLastChar()
-                pwcheck_input.text = tempPw
-            }
 
-            override fun onNumClickEvent(index: String) {
-                tempPw += index
-                pwcheck_input.text = tempPw
-            }
+        // 키패드 클릭 리스너
+        mAadapter.setKeyPadListener(KeyPadListener())
 
-            override fun onRefreshClickEvent() {
-                tempPw = ""
-                pwcheck_input.text = tempPw
-            }
+        // pin 입력 리스너
+        pwcheck_input.addTextChangedListener(PasswordTextWatcher())
 
-        })
-
-        // 핀 클릭 리스너
-        pwcheck_linear_pin_input.setOnClickListener {
-            pwcheck_input.text = ""
-        }
 
         // pin id 세팅
         for (i in mIvPwResId.indices) {
@@ -69,18 +55,16 @@ class PasswordCheckActivity : JWBaseActivity() {
             mIvPw[i] = view
         }
 
-
-        pwcheck_input.addTextChangedListener(PasswordTextWatcher())
-
-        pwcheck_close.setColorFilter(Color.parseColor("#FFFFFF"))
+//        pwcheck_close.setColorFilter(Color.parseColor("#FFFFFF"))
         pwcheck_img_lock.setColorFilter(Color.parseColor("#004680"))
 
     }
 
+
     /**
-     * 비밀번호 입력 할 때 마다 리스너
+     * pin 입력 리스너
      */
-    inner class PasswordTextWatcher : TextWatcher {
+    private inner class PasswordTextWatcher : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
         }
@@ -97,6 +81,42 @@ class PasswordCheckActivity : JWBaseActivity() {
         }
     }
 
+    /**
+     * 키패드 클릭 리스너
+     */
+    private inner class KeyPadListener : KeyPadAdapter.KeyPadListener {
+        override fun onEraserClickEvent() {
+            tempPw = removeLastChar()
+            pwcheck_input.text = tempPw
+        }
+
+        override fun onNumClickEvent(index: String) {
+            tempPw += index
+            pwcheck_input.text = tempPw
+        }
+
+        override fun onRefreshClickEvent() {
+            tempPw = ""
+            pwcheck_input.text = tempPw
+        }
+    }
+
+
+    /**
+     * 클릭리스너
+     */
+    fun onClickPw(view: View) {
+        when (view.id) {
+            R.id.pwcheck_close -> {
+                setResult(Activity.RESULT_CANCELED)
+                finish()
+            }
+            R.id.pwcheck_linear_pin_input -> {
+                pwcheck_input.text = ""
+            }
+        }
+    }
+
 
     /**
      * 키패드 클릭시 pin 색 변환
@@ -104,9 +124,7 @@ class PasswordCheckActivity : JWBaseActivity() {
      */
     private fun setPwImage(inputLen: Int) {
         for (i in mIvPw.indices) {
-            if (mIvPw[i] != null) {
                 mIvPw[i]?.isSelected = i < inputLen
-            }
         }
     }
 
@@ -123,9 +141,14 @@ class PasswordCheckActivity : JWBaseActivity() {
     /**
      * 비밀 번호 6자리 입력시
      */
-    fun setPassword() {
+    private fun setPassword() {
         val pw = getPreference(Constants.passwordSetting)
         if (pw == tempPw) {
+            // 비밀번호 초기화일 경우
+            if ("Y" == reset) {
+                Toast.makeText(this, resources.getString(R.string.pwcheck_text_reset), Toast.LENGTH_SHORT).show()
+            }
+
             setResult(Activity.RESULT_OK)
             finish()
         } else {

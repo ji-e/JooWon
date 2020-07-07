@@ -18,11 +18,14 @@ import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.WorkerMainAdapter
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.SizeConverter
+import com.example.uohih.joowon.database.AsyncExecutor
 import com.example.uohih.joowon.database.DBHelper
+import com.example.uohih.joowon.database.VacationData
 import com.example.uohih.joowon.main.PictureActivity
 import kotlinx.android.synthetic.main.activity_worker_main.*
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.Callable
 
 
 class WorkerMainActivity : JWBaseActivity() {
@@ -44,6 +47,10 @@ class WorkerMainActivity : JWBaseActivity() {
     private val workerMainAdapter by lazy { WorkerMainAdapter(supportFragmentManager) }
     private val mIvDot by lazy { arrayOfNulls<ImageView>(workerMainAdapter.count) }
 
+    // 리스트 뷰
+    private var vacationList = arrayListOf<VacationData>()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker_main)
@@ -55,6 +62,20 @@ class WorkerMainActivity : JWBaseActivity() {
             phoneNum = getBundle.getString("phone", "")   //핸드폰번호
         }
 
+        initView()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        setWorkerData()
+        setVacationData()
+
+
+    }
+
+    private fun initView() {
         //현재 날짜 세팅
         tv_worker_month.text = todayJson.getString("month")
         edit_worker_year.setText(todayJson.getString("year"))
@@ -97,57 +118,8 @@ class WorkerMainActivity : JWBaseActivity() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        var cursor = dbHelper.selectWorker(name, phoneNum.replace("-", ""))
 
-        if (!no.isEmpty()) {
-            cursor = dbHelper.selectWorker(no)
-        }
-        cursor.moveToFirst()
-        name = cursor.getString(1)
-        bitmap = cursor.getString(6)
-        phoneNum = (Constants.PHONE_NUM_PATTERN).toRegex().replace(cursor.getString(3).toString(), "$1-$2-$3")
-        use = cursor.getString(4).toString()
-        total = cursor.getString(5).toString()
-        joinDate = (Constants.YYYYMMDD_PATTERN).toRegex().replace(cursor.getInt(2).toString(), "$1-$2-$3")
-        no = cursor.getInt(0).toString()
-
-        tv_worker_name.text = "$name ($joinDate)"
-        tv_worker_phone.text = "P.H $phoneNum"
-        tv_worker_vacation.text = "Vacation $use / $total"
-
-        if (bitmap != "") {
-            val file = BitmapFactory.decodeFile(bitmap)
-            lateinit var exif: ExifInterface
-
-            try {
-                exif = ExifInterface(bitmap)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-
-            val exifOrientation: Int
-            val exifDegree: Int
-
-            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-            exifDegree = exifOrientationToDegrees(exifOrientation)
-
-            Glide.with(this).load(rotate(file, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(img_worker_people)
-
-        }
-
-        getBundle.putString("use", use)
-        getBundle.putString("total", total)
-        getBundle.putString("joinDate", joinDate)
-        getBundle.putString("no", no)
-        getBundle.putString("picture", bitmap)
-
-
-    }
-
-
-    fun btnOnClick(v: View) {
+    fun onClickWorkerMain(v: View) {
         edit_worker_year.clearFocus() //년도 포커스 제거
 
         when (v) {
@@ -236,4 +208,63 @@ class WorkerMainActivity : JWBaseActivity() {
         }
     }
 
+    /**
+     * db에서 데이터 가져온 후 set
+     */
+    private fun setVacationData() {
+        val cursor = dbHelper.selectAll(dbHelper.tableNameVacationJW)
+
+        vacationList.clear()
+
+        while (cursor.moveToNext()) {
+            vacationList.add(VacationData(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4), cursor.getDouble(5), cursor.getDouble(6)))
+        }
+
+    }
+
+    private fun setWorkerData() {
+        var cursor = dbHelper.selectWorker(name, phoneNum.replace("-", ""))
+
+        if (!no.isEmpty()) {
+            cursor = dbHelper.selectWorker(no)
+        }
+        cursor.moveToFirst()
+        name = cursor.getString(1)
+        bitmap = cursor.getString(6)
+        phoneNum = (Constants.PHONE_NUM_PATTERN).toRegex().replace(cursor.getString(3).toString(), "$1-$2-$3")
+        use = cursor.getString(4).toString()
+        total = cursor.getString(5).toString()
+        joinDate = (Constants.YYYYMMDD_PATTERN).toRegex().replace(cursor.getInt(2).toString(), "$1-$2-$3")
+        no = cursor.getInt(0).toString()
+
+        tv_worker_name.text = "$name ($joinDate)"
+        tv_worker_phone.text = "P.H $phoneNum"
+        tv_worker_vacation.text = "Vacation $use / $total"
+
+        if (bitmap != "") {
+            val file = BitmapFactory.decodeFile(bitmap)
+            lateinit var exif: ExifInterface
+
+            try {
+                exif = ExifInterface(bitmap)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+            val exifOrientation: Int
+            val exifDegree: Int
+
+            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+            exifDegree = exifOrientationToDegrees(exifOrientation)
+
+            Glide.with(this).load(rotate(file, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(img_worker_people)
+
+        }
+
+        getBundle.putString("use", use)
+        getBundle.putString("total", total)
+        getBundle.putString("joinDate", joinDate)
+        getBundle.putString("no", no)
+        getBundle.putString("picture", bitmap)
+    }
 }

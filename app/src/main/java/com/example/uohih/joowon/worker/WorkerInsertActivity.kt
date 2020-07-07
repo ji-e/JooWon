@@ -6,9 +6,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.OvalShape
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
@@ -23,7 +20,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
@@ -35,7 +31,6 @@ import com.example.uohih.joowon.view.CalendarDialog
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.DialogListAdapter
-import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.main.MainListActivity
 import com.example.uohih.joowon.view.CustomDialog
 import com.example.uohih.joowon.view.CustomListDialog
@@ -49,7 +44,7 @@ import java.util.*
 /**
  * 직원추가
  */
-class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextView.OnEditorActionListener, View.OnClickListener {
+class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextView.OnEditorActionListener {
 
     private val base = JWBaseApplication()
     private val dbHelper = DBHelper(this)
@@ -81,6 +76,11 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
 
         joinDate = todayJson.get("yyyymmdd").toString()
 
+        initView()
+
+    }
+
+    private fun initView() {
         if ("Y" == workerUpdate) {
             worker_insert_title_view.setBackBtn()
 
@@ -135,19 +135,18 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
         //이름
         worker_insert_edt_name.onFocusChangeListener = this
         worker_insert_edt_name.setOnEditorActionListener(this)
-        worker_insert_edt_name.addTextChangedListener(editTextWatcher(worker_insert_edt_name))
+        worker_insert_edt_name.addTextChangedListener(WorkerInsertTextWatcher(worker_insert_edt_name))
 
         //핸드폰번호
         worker_insert_edt_phone.onFocusChangeListener = this
         worker_insert_edt_phone.setOnEditorActionListener(this)
-        worker_insert_edt_phone.addTextChangedListener(editTextWatcher(worker_insert_edt_phone))
+        worker_insert_edt_phone.addTextChangedListener(WorkerInsertTextWatcher(worker_insert_edt_phone))
         worker_insert_edt_phone.addTextChangedListener(PhoneNumberFormattingTextWatcher())
 
         //입사날짜
         worker_insert_edt_join.onFocusChangeListener = this
-        worker_insert_edt_join.isFocusableInTouchMode = true
-        worker_insert_edt_join.isFocusable = true
-        worker_insert_edt_join.setOnClickListener(this)
+//        worker_insert_edt_join.isFocusableInTouchMode = true
+//        worker_insert_edt_join.isFocusable = true
 
         worker_insert_edt_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(joinDate, "$1-$2-$3")
 
@@ -155,58 +154,36 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
         //총휴가개수
         worker_insert_edt_vacation.onFocusChangeListener = this
         worker_insert_edt_vacation.setOnEditorActionListener(this)
-        worker_insert_edt_vacation.addTextChangedListener(editTextWatcher(worker_insert_edt_vacation))
+        worker_insert_edt_vacation.addTextChangedListener(WorkerInsertTextWatcher(worker_insert_edt_vacation))
 
         //사용한휴가개수
         worker_insert_edt_use.setOnEditorActionListener(this)
         worker_insert_edt_use.onFocusChangeListener = this
-        worker_insert_edt_use.addTextChangedListener(editTextWatcher(worker_insert_edt_use))
-
-
-        //EditText 삭제 버튼
-        worker_insert_btn_delete1.setOnClickListener(this)
-        worker_insert_btn_delete2.setOnClickListener(this)
-        worker_insert_btn_delete3.setOnClickListener(this)
-        worker_insert_btn_delete4.setOnClickListener(this)
-
-        //등록 및 변경 버튼
-        worker_insert_btn_bottom.setOnClickListener(this)
-
-        //프로필 사진 등록
-        worker_insert_plus.setOnClickListener(this)
-
-        //삭제하기
-        worker_layout_delete.setOnClickListener(this)
+        worker_insert_edt_use.addTextChangedListener(WorkerInsertTextWatcher(worker_insert_edt_use))
 
     }
 
 
     /**
-     * editTextWatcher
+     * WorkerInsertTextWatcher
      */
-    private inner class editTextWatcher(private val mEditText: EditText) : TextWatcher {
+    private inner class WorkerInsertTextWatcher(private val mEditText: EditText) : TextWatcher {
 
         override fun beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {
             when (mEditText) {
                 worker_insert_edt_name -> { //이름
-                    if (count == 0 && start == 0) worker_insert_btn_delete1.visibility = View.GONE
-                    else worker_insert_btn_delete1.visibility = View.VISIBLE
-
+                    worker_insert_btn_delete1.visibility = if (charSequence.isEmpty()) View.GONE else View.VISIBLE
                 }
                 worker_insert_edt_phone -> { //핸드폰번호
-                    if (count == 0 && start == 0) worker_insert_btn_delete2.visibility = View.GONE
-                    else worker_insert_btn_delete2.visibility = View.VISIBLE
-
+                    worker_insert_btn_delete2.visibility = if (charSequence.isEmpty()) View.GONE else View.VISIBLE
                 }
                 worker_insert_edt_vacation -> { //총휴가개수
-                    if (count == 0 && start == 0) worker_insert_btn_delete3.visibility = View.GONE
-                    else worker_insert_btn_delete3.visibility = View.VISIBLE
+                    worker_insert_btn_delete3.visibility = if (charSequence.isEmpty()) View.GONE else View.VISIBLE
                 }
                 worker_insert_edt_use -> {  //사용휴가개수
-                    if (count == 0 && start == 0) worker_insert_btn_delete4.visibility = View.GONE
-                    else worker_insert_btn_delete4.visibility = View.VISIBLE
+                    worker_insert_btn_delete4.visibility = if (charSequence.isEmpty()) View.GONE else View.VISIBLE
                 }
             }
         }
@@ -225,9 +202,9 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
                 worker_insert_edt_phone -> worker_insert_edt_vacation.requestFocus()
                 worker_insert_edt_vacation -> {
                     if ("Y" == workerUpdate) worker_insert_edt_use.requestFocus()
-                    else varification()
+                    else validation()
                 }
-                worker_insert_edt_use -> varification()
+                worker_insert_edt_use -> validation()
             }
         }
         return false
@@ -240,39 +217,27 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
     override fun onFocusChange(v: View?, hasFocus: Boolean) {
         when (v) {
             worker_insert_edt_name -> { //이름
-                if (hasFocus) {
-                    if (worker_insert_edt_name.text.isNotEmpty())
-                        worker_insert_btn_delete1.visibility = View.VISIBLE
-                } else {
-                    worker_insert_btn_delete1.visibility = View.GONE
-                }
+                worker_insert_btn_delete1.visibility =
+                        if (hasFocus && worker_insert_edt_name.text.isNotEmpty()) View.VISIBLE
+                        else View.GONE
             }
             worker_insert_edt_phone -> { //핸드폰번호
-                if (hasFocus) {
-                    if (worker_insert_edt_phone.text.isNotEmpty())
-                        worker_insert_btn_delete2.visibility = View.VISIBLE
-                } else {
-                    worker_insert_btn_delete2.visibility = View.GONE
-                }
+                worker_insert_btn_delete2.visibility =
+                        if (hasFocus && worker_insert_edt_phone.text.isNotEmpty()) View.VISIBLE
+                        else View.GONE
             }
             worker_insert_edt_join -> { //입사일자
                 if (hasFocus) showCalendarDialog()
             }
             worker_insert_edt_vacation -> { //총휴가개수
-                if (hasFocus) {
-                    if (worker_insert_edt_vacation.text.isNotEmpty())
-                        worker_insert_btn_delete3.visibility = View.VISIBLE
-                } else {
-                    worker_insert_btn_delete3.visibility = View.GONE
-                }
+                worker_insert_btn_delete3.visibility =
+                        if (hasFocus && worker_insert_edt_vacation.text.isNotEmpty()) View.VISIBLE
+                        else View.GONE
             }
             worker_insert_edt_use -> { //사용휴가개수
-                if (hasFocus) {
-                    if (worker_insert_edt_use.text.isNotEmpty())
-                        worker_insert_btn_delete4.visibility = View.VISIBLE
-                } else {
-                    worker_insert_btn_delete4.visibility = View.GONE
-                }
+                worker_insert_btn_delete4.visibility =
+                        if (hasFocus && worker_insert_edt_use.text.isNotEmpty()) View.VISIBLE
+                        else View.GONE
             }
         }
     }
@@ -281,7 +246,7 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
     /**
      * onClick
      */
-    override fun onClick(v: View?) {
+    fun onClickWorkerInsert(v: View?) {
         when (v) {
             worker_insert_btn_delete1 -> {
                 worker_insert_edt_name.setText("")
@@ -299,7 +264,7 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
                 showCalendarDialog()
             }
             worker_insert_btn_bottom -> {
-                varification()
+                validation()
             }
             worker_insert_plus -> {
                 val listViewAdapter = DialogListAdapter(this, ArrayList())
@@ -339,7 +304,7 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
      * edt: EditText
      */
     private fun hideKeypad(edt: EditText) {
-        var imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(edt.windowToken, 0)
         worker_insert_btn_bottom.requestFocus()
     }
@@ -347,7 +312,7 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
     /**
      * 검증
      */
-    private fun varification() {
+    private fun validation() {
         // 이름
         if (worker_insert_edt_name.text.toString().isEmpty()) {
             customDialog.showDialog(this, resources.getString(R.string.workerInsert_name2), resources.getString(R.string.btn01), null)
@@ -362,8 +327,9 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
         }
         // 총휴가
         if (worker_insert_edt_vacation.text.toString().isEmpty()) {
-            customDialog.showDialog(this, resources.getString(R.string.workerInsert_vacation2), resources.getString(R.string.btn01), null)
-            worker_insert_edt_vacation.requestFocus()
+//            customDialog.showDialog(this, resources.getString(R.string.workerInsert_vacation2), resources.getString(R.string.btn01), null)
+//            worker_insert_edt_vacation.requestFocus()
+            worker_insert_edt_vacation.setText("15")
             return
         }
         // 사용휴가
@@ -399,7 +365,7 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
         calendarDialog = calendarDialog.showDialogCalendar(this, date)!!
         calendarDialog.show()
         calendarDialog.setOnDismissListener {
-            worker_insert_edt_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(base.getSeleteDate(), "$1-$2-$3")
+            worker_insert_edt_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(base.getSelectDate(), "$1-$2-$3")
         }
     }
 
@@ -472,6 +438,7 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REQUEST_IMAGE_CAPTURE -> {

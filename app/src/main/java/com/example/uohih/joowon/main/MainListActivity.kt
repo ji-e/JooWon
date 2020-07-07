@@ -2,6 +2,7 @@ package com.example.uohih.joowon.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.MainListAdapter
@@ -29,7 +30,7 @@ class MainListActivity : JWBaseActivity() {
     private lateinit var backPressCloseHandler: BackPressCloseHandler
 
     // 리스트 뷰
-    var mainList = arrayListOf<StaffData>()
+    private var mainList = arrayListOf<StaffData>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,15 +40,9 @@ class MainListActivity : JWBaseActivity() {
         // back key exit 초기화
         backPressCloseHandler = BackPressCloseHandler(this)
 
-
-        main_list_btn_plus.setOnClickListener {
-            val intent = Intent(this, WorkerInsertActivity::class.java)
-            startActivity(intent)
-        }
-
-        val boardId = if (intent.action == Intent.ACTION_VIEW)
-            intent.data.getQueryParameter("key").toString()
-        else ""
+        val boardId =
+                if (intent.action == Intent.ACTION_VIEW) intent.data.getQueryParameter("key").toString()
+                else ""
         LogUtil.e(boardId)
 
         if ("setting" == boardId) {
@@ -69,6 +64,13 @@ class MainListActivity : JWBaseActivity() {
 
     override fun onBackPressed() {
         backPressCloseHandler.onBackPressed()
+    }
+
+    fun onClickMainList(view: View) {
+        if (view.id == R.id.main_list_btn_plus) {
+            val intent = Intent(this, WorkerInsertActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 

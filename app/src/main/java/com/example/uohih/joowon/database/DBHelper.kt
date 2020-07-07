@@ -5,6 +5,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.uohih.joowon.base.LogUtil
+import java.lang.Exception
 
 /**
  * DB
@@ -24,6 +25,8 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
      */
     val tableNameWorkerJW = "tb_worker_jw"
     val tableNameVacationJW = "tb_vacation_jw"
+    val mContext = mContext
+
 
     override fun onCreate(db: SQLiteDatabase) {
         val queryCreate = "create table $tableNameWorkerJW (no integer primary key autoincrement, name, joinDate integer, phone, use, total, picture)"
@@ -92,6 +95,9 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
         db.execSQL(queryInsert)
         db.close()
         LogUtil.d(queryInsert)
+//        val asyncExecutor = AsyncExecutor(mContext).apply {  setAsyncExecutorDB(db)}
+//        asyncExecutor.execute("insert", queryInsert)
+
     }
 
     /**
@@ -116,6 +122,10 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
         db.execSQL(queryUpdate)
         db.close()
         LogUtil.d(queryUpdate)
+
+//        val asyncExecutor = AsyncExecutor(mContext).apply {  setAsyncExecutorDB(db)}
+//        asyncExecutor.execute("update", queryUpdate)
+
     }
 
     /**
@@ -127,12 +137,16 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
 //            val no = array[i]
 //            var queryDelete = "delete from $tableName where $index=\'$no\'"
 //            if(index.equals("no")){
-            var queryDelete = "delete from $tableName where no=$no"
+        val queryDelete = "delete from $tableName where no=$no"
 //            }
             db.execSQL(queryDelete)
+        db.close()
             LogUtil.d(queryDelete)
 //        }
-        db.close()
+
+//        val asyncExecutor = AsyncExecutor(mContext).apply {  setAsyncExecutorDB(db)}
+//        asyncExecutor.execute("delete", queryDelete)
+
     }
 
     /**
@@ -141,17 +155,24 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
     fun selectWorker(name:String, phone:String): Cursor {
         val db = writableDatabase
         val querySelect = "select * from $tableNameWorkerJW where name=\'$name\' and phone = \'$phone\'"
-        db.rawQuery(querySelect, null)
-        LogUtil.d(querySelect)
-        return db.rawQuery(querySelect, null)
+//        db.rawQuery(querySelect, null)
+//        LogUtil.d(querySelect)
+//        return db.rawQuery(querySelect, null)
+        val asyncExecutor = AsyncExecutor(mContext).apply { setAsyncExecutorDB(db) }
+        return asyncExecutor.execute("select", querySelect).get()!!
+
     }
 
     fun selectWorker(no:String): Cursor {
         val db = writableDatabase
         val querySelect = "select * from $tableNameWorkerJW where no=\'$no\'"
-        db.rawQuery(querySelect, null)
-        LogUtil.d(querySelect)
-        return db.rawQuery(querySelect, null)
+//        db.rawQuery(querySelect, null)
+//        LogUtil.d(querySelect)
+//        return db.rawQuery(querySelect, null)
+        val asyncExecutor = AsyncExecutor(mContext).apply { setAsyncExecutorDB(db) }
+        return asyncExecutor.execute("select", querySelect).get()!!
+
+
     }
 //
 //    fun select(first: Int, last: Int): Cursor {
@@ -181,9 +202,12 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
     fun selectAll(tableName: String): Cursor {
         val db = writableDatabase
         val querySelect = "select * from $tableName"
-        db.rawQuery(querySelect, null)
-        LogUtil.d(querySelect)
-        return db.rawQuery(querySelect, null)
+//        db.rawQuery(querySelect, null)
+//        LogUtil.d(querySelect)
+
+        //            return db.rawQuery(querySelect, null)
+        val asyncExecutor = AsyncExecutor(mContext).apply { setAsyncExecutorDB(db) }
+        return asyncExecutor.execute("select", querySelect).get()!!
     }
 
     /**

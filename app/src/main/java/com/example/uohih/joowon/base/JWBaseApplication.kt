@@ -9,12 +9,12 @@ class JWBaseApplication : Application() {
     /**
      * ------------- 캘린더 팝업 날짜 세팅 -------------
      */
-    fun setSeleteDate(selecteDate: String) {
-        Companion.selecteDate = selecteDate
+    fun setSelectDate(selectDate: String) {
+        Companion.selectDate = selectDate
     }
 
-    fun getSeleteDate(): String {
-        return selecteDate
+    fun getSelectDate(): String {
+        return selectDate
     }
 
     /**
@@ -35,7 +35,7 @@ class JWBaseApplication : Application() {
 
 
     companion object {
-        private var selecteDate = JWBaseActivity().getToday().get("yyyymmdd").toString()
+        private var selectDate = JWBaseActivity().getToday().get("yyyymmdd").toString()
         private var deleteItem = ArrayList<String>()//삭제 항목
     }
 

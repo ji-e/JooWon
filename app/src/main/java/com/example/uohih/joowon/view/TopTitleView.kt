@@ -39,7 +39,7 @@ class TopTitleView : RelativeLayout, View.OnClickListener {
      */
     private fun init(attrs: AttributeSet?, defStyle: Int, mContext: Context) {
         this.mContext = mContext
-        val inflater = mContext!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         mRootView = inflater.inflate(R.layout.view_top_title, null)
         addView(mRootView, RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT))
 
@@ -106,6 +106,7 @@ class TopTitleView : RelativeLayout, View.OnClickListener {
     private val mCloseBtnClickListener: View.OnClickListener = OnClickListener {
         if (mContext is Activity) {
             (mContext as Activity).finish()
+
         }
     }
 

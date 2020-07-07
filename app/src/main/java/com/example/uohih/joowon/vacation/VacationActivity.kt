@@ -9,7 +9,6 @@ import android.media.ExifInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
@@ -33,7 +32,6 @@ import java.io.IOException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.abs
 
 
 class VacationActivity : JWBaseActivity(), View.OnClickListener {
@@ -311,12 +309,12 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
         calendarDialog.setOnDismissListener {
             if (mTv.id == R.id.vacation_tv_endD) {
                 val startD = vacation_tv_startD.text.toString().replace("-", "").toInt()
-                if (startD > base.getSeleteDate().toInt()) {
+                if (startD > base.getSelectDate().toInt()) {
                     customDialog.showDialog(this, resources.getString(R.string.worker_vacation_dialog), resources.getString(R.string.btn01), null)
                     return@setOnDismissListener
                 }
             }
-            mTv.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(base.getSeleteDate(), "$1-$2-$3")
+            mTv.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(base.getSelectDate(), "$1-$2-$3")
             cntSchedule = calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString())
             vacation_tv_use_vc.text = String.format(getString(R.string.worker_vacation_use_vacation), cntSchedule)
         }

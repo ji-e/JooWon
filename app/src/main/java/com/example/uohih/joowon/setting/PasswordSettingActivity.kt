@@ -12,11 +12,10 @@ import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.KeyPadAdapter
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.LogUtil
 import kotlinx.android.synthetic.main.activity_password_check.*
 
 class PasswordSettingActivity : JWBaseActivity() {
-    private val mAadapter by lazy { KeyPadAdapter(this, setkeyPadData()) }
+    private val mAadapter by lazy { KeyPadAdapter(this, setKeyPadData()) }
 
     private val mIvPwResId = intArrayOf(R.id.iv_pin0, R.id.iv_pin1, R.id.iv_pin2, R.id.iv_pin3, R.id.iv_pin4, R.id.iv_pin5)
     private var mIvPw = arrayOfNulls<ImageView>(mIvPwResId.size)
@@ -42,30 +41,12 @@ class PasswordSettingActivity : JWBaseActivity() {
         }
 
         keypad_grid.adapter = mAadapter
-        /**
-         * 키패드 클릭 리스너
-         */
-        mAadapter.setKeyPadListener(object : KeyPadAdapter.KeyPadListener {
-            override fun onEraserClickEvent() {
-                tempPw = removeLastChar()
-                pwcheck_input.text = tempPw
-            }
 
-            override fun onNumClickEvent(index: String) {
-                tempPw += index
-                pwcheck_input.text = tempPw
-            }
+        // 키패드 클릭 리스너
+        mAadapter.setKeyPadListener(KeyPadListener())
 
-            override fun onRefreshClickEvent() {
-                tempPw = ""
-                pwcheck_input.text = tempPw
-            }
-        })
-
-        // 핀 클릭 리스너
-        pwcheck_linear_pin_input.setOnClickListener {
-            pwcheck_input.text = ""
-        }
+        // pin 입력 리스너
+        pwcheck_input.addTextChangedListener(PasswordTextWatcher())
 
         // pin id 세팅
         for (i in mIvPwResId.indices) {
@@ -73,18 +54,15 @@ class PasswordSettingActivity : JWBaseActivity() {
             mIvPw[i] = view
         }
 
-
-        pwcheck_input.addTextChangedListener(PasswordTextWatcher())
-
-        pwcheck_close.setColorFilter(Color.parseColor("#FFFFFF"))
+//        pwcheck_close.setColorFilter(Color.parseColor("#FFFFFF"))
         pwcheck_img_lock.setColorFilter(Color.parseColor("#004680"))
 
     }
 
     /**
-     * 비밀번호 입력 할 때 마다 리스너
+     * pin 입력 리스너
      */
-    inner class PasswordTextWatcher : TextWatcher {
+    private inner class PasswordTextWatcher : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
         }
@@ -101,12 +79,35 @@ class PasswordSettingActivity : JWBaseActivity() {
         }
     }
 
+    /**
+     * 키패드 클릭 리스너
+     */
+    private inner class KeyPadListener : KeyPadAdapter.KeyPadListener {
+        override fun onEraserClickEvent() {
+            tempPw = removeLastChar()
+            pwcheck_input.text = tempPw
+        }
 
-    fun btnOnClick(view: View) {
+        override fun onNumClickEvent(index: String) {
+            tempPw += index
+            pwcheck_input.text = tempPw
+        }
+
+        override fun onRefreshClickEvent() {
+            tempPw = ""
+            pwcheck_input.text = tempPw
+        }
+    }
+
+
+    fun onClickPw(view: View) {
         when (view.id) {
             R.id.pwcheck_close -> {
                 setResult(Activity.RESULT_CANCELED)
                 finish()
+            }
+            R.id.pwcheck_linear_pin_input -> {
+                pwcheck_input.text = ""
             }
         }
     }
@@ -117,9 +118,7 @@ class PasswordSettingActivity : JWBaseActivity() {
      */
     private fun setPwImage(inputLen: Int) {
         for (i in mIvPw.indices) {
-            if (mIvPw[i] != null) {
                 mIvPw[i]?.isSelected = i < inputLen
-            }
         }
     }
 
@@ -158,7 +157,7 @@ class PasswordSettingActivity : JWBaseActivity() {
                 firstPw = tempPw
                 pwcheck_tv.text = getString(R.string.pwsetting_text02)
             }
-            pwcheck_input.text = ""
+
         } else {
             if (firstPw == tempPw) {
                 setPreference(Constants.passwordSetting, firstPw)
@@ -167,12 +166,11 @@ class PasswordSettingActivity : JWBaseActivity() {
                 finish()
             } else {
                 pwcheck_tv.text = getString(R.string.pwsetting_text_cInconsistency)
-                pwcheck_input.text = ""
                 firstPw = ""
             }
 
         }
-
+        pwcheck_input.text = ""
         tempPw = ""
     }
 }

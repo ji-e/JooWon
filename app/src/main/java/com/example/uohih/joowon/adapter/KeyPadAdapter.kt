@@ -36,7 +36,7 @@ class KeyPadAdapter(private val mContext: Context, private var keyPadData: Array
      */
 
     fun setRefreshData() {
-        keyPadData = BaseActivity.setkeyPadData()
+        keyPadData = BaseActivity.setKeyPadData()
         notifyDataSetChanged()
     }
 

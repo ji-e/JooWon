@@ -40,7 +40,7 @@ class IntroActivity : JWBaseActivity() {
         val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.CALL_PHONE)
         val arrayList = ArrayList<String>()
 
-        for (i in 0 until permission.size) {
+        for (i in permission.indices) {
             val permissionCheck = ContextCompat.checkSelfPermission(this, permission[i])
 
             if (permissionCheck == PackageManager.PERMISSION_DENIED) {
@@ -53,10 +53,10 @@ class IntroActivity : JWBaseActivity() {
             arry[i] = arrayList[i]
         }
 
-        if (!arrayList.isEmpty()) {
+        if (arrayList.isNotEmpty()) {
             ActivityCompat.requestPermissions(this, arry, 0)
 
-            setmPermissionListener(object : PermissionListener {
+            setPermissionListener(object : PermissionListener {
                 override fun onFail() {
                     finish()
                 }
@@ -140,7 +140,7 @@ class IntroActivity : JWBaseActivity() {
         fun onSuccess()
     }
 
-    private fun setmPermissionListener(listener: PermissionListener) {
+    private fun setPermissionListener(listener: PermissionListener) {
         mListener = listener
     }
 
