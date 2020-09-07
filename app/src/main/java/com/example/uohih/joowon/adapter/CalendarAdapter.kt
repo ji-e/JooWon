@@ -2,16 +2,20 @@ package com.example.uohih.joowon.adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.*
+import androidx.annotation.RequiresApi
+import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.view.CalendarDayInfo
-import com.example.uohih.joowon.R
+import com.example.uohih.joowon.database.VacationData
 import kotlinx.android.synthetic.main.grid_item_worker_main.view.*
+import java.time.LocalDate
 
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -21,8 +25,11 @@ import java.util.*
  * date: Date
  */
 class CalendarAdapter(private val mContext: Context, private val arrayListDayInfo: ArrayList<CalendarDayInfo>,
-                      val date: Date, val layout:Int) : BaseAdapter() {
+                      val date: LocalDate, val layout: Int) : BaseAdapter() {
     var selectedDate = date
+
+    // 리스트 뷰
+    private var vacationList = arrayListOf<VacationData>()
 
     override fun getCount(): Int {
         return arrayListDayInfo.size
@@ -35,6 +42,7 @@ class CalendarAdapter(private val mContext: Context, private val arrayListDayInf
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
+
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val day = arrayListDayInfo[position]
@@ -49,18 +57,29 @@ class CalendarAdapter(private val mContext: Context, private val arrayListDayInf
         // 오늘 동그라미 이미지
         val today = convertView?.calendar_today
 
+        val halfV = convertView?.calendar_half_v
+        val allV = convertView?.calendar_all_v
+
 
         /**
          * ------------- 날짜 그리기 start -------------
          */
-//        if (day != null) {
-        cell?.text = day.getDay()
 
+        cell?.text = day.getDay()
         if (day.isSameDay(selectedDate)) {
             today?.visibility = View.VISIBLE
         } else {
             today?.visibility = View.INVISIBLE
         }
+
+        for (i in vacationList.indices) {
+            if (((vacationList[i].date).toString()) == (day.getDate()).toString().replace("-", "")) {
+                allV?.visibility = View.VISIBLE
+            } else {
+                allV?.visibility = View.INVISIBLE
+            }
+        }
+
 
         if (day.isInMonth()) {
             when {
@@ -83,5 +102,17 @@ class CalendarAdapter(private val mContext: Context, private val arrayListDayInf
         return convertView!!
 
     }
+
+    fun setVacationData(vacationList: ArrayList<VacationData>) {
+        this.vacationList = vacationList
+        for (i in vacationList.indices) {
+            LogUtil.e(vacationList[i].date, vacationList[i].use, vacationList[i].phone, vacationList[i].name)
+
+        }
+        notifyDataSetChanged()
+
+    }
+
+
 
 }

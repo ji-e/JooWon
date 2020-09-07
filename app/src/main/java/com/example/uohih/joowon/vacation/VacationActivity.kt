@@ -287,6 +287,8 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
                 }
             })
 
+            checkBoxList = mVacationAdapter.getCheckBoxList()
+
 
 //            setListViewHeightBasedOnChildren(vacation_listview)
 
@@ -344,6 +346,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
         var use = cursor.getString(4).toString()
         val no = cursor.getInt(0).toString()
 
+        LogUtil.e(vacationList.size, checkBoxList.size)
         for (i in 0 until vacationList.size) {
             val date = vacationList[i].replace("-", "")
             val cntUse by lazy {
@@ -359,15 +362,15 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
                     name, phone, date, content, cntUse, cntTotal)
 
             dbHelper.update(dbHelper.tableNameWorkerJW, name, joinDate, phone, use, cntTotal, bitmap, no)
-
-            customDialog.showDialog(
-                    thisActivity,
-                    getString(R.string.vacation_dialog_msg),
-                    getString(R.string.btn01),
-                    DialogInterface.OnClickListener { dialog, which ->
-                        vacation_edt_name.setText("")
-                    })
         }
+
+        customDialog.showDialog(
+                thisActivity,
+                getString(R.string.vacation_dialog_msg),
+                getString(R.string.btn01),
+                DialogInterface.OnClickListener { dialog, which ->
+                    vacation_edt_name.setText("")
+                })
     }
 
 

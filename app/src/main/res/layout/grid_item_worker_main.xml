@@ -6,6 +6,29 @@
     android:orientation="vertical"
     android:id="@+id/calendar_layout">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp45"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/calendar_half_v"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/c_f7b52c"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/calendar_all_v"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/c_f7b52c"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

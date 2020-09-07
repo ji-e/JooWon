@@ -10,6 +10,7 @@ class VacationAdapter(mContext: Context, private val list: List<String>) : BaseA
     private val mContext = mContext
     private lateinit var viewHolder: ViewHolder
 
+
     /** 휴가 등록 리스너 ------*/
     private lateinit var vacationAdapterListener: VacationAdapterListener
 
@@ -41,7 +42,7 @@ class VacationAdapter(mContext: Context, private val list: List<String>) : BaseA
     /**
      * 휴가 체크박스 리스트 가져오기
      */
-    private fun getCheckBoxList():ArrayList<Boolean>{
+    fun getCheckBoxList(): ArrayList<Boolean> {
         return mCheckBoxList
     }
 
@@ -75,9 +76,6 @@ class VacationAdapter(mContext: Context, private val list: List<String>) : BaseA
             viewHolder = convertView.tag as ViewHolder
         }
 
-        for(i in 0 until count){
-            mCheckBoxList.add(false)
-        }
 
         viewHolder.mDate.text = list[position]
         viewHolder.mCheck.isChecked = mCheckBoxList[position]
@@ -104,6 +102,14 @@ class VacationAdapter(mContext: Context, private val list: List<String>) : BaseA
         lateinit var mDate: TextView    // 휴가 날짜
         lateinit var mCnt: TextView     // 휴가 개수
         lateinit var mCheck: CheckBox
+    }
+
+    init {
+        mCheckBoxList.clear()
+        for (i in 0 until count) {
+            mCheckBoxList.add(false)
+        }
+
     }
 
 }

@@ -160,7 +160,6 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
 //        return db.rawQuery(querySelect, null)
         val asyncExecutor = AsyncExecutor(mContext).apply { setAsyncExecutorDB(db) }
         return asyncExecutor.execute("select", querySelect).get()!!
-
     }
 
     fun selectWorker(no:String): Cursor {
@@ -171,8 +170,16 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
 //        return db.rawQuery(querySelect, null)
         val asyncExecutor = AsyncExecutor(mContext).apply { setAsyncExecutorDB(db) }
         return asyncExecutor.execute("select", querySelect).get()!!
+    }
 
-
+    fun selectVacation(phone: String, name: String): Cursor {
+        val db = writableDatabase
+        val querySelect = "select * from $tableNameVacationJW where phone=\'$phone\' and name='$name'"
+//        db.rawQuery(querySelect, null)
+        LogUtil.d(querySelect)
+//        return db.rawQuery(querySelect, null)
+        val asyncExecutor = AsyncExecutor(mContext).apply { setAsyncExecutorDB(db) }
+        return asyncExecutor.execute("select", querySelect).get()!!
     }
 //
 //    fun select(first: Int, last: Int): Cursor {

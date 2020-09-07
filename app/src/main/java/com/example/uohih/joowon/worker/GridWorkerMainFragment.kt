@@ -1,25 +1,28 @@
 package com.example.uohih.joowon.worker
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.CalendarAdapter
-import com.example.uohih.joowon.adapter.MainListAdapter
-import com.example.uohih.joowon.adapter.StaffData
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.database.DBHelper
-import kotlinx.android.synthetic.main.activity_main_list.*
+import com.example.uohih.joowon.base.LogUtil
+import com.example.uohih.joowon.database.VacationData
 import kotlinx.android.synthetic.main.fragment_grid_worker_main.*
+import java.time.LocalDate
 import java.util.*
+import kotlin.collections.ArrayList
 
 class GridWorkerMainFragment : Fragment() {
     private lateinit var mContext: Context
     private lateinit var calendarAdapter: CalendarAdapter
+
+    private var vacationList = arrayListOf<VacationData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,12 +35,13 @@ class GridWorkerMainFragment : Fragment() {
     }
 
     // 뷰 생성이 완료되면 호출되는 메소드
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 //        section_label.text=arguments?.let{
 //            it.getInt(num).toString()
 //        }
-        setCalendarView(Calendar.getInstance().time, Date())
+        setCalendarView(LocalDate.now(), LocalDate.now())
         grid_worker.adapter = calendarAdapter
     }
 
@@ -50,15 +54,25 @@ class GridWorkerMainFragment : Fragment() {
                 }
             }
         }
+
+        fun newInstance(v: ArrayList<VacationData>): GridWorkerMainFragment {
+            return GridWorkerMainFragment().apply {
+                arguments = Bundle().apply {
+                    //                    putInt(num, Number)
+                    vacationList = v
+                }
+            }
+        }
     }
 
     /**
      * 캘린더뷰 세팅
      */
-    fun setCalendarView(date: Date, selectedDate: Date) {
+
+    fun setCalendarView(date: LocalDate, selectedDate: LocalDate) {
         calendarAdapter = CalendarAdapter(mContext, JWBaseActivity().getCalendar(date), selectedDate, R.layout.grid_item_worker_main)
+        calendarAdapter.setVacationData(vacationList)
         grid_worker.adapter = calendarAdapter
     }
-
 
 }

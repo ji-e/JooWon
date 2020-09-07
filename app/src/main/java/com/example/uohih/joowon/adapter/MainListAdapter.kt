@@ -168,7 +168,7 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
                     bundle.putString("phone", holder.mTvPhone.text.toString())        //핸드폰번호
 
                     intent.putExtra("worker", bundle)
-                    mContext.startActivity(intent)
+                    mContext.startActivity(intent) z
                 }
                 R.id.main_list_left_view -> { //왼쪽 스와이프 (즐겨찾기)
                     holder.mSwipeLayout.animateReset()

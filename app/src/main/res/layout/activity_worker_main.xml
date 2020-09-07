@@ -169,7 +169,7 @@
                 android:backgroundTint="@color/c_e6e6e6"
                 android:hint="2020"
                 android:imeOptions="actionNext"
-                android:inputType="text"
+                android:inputType="number"
                 android:maxLength="4"
                 android:paddingLeft="@dimen/dp10"
                 android:singleLine="true"

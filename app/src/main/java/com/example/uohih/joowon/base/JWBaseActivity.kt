@@ -5,13 +5,15 @@ import android.content.pm.PackageInfo
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.media.ExifInterface
-import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.example.uohih.joowon.view.CalendarDayInfo
 import com.example.uohih.joowon.view.CustomLoadingBar
 import org.json.JSONObject
 import java.lang.Exception
+import java.time.LocalDate
+import java.time.format.TextStyle
+import java.time.temporal.ChronoField
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -110,42 +112,16 @@ open class JWBaseActivity : AppCompatActivity() {
      */
     fun getToday(date: String?): JSONObject {
         val jsonCalendar = JSONObject()
-        val instance = Calendar.getInstance()
-        if (date != null) {
-            instance.set(date.substring(0, 4).toInt(), date.substring(4, 6).toInt() - 1, date.substring(6).toInt())
-        }
+        val instance = if (date != null) LocalDate.parse(date) else LocalDate.now()
 
-        //현재 년도
-        val year = instance.get(Calendar.YEAR).toString()
-        //현재 월
-        val month = String.format("%02d", (instance.get(Calendar.MONTH) + 1))
-        //현재 날짜
-        val date = String.format("%02d", instance.get(Calendar.DAY_OF_MONTH))
-        //현재 월의 주
-        val week = instance.get(Calendar.WEEK_OF_MONTH).toString()
-        //현재 요일
-        var day = instance.get(Calendar.DAY_OF_WEEK).toString()
-
-
-//        // 한자리수 앞에 0표기
-//        if (month.toInt() < 10) month = "0$month"
-//        if (date.toInt() < 10) date = "0$date"
-
-        // 요일로 변환
-        when (day) {
-            "1" -> day = "일"
-            "2" -> day = "월"
-            "3" -> day = "화"
-            "4" -> day = "수"
-            "5" -> day = "목"
-            "6" -> day = "금"
-            "7" -> day = "토"
-        }
+        val year = instance.year.toString()                                             //현재 년도
+        val month = String.format("%02d", (instance.monthValue))                        //현재 월
+        val date = String.format("%02d", instance.dayOfMonth)                           //현재 날짜
+        val day = instance.dayOfWeek.getDisplayName(TextStyle.NARROW, Locale.KOREAN)    //현재 요일
 
         jsonCalendar.put("year", year)
         jsonCalendar.put("month", month)
         jsonCalendar.put("date", date)
-        jsonCalendar.put("week", week)
         jsonCalendar.put("day", day)
         jsonCalendar.put("yyyymmdd", "$year$month$date")
 
@@ -179,58 +155,50 @@ open class JWBaseActivity : AppCompatActivity() {
     }
 
 
-
-
     /**
      * 캘린더 가져오기
      */
-    fun getCalendar(dateForCurrentMonth: Date): java.util.ArrayList<CalendarDayInfo> {
-        var dayOfWeek: Int
-        val thisMonthLastDay: Int
+
+    fun getCalendar(currentDate: LocalDate): java.util.ArrayList<CalendarDayInfo> {
+        var day: CalendarDayInfo
         val arrayListDayInfo = java.util.ArrayList<CalendarDayInfo>()
+        var calendar = currentDate.withDayOfMonth(1)    //1일로 변경
+        var dayOfWeek = calendar.dayOfWeek.get(ChronoField.DAY_OF_WEEK) //1일의 요일 구하기
+        val thisMonthLastDay = calendar.withDayOfMonth(calendar.month.length(calendar.isLeapYear)).get(ChronoField.DAY_OF_MONTH)
 
-        val calendar = Calendar.getInstance()
-        calendar.time = dateForCurrentMonth
-
-        calendar.set(Calendar.DATE, 1)//1일로 변경
-        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)//1일의 요일 구하기
-        LogUtil.d("dayOfWeek = $dayOfWeek")
-
-        if (dayOfWeek == Calendar.SUNDAY) { //현재 달의 1일이 무슨 요일인지 검사
+        //현재 달의 1일이 무슨 요일인지 검사
+        if (dayOfWeek == Calendar.SUNDAY) {
             dayOfWeek += 7
         }
 
-        thisMonthLastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-
-
-        var day: CalendarDayInfo
-
-        calendar.add(Calendar.DATE, -1 * (dayOfWeek - 1)) //현재 달력화면에서 보이는 지난달의 시작일
-        for (i in 0 until dayOfWeek - 1) {
+        //현재 달력화면에서 보이는 지난달의 시작일
+        calendar = calendar.minusDays((dayOfWeek).toLong())
+        for (i in 0 until dayOfWeek) {
             day = CalendarDayInfo()
-            day.setDate(calendar.time)
+            day.setDate(calendar)
             day.setInMonth(false)
             arrayListDayInfo.add(day)
 
-            calendar.add(Calendar.DATE, +1)
+            calendar = calendar.plusDays(1)
+
         }
 
         for (i in 1..thisMonthLastDay) {
             day = CalendarDayInfo()
-            day.setDate(calendar.time)
+            day.setDate(calendar)
             day.setInMonth(true)
             arrayListDayInfo.add(day)
 
-            calendar.add(Calendar.DATE, +1)
+            calendar = calendar.plusDays(1)
         }
 
-        for (i in 1 until 42 - (thisMonthLastDay + dayOfWeek - 1) + 1) {
+        for (i in 1 until 42 - (thisMonthLastDay + dayOfWeek) + 1) {
             day = CalendarDayInfo()
-            day.setDate(calendar.time)
+            day.setDate(calendar)
             day.setInMonth(false)
             arrayListDayInfo.add(day)
 
-            calendar.add(Calendar.DATE, +1)
+            calendar = calendar.plusDays(1)
         }
 
         return arrayListDayInfo
