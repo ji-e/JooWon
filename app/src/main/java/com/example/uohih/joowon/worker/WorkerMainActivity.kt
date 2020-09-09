@@ -3,15 +3,12 @@ package com.example.uohih.joowon.worker
 
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.icu.util.LocaleData
 import android.media.ExifInterface
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.bumptech.glide.Glide
@@ -19,8 +16,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.WorkerMainAdapter
+import com.example.uohih.joowon.base.BlankActivity
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.base.SizeConverter
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.database.VacationData
@@ -28,8 +25,6 @@ import com.example.uohih.joowon.main.PictureActivity
 import kotlinx.android.synthetic.main.activity_worker_main.*
 import java.io.IOException
 import java.time.LocalDate
-import java.time.LocalTime
-import java.util.*
 
 
 class WorkerMainActivity : JWBaseActivity() {
@@ -42,13 +37,12 @@ class WorkerMainActivity : JWBaseActivity() {
     private lateinit var joinDate: String
     private var no = ""
 
+    private var tempYear = ""
+
     private var getBundle = Bundle()
     private val dbHelper = DBHelper(this)
-    //    private val instance = Calendar.getInstance()
+
     private val todayJson = JWBaseActivity().getToday()
-
-    private var localdate = LocalDate.now()
-
 
     private val workerMainAdapter by lazy { WorkerMainAdapter(supportFragmentManager, vacationList) }
     private val mIvDot by lazy { arrayOfNulls<ImageView>(workerMainAdapter.count) }
@@ -56,11 +50,11 @@ class WorkerMainActivity : JWBaseActivity() {
     // 리스트 뷰
     private var vacationList = arrayListOf<VacationData>()
 
+    private var localdate = LocalDate.now()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker_main)
-        showLoading()
 
         if (intent.hasExtra("worker")) {
             getBundle = intent.getBundleExtra("worker")
@@ -69,6 +63,7 @@ class WorkerMainActivity : JWBaseActivity() {
         }
 
         initView()
+        hideLoading()
 
     }
 
@@ -78,19 +73,28 @@ class WorkerMainActivity : JWBaseActivity() {
         setWorkerData()
         setVacationData()
 
-
+        if (viewpager_worker != null && findFragmentByPosition() != null) {
+            if (viewpager_worker.currentItem == 0) {
+                val fragment = findFragmentByPosition() as GridWorkerMainFragment
+                fragment.setCalendarView(localdate)
+            } else {
+                val fragment = findFragmentByPosition() as ListWorkerMainFragment
+                fragment.setNotify()
+            }
+        }
     }
 
     private fun initView() {
         //현재 날짜 세팅
         tv_worker_month.text = todayJson.getString("month")
         edit_worker_year.setText(todayJson.getString("year"))
-
+        tempYear = edit_worker_year.text.toString()
 
         //뷰페이저
         //뷰페이저 화면전환 리스너
-        viewpager_worker.addOnPageChangeListener(ViewpagerChangeListener())
         viewpager_worker.adapter = workerMainAdapter
+        viewpager_worker.addOnPageChangeListener(ViewpagerChangeListener())
+
         setIndicator() //뷰페이저 인디케이터 설정
 
     }
@@ -118,11 +122,17 @@ class WorkerMainActivity : JWBaseActivity() {
                 tv_worker_month.visibility = View.VISIBLE
                 btn_worker_nextm.visibility = View.VISIBLE
                 btn_worker_backm.visibility = View.VISIBLE
+                val fragment = findFragmentByPosition() as GridWorkerMainFragment
+                fragment.setCalendarView(localdate)
             } else {
                 tv_worker_month.visibility = View.INVISIBLE
                 btn_worker_nextm.visibility = View.INVISIBLE
                 btn_worker_backm.visibility = View.INVISIBLE
+                val fragment = findFragmentByPosition() as ListWorkerMainFragment
+                fragment.setNotify()
             }
+
+            edit_worker_year.setText(tempYear)
         }
     }
 
@@ -133,11 +143,31 @@ class WorkerMainActivity : JWBaseActivity() {
 
         when (v) {
             img_worker_people -> {
+                // 프로필 사진 보기
                 val intent = Intent(this, PictureActivity::class.java)
                 intent.putExtra("picture", bitmap)
                 startActivity(intent)
             }
             btn_worker_write -> {
+                // 휴가 등록하기
+                val bundle = Bundle()
+                bundle.putString("name", name)
+                bundle.putString("join", joinDate)
+                bundle.putString("phone", phoneNum)
+                bundle.putString("vacation", """$use/$total""")
+                bundle.putString("bitmap", bitmap)
+
+                val cntRemain = (total.toDouble() - use.toDouble())
+                val cntTotal = total
+
+                bundle.putDouble("cntRemain", cntRemain)
+                bundle.putString("cntTotal", cntTotal)
+
+                val intent = Intent(this, BlankActivity::class.java)
+                intent.putExtra("fragmentFlag", "vacation")
+                intent.putExtra("fragmentBundle", bundle)
+
+                startActivity(intent)
 
             }
             btn_worker_list -> {
@@ -160,45 +190,40 @@ class WorkerMainActivity : JWBaseActivity() {
                 startActivity(intentSetting)
             }
             btn_worker_backm -> {
-//                instance.add(Calendar.MONTH, -1)
                 localdate = localdate.minusMonths(1)
                 edit_worker_year.setText(localdate.year.toString())
                 tv_worker_month.text = String.format("%02d", localdate.monthValue)
-//                edit_worker_year.setText(instance.get(Calendar.YEAR).toString())
-//                tv_worker_month.text = String.format("%02d", instance.get(Calendar.MONTH) + 1)
             }
             btn_worker_nextm -> {
                 localdate = localdate.plusMonths(1)
                 edit_worker_year.setText(localdate.year.toString())
                 tv_worker_month.text = String.format("%02d", localdate.monthValue)
-//                instance.add(Calendar.MONTH, +1)
-//                edit_worker_year.setText(instance.get(Calendar.YEAR).toString())
-//                tv_worker_month.text = String.format("%02d", instance.get(Calendar.MONTH) + 1)
             }
             btn_worker_search -> {
-//                instance.set(Calendar.YEAR, Integer.parseInt(edit_worker_year.text.toString()))
                 localdate = localdate.withYear(Integer.parseInt(edit_worker_year.text.toString()))
+
+                setVacationData()
+                tempYear = edit_worker_year.text.toString()
             }
 
         }
 
         if (viewpager_worker.currentItem == 0) {
             val fragment = findFragmentByPosition() as GridWorkerMainFragment
-            fragment.setCalendarView(localdate, LocalDate.now())
+            fragment.setCalendarView(localdate)
         } else {
             val fragment = findFragmentByPosition() as ListWorkerMainFragment
-            //todo
+            fragment.setNotify()
         }
-
 
     }
 
     /**
      * 뷰페이저 프래그먼트 가져오기
      */
-    private fun findFragmentByPosition(): Fragment {
+    private fun findFragmentByPosition(): Fragment? {
         return supportFragmentManager.findFragmentByTag(
-                workerMainAdapter.getItem(viewpager_worker.currentItem).tag)!!
+                workerMainAdapter.getItem(viewpager_worker.currentItem).tag)
     }
 
     /**
@@ -228,8 +253,7 @@ class WorkerMainActivity : JWBaseActivity() {
      * db에서 데이터 가져온 후 set
      */
     private fun setVacationData() {
-        val cursor = dbHelper.selectVacation(phoneNum.replace("-", ""), name)
-        LogUtil.e(cursor.count)
+        val cursor = dbHelper.selectVacation(phoneNum.replace("-", ""), name, edit_worker_year.text.toString())
         vacationList.clear()
 
         while (cursor.moveToNext()) {
@@ -283,4 +307,5 @@ class WorkerMainActivity : JWBaseActivity() {
         getBundle.putString("no", no)
         getBundle.putString("picture", bitmap)
     }
+
 }

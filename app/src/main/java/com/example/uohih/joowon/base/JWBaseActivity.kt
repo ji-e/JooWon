@@ -7,10 +7,10 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.uohih.joowon.view.CalendarDayInfo
 import com.example.uohih.joowon.view.CustomLoadingBar
 import org.json.JSONObject
-import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.time.temporal.ChronoField
@@ -21,8 +21,7 @@ import kotlin.collections.ArrayList
 open class JWBaseActivity : AppCompatActivity() {
 
     val mContext: Context by lazy { applicationContext }
-
-
+    val customLoading by lazy { CustomLoadingBar.createCustomLoadingBarDialog(this) }
     /**
      * 앱 버전 정보 가져오기
      */
@@ -209,7 +208,7 @@ open class JWBaseActivity : AppCompatActivity() {
      * show loading
      */
     fun showLoading() {
-        CustomLoadingBar.showLoadingBar(this)
+        customLoading.show()
     }
 
     /**
@@ -218,11 +217,17 @@ open class JWBaseActivity : AppCompatActivity() {
     fun hideLoading() {
         try {
             LogUtil.e("<<<<<<<hideLoading>>>>>>")
-            CustomLoadingBar.hideLoadingBar()
+            customLoading.hide()
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
+
+    open fun addContainerFragment(layoutId: Int, fragment: Fragment) {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        val classNameTag: String = fragment.javaClass.simpleName
+        fragmentTransaction.add(layoutId, fragment, classNameTag).commitAllowingStateLoss()
+    }
 
 }

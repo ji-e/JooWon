@@ -14,6 +14,7 @@ import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.setting.SettingActivity
 import com.example.uohih.joowon.worker.WorkerInsertActivity
+import com.example.uohih.joowon.worker.WorkerMainActivity
 import kotlinx.android.synthetic.main.activity_main_list.*
 
 //import sun.jvm.hotspot.utilities.IntArray
@@ -57,6 +58,7 @@ class MainListActivity : JWBaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        hideLoading()
         setData()
 
 
@@ -91,6 +93,15 @@ class MainListActivity : JWBaseActivity() {
 
         mAadapter = MainListAdapter(mainList)
         main_list_recyclerView.adapter = mAadapter
+        mAadapter.setClickListener(object : MainListAdapter.ClickListener {
+            override fun onmClickEvent(bundle: Bundle) {
+                showLoading()
+                val intent = Intent(mContext, WorkerMainActivity::class.java)
+                intent.putExtra("worker", bundle)
+                startActivity(intent)
+            }
+
+        })
 
 //        main_list_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }

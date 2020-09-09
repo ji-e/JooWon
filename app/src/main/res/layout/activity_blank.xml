@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--상단 타이틀 및 아이콘 바-->
+    <com.example.uohih.joowon.view.TopTitleView
+        android:id="@+id/worker_main_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp60"
+        android:gravity="center_vertical"
+        app:btnBack="true"
+        app:tvTitle="@string/worker_vacation_title" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/blank_frame" />
+
+</LinearLayout>

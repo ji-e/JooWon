@@ -33,7 +33,6 @@ class JWBaseApplication : Application() {
     }
 
 
-
     companion object {
         private var selectDate = JWBaseActivity().getToday().get("yyyymmdd").toString()
         private var deleteItem = ArrayList<String>()//삭제 항목

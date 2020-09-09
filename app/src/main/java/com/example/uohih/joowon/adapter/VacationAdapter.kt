@@ -28,7 +28,7 @@ class VacationAdapter(mContext: Context, private val list: List<String>) : BaseA
     private var mCheckBoxList = arrayListOf<Boolean>()
 
     /**
-     * 휴가 개수 가져오기
+     * 휴가 일수 가져오기
      */
     private fun getVacationCnt(): Double {
         var cnt = 0.0
@@ -60,7 +60,7 @@ class VacationAdapter(mContext: Context, private val list: List<String>) : BaseA
         return 0
     }
 
-    override fun getView(position: Int, convertView: View?, viewGroup: ViewGroup?): View {
+    override fun getView(position: Int, convertView: View?, viewGroup: ViewGroup?): View? {
         var convertView = convertView
         if (convertView == null) {
             viewHolder = ViewHolder()
@@ -89,18 +89,18 @@ class VacationAdapter(mContext: Context, private val list: List<String>) : BaseA
         }
 
         viewHolder.mLayout.viewTreeObserver.addOnGlobalLayoutListener {
-            var height = viewHolder.mLayout.height
+            val height = viewHolder.mLayout.height
             vacationAdapterListener.getItemHeight((height + 2) * count)
         }
 
         convertView?.tag = viewHolder
-        return convertView!!
+        return convertView
     }
 
     internal inner class ViewHolder {
         lateinit var mLayout: LinearLayout
         lateinit var mDate: TextView    // 휴가 날짜
-        lateinit var mCnt: TextView     // 휴가 개수
+        lateinit var mCnt: TextView     // 휴가 일수
         lateinit var mCheck: CheckBox
     }
 

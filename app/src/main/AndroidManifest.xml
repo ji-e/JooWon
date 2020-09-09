@@ -43,6 +43,7 @@
         <activity
             android:name=".vacation.VacationActivity"
             android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".base.BlankActivity"></activity>
     </application>
 
 </manifest>

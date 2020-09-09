@@ -24,9 +24,10 @@ import kotlin.collections.ArrayList
  * arrayListDayInfo: ArrayList<CalendarDayInfo>: 캘린더 날짜 정보 리스트
  * date: Date
  */
-class CalendarAdapter(private val mContext: Context, private val arrayListDayInfo: ArrayList<CalendarDayInfo>,
+class CalendarAdapter(private val mContext: Context, listDayInfo: ArrayList<CalendarDayInfo>,
                       val date: LocalDate, val layout: Int) : BaseAdapter() {
     var selectedDate = date
+    var arrayListDayInfo = listDayInfo
 
     // 리스트 뷰
     private var vacationList = arrayListOf<VacationData>()
@@ -72,11 +73,17 @@ class CalendarAdapter(private val mContext: Context, private val arrayListDayInf
             today?.visibility = View.INVISIBLE
         }
 
+        halfV?.visibility = View.INVISIBLE
+        allV?.visibility = View.INVISIBLE
         for (i in vacationList.indices) {
             if (((vacationList[i].date).toString()) == (day.getDate()).toString().replace("-", "")) {
-                allV?.visibility = View.VISIBLE
-            } else {
-                allV?.visibility = View.INVISIBLE
+                if ((vacationList[i].use).toString() == "0.5") {
+                    halfV?.visibility = View.VISIBLE
+                    allV?.visibility = View.INVISIBLE
+                } else {
+                    halfV?.visibility = View.GONE
+                    allV?.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -105,12 +112,13 @@ class CalendarAdapter(private val mContext: Context, private val arrayListDayInf
 
     fun setVacationData(vacationList: ArrayList<VacationData>) {
         this.vacationList = vacationList
-        for (i in vacationList.indices) {
-            LogUtil.e(vacationList[i].date, vacationList[i].use, vacationList[i].phone, vacationList[i].name)
-
-        }
         notifyDataSetChanged()
 
+    }
+
+    fun setListDayInfo(arrayListDayInfo: ArrayList<CalendarDayInfo>) {
+        this.arrayListDayInfo = arrayListDayInfo
+        notifyDataSetChanged()
     }
 
 

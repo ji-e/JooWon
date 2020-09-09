@@ -62,7 +62,14 @@
             android:textSize="@dimen/dp12" />
     </RelativeLayout>
 
-    <include layout="@layout/inflater_vacation" />
+    <FrameLayout
+        android:id="@+id/vacation_frame_ly"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:visibility="gone" />
+    <!--    <include layout="@layout/inflater_vacation" />-->
 
     <RelativeLayout
         android:id="@+id/vacation_ly_search"
@@ -97,16 +104,16 @@
     </RelativeLayout>
 
 
-    <!--확인버튼-->
-    <Button
-        android:id="@+id/vacation_btn_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp50"
-        android:background="@drawable/btn_bottom_selector"
-        android:text="@string/btn04"
-        android:textColor="@color/c_ffffff"
-        android:textSize="@dimen/dp20"
-        android:visibility="gone" />
+    <!--    &lt;!&ndash;확인버튼&ndash;&gt;-->
+    <!--    <Button-->
+    <!--        android:id="@+id/vacation_btn_bottom"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="@dimen/dp50"-->
+    <!--        android:background="@drawable/btn_bottom_selector"-->
+    <!--        android:text="@string/btn04"-->
+    <!--        android:textColor="@color/c_ffffff"-->
+    <!--        android:textSize="@dimen/dp20"-->
+    <!--        android:visibility="gone" />-->
 
 
 </LinearLayout>

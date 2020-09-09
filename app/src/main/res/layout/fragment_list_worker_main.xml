@@ -2,13 +2,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:gravity="center">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/dp20"
+        android:paddingLeft="@dimen/dp20"
+        android:paddingBottom="@dimen/dp05"
+        android:paddingTop="@dimen/dp05"
+        android:background="@color/c_e6e6e6"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:text="@string/vacation_no"
+            android:textSize="@dimen/dp14" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.3"
+            android:text="@string/vacation_date"
+            android:textSize="@dimen/dp14" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="@string/worker_vacation_content"
+            android:textSize="@dimen/dp14" />
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/vacation_use_cnt"
+            android:textSize="@dimen/dp14"
+            android:textAlignment="center" />
+
+    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recycler_worker"/>
+        android:id="@+id/recycler_worker"
+        tools:listitem="@layout/list_item_worker_main" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,3 +62,5 @@
         android:textColor="@color/c_cccccc"/>
 
 </LinearLayout>
+
+

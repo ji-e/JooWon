@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/vacation_sv"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
+    android:layout_height="match_parent"
     android:fillViewport="true"
-    android:paddingLeft="@dimen/dp16"
-    android:paddingRight="@dimen/dp16"
-    android:scrollbars="none"
-    android:visibility="gone">
+    android:visibility="visible"
+    android:orientation="vertical"
+    android:background="@color/c_ffffff">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:paddingLeft="@dimen/dp16"
+        android:paddingRight="@dimen/dp16">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -231,15 +238,52 @@
             </LinearLayout>
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/vacation_ly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp20"
             android:layout_marginBottom="@dimen/dp10"
             android:background="@drawable/rectangle_nor3"
+            android:orientation="vertical"
             android:padding="@dimen/dp02">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/dp16"
+                android:paddingBottom="@dimen/dp05"
+                android:paddingTop="@dimen/dp05"
+                android:background="@color/c_e6e6e6">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3.3"
+                    android:text="@string/vacation_date"
+                    android:textSize="@dimen/dp14" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/vacation_use_cnt"
+                    android:textSize="@dimen/dp14"
+                    android:paddingLeft="@dimen/dp02" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/vacation_half"
+                    android:textSize="@dimen/dp14"
+                    android:paddingLeft="@dimen/dp03" />
+            </LinearLayout>
+            <!--            <View-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="@dimen/dp01"-->
+            <!--                android:background="@color/c_cccccc"/>-->
             <ListView
                 android:id="@+id/vacation_listview"
                 android:layout_width="match_parent"
@@ -247,7 +291,7 @@
                 android:divider="@null"
                 android:dividerHeight="0dp"
                 tools:listitem="@layout/list_item_vacation" />
-        </RelativeLayout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/vacation_tv_use_vc"
@@ -272,7 +316,8 @@
         <!---->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp30">
             <!---->
             <EditText
                 android:id="@+id/vacation_edt_content"
@@ -298,4 +343,17 @@
                 android:visibility="gone" />
         </RelativeLayout>
     </LinearLayout>
-</ScrollView>
+
+
+    </ScrollView>
+
+    <!--확인버튼-->
+    <Button
+        android:id="@+id/vacation_btn_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp50"
+        android:background="@drawable/btn_bottom_selector"
+        android:text="@string/btn04"
+        android:textColor="@color/c_ffffff"
+        android:textSize="@dimen/dp20" />
+</LinearLayout>

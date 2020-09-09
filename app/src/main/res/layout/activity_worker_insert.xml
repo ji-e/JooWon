@@ -266,7 +266,7 @@
                             android:hint="0"
                             android:imeOptions="actionNext"
                             android:inputType="text"
-                            android:maxLength="3"
+                            android:maxLength="4"
                             android:paddingLeft="@dimen/dp10"
                             android:singleLine="true"
                             android:textSize="@dimen/dp15" />

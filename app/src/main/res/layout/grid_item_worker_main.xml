@@ -14,17 +14,19 @@
         <RelativeLayout
             android:id="@+id/calendar_half_v"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/dp10"
             android:layout_weight="1"
             android:background="@color/c_f7b52c"
+            android:layout_marginTop="@dimen/dp20"
             android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/calendar_all_v"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/dp10"
             android:layout_weight="1"
             android:background="@color/c_f7b52c"
+            android:layout_marginTop="@dimen/dp20"
             android:visibility="gone" />
     </LinearLayout>
 

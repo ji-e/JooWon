@@ -6,12 +6,13 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.example.uohih.joowon.database.VacationData
 import com.example.uohih.joowon.worker.GridWorkerMainFragment
 import com.example.uohih.joowon.worker.ListWorkerMainFragment
+import java.time.LocalDate
 
 
 class WorkerMainAdapter(fm: FragmentManager, vacationDataList: ArrayList<VacationData>) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     private val fragments = arrayListOf(
             GridWorkerMainFragment.newInstance(vacationDataList),
-            ListWorkerMainFragment()
+            ListWorkerMainFragment.newInstance(vacationDataList)
     )
 
     override fun getItem(position: Int): Fragment {

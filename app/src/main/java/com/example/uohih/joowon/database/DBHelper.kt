@@ -19,8 +19,8 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
      * name: 이름
      * joinDate: 입사날짜
      * phone: 핸드폰 번호
-     * use: 사용 휴가 갯수
-     * total: 전체 휴가 갯수
+     * use: 사용 휴가 일수
+     * total: 전체 휴가 일수
      * picture: 사진
      */
     val tableNameWorkerJW = "tb_worker_jw"
@@ -60,8 +60,8 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
      * phone: String: 핸드폰번호
      * date: Integer: 휴가 날짜
      * content: String: 휴가 내용
-     * use: String: 사용한 휴가 개수
-     * total: String: 총 휴가 개수
+     * use: String: 사용한 휴가 일수
+     * total: String: 총 휴가 일수
      */
     fun createVacationTable() {
         val db = writableDatabase
@@ -172,9 +172,9 @@ class DBHelper(mContext: Context) : SQLiteOpenHelper(mContext, "joowon", null, 1
         return asyncExecutor.execute("select", querySelect).get()!!
     }
 
-    fun selectVacation(phone: String, name: String): Cursor {
+    fun selectVacation(phone: String, name: String, year: String): Cursor {
         val db = writableDatabase
-        val querySelect = "select * from $tableNameVacationJW where phone=\'$phone\' and name='$name'"
+        val querySelect = "select * from $tableNameVacationJW where phone=\'$phone\' and name='$name' and date like '$year%'"
 //        db.rawQuery(querySelect, null)
         LogUtil.d(querySelect)
 //        return db.rawQuery(querySelect, null)

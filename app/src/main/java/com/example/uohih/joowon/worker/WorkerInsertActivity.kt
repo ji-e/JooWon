@@ -156,12 +156,12 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
         worker_insert_edt_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(joinDate, "$1-$2-$3")
 
 
-        //총휴가개수
+        //총휴가일수
         worker_insert_edt_vacation.onFocusChangeListener = this
         worker_insert_edt_vacation.setOnEditorActionListener(this)
         worker_insert_edt_vacation.addTextChangedListener(WorkerInsertTextWatcher(worker_insert_edt_vacation))
 
-        //사용한휴가개수
+        //사용한휴가일수
         worker_insert_edt_use.setOnEditorActionListener(this)
         worker_insert_edt_use.onFocusChangeListener = this
         worker_insert_edt_use.addTextChangedListener(WorkerInsertTextWatcher(worker_insert_edt_use))
@@ -184,10 +184,10 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
                 worker_insert_edt_phone -> { //핸드폰번호
                     worker_insert_btn_delete2.visibility = if (charSequence.isEmpty()) View.GONE else View.VISIBLE
                 }
-                worker_insert_edt_vacation -> { //총휴가개수
+                worker_insert_edt_vacation -> { //총휴가일수
                     worker_insert_btn_delete3.visibility = if (charSequence.isEmpty()) View.GONE else View.VISIBLE
                 }
-                worker_insert_edt_use -> {  //사용휴가개수
+                worker_insert_edt_use -> {  //사용휴가일수
                     worker_insert_btn_delete4.visibility = if (charSequence.isEmpty()) View.GONE else View.VISIBLE
                 }
             }
@@ -234,12 +234,12 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
             worker_insert_edt_join -> { //입사일자
                 if (hasFocus) showCalendarDialog()
             }
-            worker_insert_edt_vacation -> { //총휴가개수
+            worker_insert_edt_vacation -> { //총휴가일수
                 worker_insert_btn_delete3.visibility =
                         if (hasFocus && worker_insert_edt_vacation.text.isNotEmpty()) View.VISIBLE
                         else View.GONE
             }
-            worker_insert_edt_use -> { //사용휴가개수
+            worker_insert_edt_use -> { //사용휴가일수
                 worker_insert_btn_delete4.visibility =
                         if (hasFocus && worker_insert_edt_use.text.isNotEmpty()) View.VISIBLE
                         else View.GONE

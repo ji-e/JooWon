@@ -23,15 +23,10 @@ open class AsyncExecutor(mContext: Context) : AsyncTask<String, Void?, Cursor?>(
         this.callback = callback
     }
 
-    override fun onPreExecute() {
-        super.onPreExecute()
-        asyncDialog.show()
-    }
-
     override fun onPostExecute(result: Cursor?) {
         super.onPostExecute(result)
 
-        asyncDialog.dismiss()
+//        asyncDialog.dismiss()
 
         callback?.onPostExecute()
 

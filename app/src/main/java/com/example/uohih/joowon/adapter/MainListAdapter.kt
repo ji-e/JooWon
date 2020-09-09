@@ -79,7 +79,15 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
         notifyDataSetChanged()
         base.setDeleteItem(array)
     }*/
+    private var mListener: ClickListener? = null
 
+    interface ClickListener {
+        fun onmClickEvent(bundle: Bundle)
+    }
+
+    fun setClickListener(listener: ClickListener) {
+        this.mListener = listener
+    }
 
     /**
      * 데이터 삭제
@@ -161,14 +169,15 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
                     mContext.startActivity(intent)
                 }
                 R.id.main_list_item -> { //리스트 아이템
-                    val intent = Intent(mContext, WorkerMainActivity::class.java)
 
                     val bundle = Bundle()
                     bundle.putString("name", holder.mTvName.text.toString())          //이름
                     bundle.putString("phone", holder.mTvPhone.text.toString())        //핸드폰번호
 
-                    intent.putExtra("worker", bundle)
-                    mContext.startActivity(intent) z
+                    mListener?.onmClickEvent(bundle)
+//                    val intent = Intent(mContext, WorkerMainActivity::class.java)
+//                    intent.putExtra("worker", bundle)
+//                    mContext.startActivity(intent)
                 }
                 R.id.main_list_left_view -> { //왼쪽 스와이프 (즐겨찾기)
                     holder.mSwipeLayout.animateReset()
@@ -219,8 +228,8 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
  * val name: String: 이름
  * val joinDate: Int: 입사 날짜
  * val phone: String: 핸드폰 번호
- * val use: Int: 사용 휴가 갯수
- * val total: Int: 전체 휴가 갯수
+ * val use: Int: 사용 휴가 일수
+ * val total: Int: 전체 휴가 일수
  * val picture: String: 사진
  */
 class StaffData(

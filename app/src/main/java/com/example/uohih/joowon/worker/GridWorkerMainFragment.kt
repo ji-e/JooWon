@@ -20,7 +20,7 @@ import kotlin.collections.ArrayList
 
 class GridWorkerMainFragment : Fragment() {
     private lateinit var mContext: Context
-    private lateinit var calendarAdapter: CalendarAdapter
+    private val calendarAdapter by lazy { CalendarAdapter(mContext, JWBaseActivity().getCalendar(LocalDate.now()), LocalDate.now(), R.layout.grid_item_worker_main) }
 
     private var vacationList = arrayListOf<VacationData>()
 
@@ -41,8 +41,9 @@ class GridWorkerMainFragment : Fragment() {
 //        section_label.text=arguments?.let{
 //            it.getInt(num).toString()
 //        }
-        setCalendarView(LocalDate.now(), LocalDate.now())
+//        setCalendarView(LocalDate.now())
         grid_worker.adapter = calendarAdapter
+        calendarAdapter.setVacationData(vacationList)
     }
 
     companion object {
@@ -60,6 +61,8 @@ class GridWorkerMainFragment : Fragment() {
                 arguments = Bundle().apply {
                     //                    putInt(num, Number)
                     vacationList = v
+
+
                 }
             }
         }
@@ -69,10 +72,9 @@ class GridWorkerMainFragment : Fragment() {
      * 캘린더뷰 세팅
      */
 
-    fun setCalendarView(date: LocalDate, selectedDate: LocalDate) {
-        calendarAdapter = CalendarAdapter(mContext, JWBaseActivity().getCalendar(date), selectedDate, R.layout.grid_item_worker_main)
+    fun setCalendarView(date: LocalDate) {
+        calendarAdapter.setListDayInfo(JWBaseActivity().getCalendar(date))
         calendarAdapter.setVacationData(vacationList)
-        grid_worker.adapter = calendarAdapter
     }
 
 }
