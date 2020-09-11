@@ -75,15 +75,15 @@
                 android:layout_width="@dimen/dp40"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_list_selector"
-                android:onClick="onClickWorkerMain" />
+                android:onClick="onClickWorkerMain"
+                android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/btn_worker_calendar"
                 android:layout_width="@dimen/dp40"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_calendar_selector"
-                android:onClick="onClickWorkerMain"
-                android:visibility="gone" />
+                android:onClick="onClickWorkerMain" />
 
             <ImageButton
                 android:id="@+id/btn_worker_call"

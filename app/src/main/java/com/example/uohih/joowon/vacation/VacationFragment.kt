@@ -7,6 +7,7 @@ import android.content.DialogInterface
 import android.graphics.BitmapFactory
 import android.media.ExifInterface
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,7 +85,7 @@ class VacationFragment : Fragment(), View.OnClickListener {
         vacation_btn_endC.setOnClickListener(this)
 
         cntSchedule = (calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString()))
-        vacation_tv_use_vc.text = String.format(getString(R.string.worker_vacation_use_vacation), cntSchedule)
+        vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cntSchedule)
 
         // 하단 등록 버튼
         vacation_btn_bottom.setOnClickListener(this)
@@ -168,8 +169,15 @@ class VacationFragment : Fragment(), View.OnClickListener {
      * 검증
      */
     private fun validation(): Boolean {
+        if (vacationList.size == 0) {
+            customDialog.showDialog(
+                    mContext,
+                    resources.getString(R.string.vacation_dialog_msg4),
+                    resources.getString(R.string.btn01), null)
+            return false
+        }
         if (vacation_edt_content.text.isNullOrEmpty())
-            vacation_edt_content.setText(getString(R.string.worker_vacation_content2))
+            vacation_edt_content.setText(getString(R.string.vacation_content2))
 
         // 휴가 일수 확인
         return cntRemain >= cntSchedule
@@ -204,14 +212,14 @@ class VacationFragment : Fragment(), View.OnClickListener {
             vacation_listview.adapter = mVacationAdapter.apply {
                 setVacationAdapterListener(object : VacationAdapter.VacationAdapterListener {
                     override fun getItemHeight(height: Int) {
-                        val params = vacation_listview.layoutParams
-                        params.height = height
-                        vacation_listview.layoutParams = params
-                        vacation_listview.requestLayout()
+                        val params = vacation_listview?.layoutParams
+                        params?.height = height
+                        vacation_listview?.layoutParams = params
+                        vacation_listview?.requestLayout()
                     }
 
                     override fun getVacationCnt(mCheckBoxList: ArrayList<Boolean>, cnt: Double) {
-                        vacation_tv_use_vc.text = String.format(getString(R.string.worker_vacation_use_vacation), cnt)
+                        vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cnt)
                         workingDays = cnt
                         checkBoxList = mCheckBoxList
                     }
@@ -242,13 +250,13 @@ class VacationFragment : Fragment(), View.OnClickListener {
             if (mTv.id == R.id.vacation_tv_endD) {
                 val startD = vacation_tv_startD.text.toString().replace("-", "").toInt()
                 if (startD > baseApplication.getSelectDate().toInt()) {
-                    customDialog.showDialog(mContext, resources.getString(R.string.worker_vacation_dialog), resources.getString(R.string.btn01), null)
+                    customDialog.showDialog(mContext, resources.getString(R.string.vacation_dialog_msg3), resources.getString(R.string.btn01), null)
                     return@setOnDismissListener
                 }
             }
             mTv.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(baseApplication.getSelectDate(), "$1-$2-$3")
             cntSchedule = calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString())
-            vacation_tv_use_vc.text = String.format(getString(R.string.worker_vacation_use_vacation), cntSchedule)
+            vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cntSchedule)
         }
     }
 
@@ -273,6 +281,17 @@ class VacationFragment : Fragment(), View.OnClickListener {
 
             use = (use.toDouble() + cntUse.toDouble()).toString()
 
+            val cursor = dbHelper.selectVacation(phone, name, date)
+
+            if (cursor.count > 0) {
+                customDialog.showDialog(
+                        mContext,
+                        getString(R.string.vacation_dialog_msg2),
+                        getString(R.string.btn01), null)
+
+                return
+            }
+
             dbHelper.insert(dbHelper.tableNameVacationJW, "name", "phone", "date", "content", "use", "total",
                     name, phone, date, content, cntUse, cntTotal)
 
@@ -294,6 +313,9 @@ class VacationFragment : Fragment(), View.OnClickListener {
     }
 
 
+    private fun vacationExistence() {
+
+    }
     /**
      * 리스트뷰 높이 설정
      */

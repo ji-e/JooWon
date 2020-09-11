@@ -15,7 +15,7 @@
         android:layout_height="@dimen/dp60"
         android:gravity="center_vertical"
         app:btnClose="true"
-        app:tvTitle="@string/worker_vacation_title" />
+        app:tvTitle="@string/vacation_title" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp40"
             android:background="@drawable/input_selector"
-            android:hint="@string/worker_vacation_hint"
+            android:hint="@string/vacation_hint"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:maxLength="15"
@@ -89,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/worker_vacation_nothing"
+            android:text="@string/vacation_nothing"
             android:textColor="@color/c_aaaaaa"
             android:textSize="@dimen/dp14" />
 

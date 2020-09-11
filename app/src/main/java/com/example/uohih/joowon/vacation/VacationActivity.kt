@@ -13,7 +13,6 @@ import com.example.uohih.joowon.R
 import com.example.uohih.joowon.adapter.StaffData
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
-import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.view.CustomDialog
 import kotlinx.android.synthetic.main.activity_vacation.*
@@ -81,7 +80,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
 //        vacation_btn_endC.setOnClickListener(this)
 //
 //        cntSchedule = (calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString()))
-//        vacation_tv_use_vc.text = String.format(getString(R.string.worker_vacation_use_vacation), cntSchedule)
+//        vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cntSchedule)
 //
 //        // 하단 등록 버튼
 //        vacation_btn_bottom.setOnClickListener(this)
@@ -107,7 +106,6 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
                 setSearch(vacation_edt_name.text.toString())
 
             } else {
-                LogUtil.e("FDF")
                 subList.clear()
                 vacation_btn_delete1.visibility = View.GONE
                 vacation_frame_ly.visibility = View.GONE
@@ -123,37 +121,6 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
 
     inner class VacationListItemClickListener : OnItemClickListener {
         override fun onItemClick(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-            vacation_frame_ly.visibility = View.VISIBLE
-            vacation_ly_search.visibility = View.GONE
-//            vacation_btn_bottom.visibility = View.VISIBLE
-
-//            val bitmap = subList[p2].picture
-//            if (bitmap != "") {
-//                val file = BitmapFactory.decodeFile(bitmap)
-//                lateinit var exif: ExifInterface
-//
-//                try {
-//                    exif = ExifInterface(bitmap)
-//                } catch (e: IOException) {
-//                    e.printStackTrace()
-//                }
-//
-//                val exifOrientation: Int
-//                val exifDegree: Int
-//
-//                exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-//                exifDegree = exifOrientationToDegrees(exifOrientation)
-//
-//                Glide.with(thisActivity).load(rotate(file, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(vacation_img_people)
-//
-//            } else {
-//                vacation_img_people.setImageDrawable(getDrawable(R.drawable.people))
-//            }
-//
-//            vacation_tv_name.text = subList[p2].name
-//            vacation_tv_join.text = subList[p2].joinDate.toString()
-//            vacation_tv_phone.text = subList[p2].phone
-//            vacation_tv_vacation.text = subList[p2].use + "/" + subList[p2].total
 
             cntRemain = (subList[position].total.toDouble() - subList[position].use.toDouble())
             cntTotal = subList[position].total
@@ -171,8 +138,10 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
             bundle.putDouble("cntRemain", cntRemain)
             bundle.putString("cntTotal", cntTotal)
 
-            addContainerFragment(R.id.vacation_frame_ly, VacationFragment.newInstance(bundle))
+            replaceContainerFragment(R.id.vacation_frame_ly, VacationFragment.newInstance(bundle), position)
 
+            vacation_ly_search.visibility = View.GONE
+            vacation_frame_ly.visibility = View.VISIBLE
         }
 
     }
@@ -185,19 +154,6 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
             R.id.vacation_btn_search -> {
                 setSearch(vacation_edt_name.text.toString())
             }
-//            R.id.vacation_btn_startC -> {
-//                showCalendarDialog(vacation_tv_startD.text.toString(), vacation_tv_startD)
-//            }
-//            R.id.vacation_btn_endC -> {
-//                showCalendarDialog(vacation_tv_endD.text.toString(), vacation_tv_endD)
-//            }
-//            R.id.vacation_btn_bottom -> {
-//                if(validation()){
-//                    //todo
-//                    LogUtil.e("True")
-//                    setVacationRegister()
-//                }
-//            }
 
         }
     }
@@ -223,7 +179,6 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
     private fun setSearch(charText: String) {
         vacation_frame_ly.visibility = View.GONE
         vacation_ly_search.visibility = View.VISIBLE
-//        vacation_btn_bottom.visibility = View.GONE
 
         subList.clear()
         for (i in 0 until mainList.size) {
@@ -247,9 +202,6 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
     fun clearEditName() {
         vacation_edt_name.setText("")
     }
-
-
-
 
 }
 

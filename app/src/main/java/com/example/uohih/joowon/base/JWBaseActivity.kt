@@ -8,6 +8,7 @@ import android.media.ExifInterface
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.uohih.joowon.R
 import com.example.uohih.joowon.view.CalendarDayInfo
 import com.example.uohih.joowon.view.CustomLoadingBar
 import org.json.JSONObject
@@ -224,10 +225,22 @@ open class JWBaseActivity : AppCompatActivity() {
     }
 
 
-    open fun addContainerFragment(layoutId: Int, fragment: Fragment) {
+    open fun replaceContainerFragment(layoutId: Int, fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         val classNameTag: String = fragment.javaClass.simpleName
+        fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+
         fragmentTransaction.add(layoutId, fragment, classNameTag).commitAllowingStateLoss()
+
     }
+
+    open fun replaceContainerFragment(layoutId: Int, fragment: Fragment, i: Int) {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        val classNameTag: String = fragment.javaClass.simpleName
+        fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+        fragmentTransaction.replace(layoutId, fragment, classNameTag).commit()
+
+    }
+
 
 }

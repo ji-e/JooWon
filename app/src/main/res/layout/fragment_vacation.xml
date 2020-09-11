@@ -155,7 +155,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp10"
-                    android:text="@string/worker_vacation_start_date"
+                    android:text="@string/vacation_start_date"
                     android:textColor="@color/c_333333"
                     android:textSize="@dimen/dp15"
                     android:textStyle="bold" />
@@ -207,7 +207,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp10"
-                    android:text="@string/worker_vacation_end_date"
+                    android:text="@string/vacation_end_date"
                     android:textColor="@color/c_333333"
                     android:textSize="@dimen/dp15"
                     android:textStyle="bold" />
@@ -299,7 +299,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:gravity="center_vertical"
-            android:text="@string/worker_vacation_use_vacation"
+            android:text="@string/vacation_use_vacation"
             android:textColor="@color/c_004680"
             android:textSize="@dimen/dp15" />
 
@@ -309,7 +309,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp16"
             android:layout_marginBottom="@dimen/dp10"
-            android:text="@string/worker_vacation_content"
+            android:text="@string/vacation_content"
             android:textColor="@color/c_333333"
             android:textSize="@dimen/dp15"
             android:textStyle="bold" />
@@ -324,7 +324,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp150"
                 android:background="@drawable/input_selector"
-                android:hint="@string/worker_vacation_hint2"
+                android:hint="@string/vacation_hint2"
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:maxLength="15"

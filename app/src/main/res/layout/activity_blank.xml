@@ -11,7 +11,7 @@
         android:layout_height="@dimen/dp60"
         android:gravity="center_vertical"
         app:btnBack="true"
-        app:tvTitle="@string/worker_vacation_title" />
+        app:tvTitle="@string/vacation_title" />
 
     <FrameLayout
         android:layout_width="match_parent"

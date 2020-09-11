@@ -102,7 +102,9 @@
         app:bring_to_clamp="@dimen/dp100"
         app:clamp="self"
         app:gravity="left"
-        app:sticky="none">
+        app:sticky="none"
+        app:left_swipe_enabled="false"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"

@@ -36,7 +36,7 @@ class BlankActivity : JWBaseActivity() {
 
 
         if (fragment != null)
-            addContainerFragment(R.id.blank_frame, fragment)
+            replaceContainerFragment(R.id.blank_frame, fragment)
 
     }
 }

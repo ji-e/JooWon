@@ -119,12 +119,18 @@ class WorkerMainActivity : JWBaseActivity() {
             }
 
             if (position == 0) {
+                // 캘린더 형
+                btn_worker_calendar.visibility = View.VISIBLE
+                btn_worker_list.visibility = View.GONE
                 tv_worker_month.visibility = View.VISIBLE
                 btn_worker_nextm.visibility = View.VISIBLE
                 btn_worker_backm.visibility = View.VISIBLE
                 val fragment = findFragmentByPosition() as GridWorkerMainFragment
                 fragment.setCalendarView(localdate)
             } else {
+                // 리스트 형
+                btn_worker_calendar.visibility = View.GONE
+                btn_worker_list.visibility = View.VISIBLE
                 tv_worker_month.visibility = View.INVISIBLE
                 btn_worker_nextm.visibility = View.INVISIBLE
                 btn_worker_backm.visibility = View.INVISIBLE
@@ -173,17 +179,23 @@ class WorkerMainActivity : JWBaseActivity() {
             btn_worker_list -> {
                 btn_worker_calendar.visibility = View.VISIBLE
                 btn_worker_list.visibility = View.GONE
+
+                viewpager_worker.currentItem = 0
             }
             btn_worker_calendar -> {
                 btn_worker_calendar.visibility = View.GONE
                 btn_worker_list.visibility = View.VISIBLE
+
+                viewpager_worker.currentItem = 1
             }
             btn_worker_call -> {
+                // 전화걸기
                 val intentCall = Intent(Intent.ACTION_DIAL)
                 intentCall.data = Uri.parse("tel:$phoneNum")
                 startActivity(intentCall)
             }
             btn_worker_setting -> {
+                // 직원정보 수정하기
                 val intentSetting = Intent(this, WorkerInsertActivity::class.java)
                 intentSetting.putExtra("workerUpdate", "Y")
                 intentSetting.putExtra("workerBundle", getBundle)

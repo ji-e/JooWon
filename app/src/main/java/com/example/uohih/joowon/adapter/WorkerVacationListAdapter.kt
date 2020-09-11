@@ -86,6 +86,7 @@ class WorkerVacationListAdapter(private val vacationDataList: ArrayList<Vacation
             when (it.id) {
             }
         }
+        holder.mSwipeLayout.animateReset()
 
 
         holder.apply {
@@ -100,9 +101,9 @@ class WorkerVacationListAdapter(private val vacationDataList: ArrayList<Vacation
     }
 
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
-        if (holder.adapterPosition != RecyclerView.NO_POSITION) {
-            itemsOffset[holder.adapterPosition] = holder.mSwipeLayout.offset
-        }
+//        if (holder.adapterPosition != RecyclerView.NO_POSITION) {
+//            itemsOffset[holder.adapterPosition] = holder.mSwipeLayout.offset
+//        }
     }
 }
 

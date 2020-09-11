@@ -219,6 +219,7 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
         if (holder.adapterPosition != RecyclerView.NO_POSITION) {
             itemsOffset[holder.adapterPosition] = holder.mSwipeLayout.offset
         }
+        holder.mSwipeLayout.animateReset()
     }
 }
 
