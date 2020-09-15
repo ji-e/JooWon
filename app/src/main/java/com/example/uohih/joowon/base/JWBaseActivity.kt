@@ -5,7 +5,11 @@ import android.content.pm.PackageInfo
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.media.ExifInterface
+import android.os.Bundle
 import android.os.Handler
+import android.os.PersistableBundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.uohih.joowon.R
@@ -21,8 +25,8 @@ import kotlin.collections.ArrayList
 
 open class JWBaseActivity : AppCompatActivity() {
 
-    val mContext: Context by lazy { applicationContext }
-    val customLoading by lazy { CustomLoadingBar.createCustomLoadingBarDialog(this) }
+    val mContext: Context by lazy { this }
+
     /**
      * 앱 버전 정보 가져오기
      */
@@ -205,23 +209,33 @@ open class JWBaseActivity : AppCompatActivity() {
 
     }
 
+
     /**
      * show loading
      */
-    fun showLoading() {
-        customLoading.show()
+    open fun showLoading(): Boolean {
+        try {
+            LogUtil.d("<><><><> showLoadingBar start <><><><>")
+            CustomLoadingBar.showLoadingBar(mContext)
+        } catch (e: java.lang.Exception) {
+            LogUtil.e("<><><><> showLoadingBar Exception : " + e.message)
+            return false
+        }
+        return true
     }
 
     /**
      * hide loading
      */
-    fun hideLoading() {
+    open fun hideLoading(): Boolean {
         try {
-            LogUtil.e("<<<<<<<hideLoading>>>>>>")
-            customLoading.hide()
-        } catch (e: Exception) {
-            e.printStackTrace()
+            LogUtil.d("<><><><> hideLoadingBar start <><><><>")
+            CustomLoadingBar.hideLoadingBar()
+        } catch (e: java.lang.Exception) {
+            LogUtil.e("<><><><> hideLoadingBar Exception : " + e.message)
+            return false
         }
+        return true
     }
 
 

@@ -6,24 +6,27 @@ import com.example.uohih.joowon.R
 
 class CustomLoadingBar {
     companion object {
-        lateinit var mLoadingBar: Dialog
+        private var mLoadingBar: Dialog? = null
         fun createCustomLoadingBarDialog(mContext: Context): Dialog {
-            mLoadingBar = Dialog(mContext, R.style.Loading)
-            mLoadingBar.setCancelable(false)
-            mLoadingBar.setContentView(R.layout.dialog_loading)
 
-            return mLoadingBar
+            mLoadingBar = Dialog(mContext, R.style.Loading).apply {
+                setCancelable(false)
+                setContentView(R.layout.dialog_loading)
+            }
+
+            return mLoadingBar as Dialog
         }
 
         fun showLoadingBar(mContext: Context) {
             createCustomLoadingBarDialog(mContext)
-            mLoadingBar.show()
+            mLoadingBar?.show()
         }
 
         fun hideLoadingBar() {
             if (mLoadingBar != null) {
                 try {
-                    mLoadingBar.dismiss()
+                    mLoadingBar?.dismiss()
+                    mLoadingBar = null
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
