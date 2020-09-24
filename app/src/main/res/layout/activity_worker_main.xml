@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:background="@color/c_ffffff"
     android:orientation="vertical"
-    tools:context=".worker.WorkerMainActivity">
+    tools:context=".view.worker.WorkerMainActivity">
 
     <!--상단 타이틀 및 아이콘 바-->
-    <com.example.uohih.joowon.view.TopTitleView
+    <com.example.uohih.joowon.customview.TopTitleView
         android:id="@+id/worker_main_title_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp60"

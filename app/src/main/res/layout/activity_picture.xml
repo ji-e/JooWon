@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.PictureActivity"
+    tools:context=".view.main.PictureActivity"
     android:orientation="vertical"
     android:background="@color/c_ffffff">
     <!--상단 타이틀 및 아이콘 바-->
-    <com.example.uohih.joowon.view.TopTitleView
+    <com.example.uohih.joowon.customview.TopTitleView
         android:id="@+id/worker_insert_title_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp60"

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".main.IntroActivity">
+    tools:context=".view.main.IntroActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"

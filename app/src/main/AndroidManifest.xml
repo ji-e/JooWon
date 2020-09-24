@@ -15,6 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".view.login.ui.login.LoginActivity"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -26,24 +28,24 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".main.IntroActivity">
+        <activity android:name="com.example.uohih.joowon.view.main.IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.MainListActivity" />
-        <activity android:name=".worker.WorkerInsertActivity" />
-        <activity android:name=".main.PictureActivity" />
-        <activity android:name=".worker.WorkerMainActivity" />
-        <activity android:name=".setting.SettingActivity" />
-        <activity android:name=".setting.PasswordSettingActivity"></activity>
-        <activity android:name=".setting.PasswordCheckActivity"></activity>
+        <activity android:name="com.example.uohih.joowon.view.main.MainListActivity" />
+        <activity android:name="com.example.uohih.joowon.view.worker.WorkerInsertActivity" />
+        <activity android:name="com.example.uohih.joowon.view.main.PictureActivity" />
+        <activity android:name="com.example.uohih.joowon.view.worker.WorkerMainActivity" />
+        <activity android:name="com.example.uohih.joowon.view.setting.SettingActivity" />
+        <activity android:name="com.example.uohih.joowon.view.setting.PasswordSettingActivity" />
+        <activity android:name="com.example.uohih.joowon.view.setting.PasswordCheckActivity" />
         <activity
-            android:name=".vacation.VacationActivity"
+            android:name="com.example.uohih.joowon.view.vacation.VacationActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".base.BlankActivity"></activity>
+        <activity android:name=".base.BlankActivity" />
     </application>
 
 </manifest>

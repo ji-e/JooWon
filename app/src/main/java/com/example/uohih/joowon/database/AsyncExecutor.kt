@@ -4,7 +4,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.AsyncTask
-import com.example.uohih.joowon.view.CustomLoadingBar
+import com.example.uohih.joowon.customview.CustomLoadingBar
 
 
 open class AsyncExecutor(mContext: Context) : AsyncTask<String, Void?, Cursor?>() {
