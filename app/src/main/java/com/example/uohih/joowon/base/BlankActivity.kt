@@ -3,7 +3,7 @@ package com.example.uohih.joowon.base
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.view.vacation.VacationFragment
+import com.example.uohih.joowon.ui.vacation.VacationFragment
 
 class BlankActivity : JWBaseActivity() {
 

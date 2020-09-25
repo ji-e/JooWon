@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.view.setting.SettingActivity
-import com.example.uohih.joowon.view.vacation.VacationActivity
+import com.example.uohih.joowon.ui.setting.SettingActivity
+import com.example.uohih.joowon.ui.vacation.VacationActivity
 import kotlinx.android.synthetic.main.view_top_title.view.*
 
 /**

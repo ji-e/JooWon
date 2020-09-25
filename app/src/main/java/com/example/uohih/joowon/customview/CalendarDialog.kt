@@ -14,7 +14,7 @@ import android.widget.TextView
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.view.adapter.CalendarAdapter
+import com.example.uohih.joowon.ui.adapter.CalendarAdapter
 import com.example.uohih.joowon.base.LogUtil
 import kotlinx.android.synthetic.main.dialog_calendar.view.*
 import java.time.LocalDate

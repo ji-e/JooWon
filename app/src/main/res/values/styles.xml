@@ -30,4 +30,12 @@
     </style>
 
 
+    <style name="Font_14_000000">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_000000</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+
 </resources>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/c_ffffff"
     android:orientation="vertical"
-    tools:context=".view.worker.WorkerMainActivity">
+    tools:context=".ui.worker.WorkerMainActivity">
 
     <!--상단 타이틀 및 아이콘 바-->
     <com.example.uohih.joowon.customview.TopTitleView

@@ -101,5 +101,13 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="title_activity_signup">Signup</string>
 
+
+    <!--SignUpActivity-->
+    <string name="signup_title">회원가입</string>
+    <string name="signup_name">이름</string>
+    <string name="signup_email">이메일</string>
+    <string name="signup_pw">비밀번호</string>
+    <string name="signup_pw2">비밀번호 재입력</string>
 </resources>
