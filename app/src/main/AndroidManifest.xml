@@ -15,8 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.signup.SignUpActivity"></activity>
-        <activity android:name="com.example.uohih.joowon.ui.signin.ui.login.LoginActivity" />
+        <activity android:name=".ui.signup.SignUpInitActiviy"></activity>
+        <activity
+            android:name=".ui.signup.SignUpActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.signin.LoginActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -28,22 +31,22 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name="com.example.uohih.joowon.ui.main.IntroActivity">
+        <activity android:name=".ui.main.IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.uohih.joowon.ui.main.MainListActivity" />
-        <activity android:name="com.example.uohih.joowon.ui.worker.WorkerInsertActivity" />
-        <activity android:name="com.example.uohih.joowon.ui.main.PictureActivity" />
-        <activity android:name="com.example.uohih.joowon.ui.worker.WorkerMainActivity" />
-        <activity android:name="com.example.uohih.joowon.ui.setting.SettingActivity" />
-        <activity android:name="com.example.uohih.joowon.ui.setting.PasswordSettingActivity" />
-        <activity android:name="com.example.uohih.joowon.ui.setting.PasswordCheckActivity" />
+        <activity android:name=".ui.main.MainListActivity" />
+        <activity android:name=".ui.worker.WorkerInsertActivity" />
+        <activity android:name=".ui.main.PictureActivity" />
+        <activity android:name=".ui.worker.WorkerMainActivity" />
+        <activity android:name=".ui.setting.SettingActivity" />
+        <activity android:name=".ui.setting.PasswordSettingActivity" />
+        <activity android:name=".ui.setting.PasswordCheckActivity" />
         <activity
-            android:name="com.example.uohih.joowon.ui.vacation.VacationActivity"
+            android:name=".ui.vacation.VacationActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".base.BlankActivity" />
     </application>

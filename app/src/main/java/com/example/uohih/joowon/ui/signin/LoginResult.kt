@@ -1,4 +1,4 @@
-package com.example.uohih.joowon.ui.signin.ui.login
+package com.example.uohih.joowon.ui.signin
 
 /**
  * Authentication result : success (user details) or error message.

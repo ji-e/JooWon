@@ -1,4 +1,4 @@
-package com.example.uohih.joowon.ui.signin.ui.login
+package com.example.uohih.joowon.ui.signin
 
 import android.app.Activity
 import androidx.lifecycle.Observer

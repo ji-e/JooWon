@@ -29,11 +29,44 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <style name="Font_10_f13e51">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_f13e51</item>
+        <item name="android:textSize">@dimen/dp10</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Font_10_000000">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_000000</item>
+        <item name="android:textSize">@dimen/dp10</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Font_12_000000">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_000000</item>
+        <item name="android:textSize">@dimen/dp12</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
 
     <style name="Font_14_000000">
         <!--<item name="fontFamily">@font/roboto_r</item>-->
         <item name="android:textColor">@color/c_000000</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">@dimen/dp14</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+    <style name="Font_14_ffffff">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_ffffff</item>
+        <item name="android:textSize">@dimen/dp14</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Font_16_ffffff">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_ffffff</item>
+        <item name="android:textSize">@dimen/dp16</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 

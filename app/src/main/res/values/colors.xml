@@ -26,9 +26,12 @@
     <color name="c_f13e51">#f13e51</color>
     <color name="c_f7b52c">#f7b52c</color>
     <color name="c_004680">#004680</color>
+    <color name="c_003570">#003570</color>
     <color name="c_a1dee9">#a1dee9</color>
     <color name="c_cee59a">#cee59a</color>
     <color name="c_cba8de">#cba8de</color>
     <color name="c_9dabe2">#9dabe2</color>
     <color name="c_fdc480">#fdc480</color>
+
+    <color name="c_null">#00000000</color>
 </resources>

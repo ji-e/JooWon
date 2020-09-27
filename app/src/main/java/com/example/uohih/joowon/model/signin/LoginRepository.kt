@@ -1,4 +1,4 @@
-package com.example.uohih.joowon.repository.signin
+package com.example.uohih.joowon.model.signin
 
 import com.example.uohih.joowon.model.signin.LoggedInUser
 import com.example.uohih.joowon.model.signin.LoginDataSource

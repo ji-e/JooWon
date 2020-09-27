@@ -1,7 +1,7 @@
-package com.example.uohih.joowon.server;
+package com.example.uohih.joowon.retrofit;
 
 
-import android.content.Context;
+import android.util.Log;
 
 import com.example.uohih.joowon.base.LogUtil;
 
@@ -20,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Retrofit 클라이언트
- *
+ * <p>
  * date: 2020-09-24
  * author: jieun
  */
@@ -28,24 +28,27 @@ public class RetroClient {
 
     public static ApiService apiService;
     public static String baseUrl = ApiService.Base_URL;
-    private static Context mContext;
+    public static String baseUrlNaverApi = ApiService.BASE_URL_NAVER_API;
     private static Retrofit retrofit;
 
     private static class SingletonHolder {
-        private static RetroClient INSTANCE = new RetroClient();
+        private static RetroClient INSTANCE = new RetroClient(baseUrl);
+        private static RetroClient INSTANCE2 = new RetroClient(baseUrlNaverApi);
     }
 
-    public static RetroClient getInstance(Context context) {
-        if (context != null) {
-            mContext = context;
-        }
+
+    public static RetroClient getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
-    private RetroClient() {
+    public static RetroClient getInstance2() {
+        return SingletonHolder.INSTANCE2;
+    }
+
+    private RetroClient(String url) {
         retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(baseUrl)
+                .baseUrl(url)
                 .build();
     }
 
@@ -69,28 +72,30 @@ public class RetroClient {
         apiCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String response_body = "";
-                if (response.isSuccessful()) {
-                    try {
+                try {
+                    String response_body = "";
+                    if (response.isSuccessful()) {
                         response_body = response.body().string();
-//                        LogUtil.d(response_body);
+                        Log.d("Retrofitttt::  ", response_body);
 
-                        if(response_body.indexOf("[") == 0){
-                            callback.onSuccess(response.code(), new JSONArray(response_body));
-                        }else{
-                            JSONArray jsonArray = new JSONArray();
-                            JSONObject jsonObject= new JSONObject(response_body);
-                            jsonArray.put(jsonObject);
-                            callback.onSuccess(response.code(), jsonArray);
-                        }
+//                        if(response_body.indexOf("[") == 0){
+//                            callback.onSuccess(response.code(), new JSONArray(response_body));
+//                        }else{
+                        JSONArray jsonArray = new JSONArray();
+                        JSONObject jsonObject = new JSONObject(response_body);
+                        jsonArray.put(jsonObject);
+                        callback.onSuccess(response.code(), jsonObject);
+//                        }
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+
+                    } else {
+                        Log.d("Retrofitttt::  ", response.body().string());
+                        callback.onFailure(response.code());
                     }
-                } else {
-                    callback.onFailure(response.code());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
 

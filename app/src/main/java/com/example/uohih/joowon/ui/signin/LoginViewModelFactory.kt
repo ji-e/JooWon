@@ -1,9 +1,9 @@
-package com.example.uohih.joowon.ui.signin.ui.login
+package com.example.uohih.joowon.ui.signin
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.uohih.joowon.model.signin.LoginDataSource
-import com.example.uohih.joowon.repository.signin.LoginRepository
+import com.example.uohih.joowon.model.signin.LoginRepository
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

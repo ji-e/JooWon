@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.uohih.joowon.repository.signup.SignUpDataSource
 import com.example.uohih.joowon.repository.signup.SignUpRepository
 
-class SignUpViewModelFactory : ViewModelProvider.Factory {
+class SignUpInitViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SignUpViewModel::class.java)) {
-            return SignUpViewModel(
+        if (modelClass.isAssignableFrom(SignUpInitViewModel::class.java)) {
+            return SignUpInitViewModel(
                     signUpRepository = SignUpRepository(dataSource = SignUpDataSource())
             ) as T
         }

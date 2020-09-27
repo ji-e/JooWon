@@ -78,7 +78,7 @@
         android:layout_marginTop="@dimen/dp20"
         android:layout_marginBottom="@dimen/dp20"
         android:layout_weight="1"
-        android:background="@drawable/rectangle_nor3"
+        android:background="@drawable/rectangle_r4_aaaaaa"
         android:padding="@dimen/dp02"
         android:layout_marginLeft="@dimen/dp16"
         android:layout_marginRight="@dimen/dp16"

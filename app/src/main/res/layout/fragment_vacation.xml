@@ -244,7 +244,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp20"
             android:layout_marginBottom="@dimen/dp10"
-            android:background="@drawable/rectangle_nor3"
+            android:background="@drawable/rectangle_r4_aaaaaa"
             android:orientation="vertical"
             android:padding="@dimen/dp02">
 

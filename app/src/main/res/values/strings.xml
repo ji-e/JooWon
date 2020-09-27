@@ -3,6 +3,8 @@
     <string name="name">주원산업</string>
     <string name="name2">주원</string>
     <string name="exit_msg">한번 더 누르시면 종료 됩니다.</string>
+    <string name="blank"></string>
+    <string name="string_format" formatted="false">%s</string>
 
     <!--button-->
     <string name="btn01">확인</string>
@@ -110,4 +112,15 @@
     <string name="signup_email">이메일</string>
     <string name="signup_pw">비밀번호</string>
     <string name="signup_pw2">비밀번호 재입력</string>
+    <string name="signup_email_hint">이메일을 입력해주세요.</string>
+    <string name="signup_pw_hint">비밀번호를 영문, 숫자, 특수문자 조합으로 입력해주세요.</string>
+    <string name="signup_pw2_hint">비밀번호를 다시 한번 입력해주세요.</string>
+    <string name="signup_email_err">이메일 형식으로 입력해주세요.</string>
+    <string name="signup_email_confirm">사용가능한 이메일입니다.</string>
+    <string name="signup_password_err1">8자리 이상 입력해주세요.</string>
+    <string name="signup_password_err2">영문, 숫자, 특수문자 조합으로 입력해주세요.</string>
+    <string name="signup_password_err3">같은문자를 4자리이상 입력할 수 없습니다.</string>
+    <string name="signup_password_err4">비밀번호가 일치하지 않습니다.</string>
+    <string name="signup_btn_email_overlap">중복확인</string>
+    <string name="signup_btn_signup">가입하기</string>
 </resources>
