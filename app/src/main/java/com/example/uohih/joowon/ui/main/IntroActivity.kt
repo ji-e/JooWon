@@ -13,6 +13,7 @@ import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.ui.signin.LoginActivity
+import com.example.uohih.joowon.ui.signin.SignInActivity
 import com.example.uohih.joowon.ui.signup.SignUpActivity
 import com.example.uohih.joowon.ui.signup.SignUpInitActiviy
 import kotlinx.android.synthetic.main.activity_intro.*
@@ -97,7 +98,7 @@ class IntroActivity : JWBaseActivity() {
 //                goMainActivity()
 
 //                val intent = Intent(this, LoginActivity::class.java)
-                val intent = Intent(this, SignUpInitActiviy::class.java)
+                val intent = Intent(this, SignInActivity::class.java)
                 startActivity(intent)
                 finish()
             }

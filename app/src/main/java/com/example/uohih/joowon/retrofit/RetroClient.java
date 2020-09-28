@@ -32,23 +32,18 @@ public class RetroClient {
     private static Retrofit retrofit;
 
     private static class SingletonHolder {
-        private static RetroClient INSTANCE = new RetroClient(baseUrl);
-        private static RetroClient INSTANCE2 = new RetroClient(baseUrlNaverApi);
+        private static RetroClient INSTANCE = new RetroClient();
     }
-
 
     public static RetroClient getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
-    public static RetroClient getInstance2() {
-        return SingletonHolder.INSTANCE2;
-    }
 
-    private RetroClient(String url) {
+    private RetroClient() {
         retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(url)
+                .baseUrl(baseUrl)
                 .build();
     }
 
@@ -89,8 +84,10 @@ public class RetroClient {
 
 
                     } else {
-                        Log.d("Retrofitttt::  ", response.body().string());
-                        callback.onFailure(response.code());
+                        if (response.body() != null) {
+                            Log.d("Retrofitttt::  ", response.body().string());
+                            callback.onFailure(response.code());
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

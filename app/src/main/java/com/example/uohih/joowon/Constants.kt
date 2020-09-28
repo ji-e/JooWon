@@ -4,6 +4,14 @@ class Constants {
     companion object {
 
         val SERVICE_ADMIN = "admin"
+        val JW1001 = "SU1001"
+        val JW1002 = "SU1002"
+        val JW1003 = "SU1003"
+        val JW1004 = "SU1004"
+        val JW1005 = "SU1005"
+        val JW1006 = "SU1006"
+
+
         // PasswordCheckActivity requestCode
         val passwordCheck = 1000
 

@@ -1,6 +1,5 @@
 package com.example.uohih.joowon.retrofit
 
-import com.example.uohih.joowon.model.Result
 import org.json.JSONObject
 
 

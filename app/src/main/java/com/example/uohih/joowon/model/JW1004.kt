@@ -1,8 +1,6 @@
-package com.example.uohih.joowon.model.signup
+package com.example.uohih.joowon.model
 
-import com.example.uohih.joowon.model.BaseResBody
-
-data class SU1002(
+data class JW1004(
         val resbody: resbodyInfo? = null
 
 ) : BaseResBody() {

@@ -1,14 +1,12 @@
-package com.example.uohih.joowon.model.signup
-
-import com.example.uohih.joowon.model.BaseResBody
+package com.example.uohih.joowon.model
 
 /**
  * 아이디 중복확인
  */
-data class SU1003(
+data class JW1003(
         val resultcode: String,
         val message: String,
-        val resbody: resbodyInfo? = null
+        val response: resbodyInfo? = null
 ) {
     data class resbodyInfo(
             val id: String? = null,     // 고유식별id

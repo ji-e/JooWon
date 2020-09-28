@@ -41,7 +41,7 @@ class SignUpInitActiviy : JWBaseActivity() {
         mOAuthLoginButton.setOAuthLoginHandler(mOAuthLoginHandler)
 
 
-        signUpInitViewModel.su1002Data.observe(this@SignUpInitActiviy, Observer {
+        signUpInitViewModel.JW1002Data.observe(this@SignUpInitActiviy, Observer {
             val su1002Data = it ?: return@Observer
             if("Y"==su1002Data.resbody?.successYN){
                 finish()
@@ -54,7 +54,7 @@ class SignUpInitActiviy : JWBaseActivity() {
         override fun run(success: Boolean) {
             LogUtil.e(mOAuthLoginInstance.getAccessToken(thisActivity))
             if (success) {
-                signUpInitViewModel.su1003(mOAuthLoginInstance.getAccessToken(thisActivity))
+//                signUpInitViewModel.su1003(mOAuthLoginInstance.getAccessToken(thisActivity))
             } else {
             }
         }

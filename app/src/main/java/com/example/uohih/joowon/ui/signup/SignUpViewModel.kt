@@ -5,41 +5,43 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.base.LogUtil
-import com.example.uohih.joowon.model.Result
-import com.example.uohih.joowon.model.signup.SU1001
-import com.example.uohih.joowon.model.signup.SU1002
-import com.example.uohih.joowon.model.signup.SignUpFormState
+import com.example.uohih.joowon.model.JW1001
+import com.example.uohih.joowon.model.JW1002
+import com.example.uohih.joowon.model.SignUpFormState
 
 import com.example.uohih.joowon.repository.signup.SignUpRepository
 import com.example.uohih.joowon.repository.signup.SignUpRepository.GetResbodyCallback
+import com.google.gson.Gson
 import com.google.gson.JsonObject
+import org.json.JSONObject
 import java.util.regex.Pattern
 
 
 class SignUpViewModel(private val signUpRepository: SignUpRepository) : ViewModel() {
+    private val gson = Gson()
+
     private val _signUpForm = MutableLiveData<SignUpFormState>()
-    private val _su1001Data = MutableLiveData<SU1001>()
-    private val _su1002Data = MutableLiveData<SU1002>()
+    private val _su1001Data = MutableLiveData<JW1001>()
+    private val _su1002Data = MutableLiveData<JW1002>()
 
     val signUpFormState: LiveData<SignUpFormState> = _signUpForm
-    val su1001Data: LiveData<SU1001> = _su1001Data
-    val su1002Data: LiveData<SU1002> = _su1002Data
+    val JW1001Data: LiveData<JW1001> = _su1001Data
+    val JW1002Data: LiveData<JW1002> = _su1002Data
 
 
     fun signUp(jsonObject: JsonObject) {
-        signUpRepository.su1002(jsonObject, object : GetResbodyCallback<SU1002> {
+        signUpRepository.jw1002(jsonObject, object : GetResbodyCallback<JSONObject> {
 
-            override fun onSuccess(data: SU1002) {
+            override fun onSuccess(data: JSONObject) {
 //                LogUtil.d(data..result as String)
             }
 
             override fun onFailure(code: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onError(throwable: Throwable) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
 
@@ -51,7 +53,7 @@ class SignUpViewModel(private val signUpRepository: SignUpRepository) : ViewMode
         if (_signUpForm.value?.emailMsg == R.string.signup_email_confirm
                 && _signUpForm.value?.passwordError == null
                 && _signUpForm.value?.password2Error == null) {
-            _signUpForm.value = SignUpFormState( emailMsg = signUpFormState.value?.emailMsg,isDataValid = true)
+            _signUpForm.value = SignUpFormState(emailMsg = signUpFormState.value?.emailMsg, isDataValid = true)
         }
     }
 
@@ -64,16 +66,17 @@ class SignUpViewModel(private val signUpRepository: SignUpRepository) : ViewMode
                 emailMsg = emailError,
                 passwordError = passwordErr,
                 password2Error = password2Err,
-                isEmailOverlapValid = emailError==null)
+                isEmailOverlapValid = emailError == null)
 
         isDataValidCheck()
     }
 
     fun isEmailOverlapConfirm(jsonObject: JsonObject) {
-        signUpRepository.su1001(jsonObject, object : GetResbodyCallback<SU1001> {
-            override fun onSuccess(data: SU1001) {
-                _su1001Data.value = (data)
-                if ("Y" == data.resbody?.emailValid) {
+        signUpRepository.jw1001(jsonObject, object : GetResbodyCallback<JSONObject> {
+            override fun onSuccess(data: JSONObject) {
+                val jw1001Data = gson.fromJson(data.toString(), JW1001::class.java)
+                _su1001Data.value = jw1001Data
+                if ("Y" == jw1001Data.resbody?.emailValid) {
                     _signUpForm.value = SignUpFormState(
                             emailMsg = R.string.signup_email_confirm,
                             passwordError = signUpFormState.value?.passwordError,
@@ -97,8 +100,8 @@ class SignUpViewModel(private val signUpRepository: SignUpRepository) : ViewMode
     private fun isEmailValid(email: String): Int? {
         var emailError: Int? = null
 
-        if(email == su1001Data.value?.resbody?.email){
-            if ("Y" == su1001Data.value?.resbody?.emailValid) {
+        if (email == JW1001Data.value?.resbody?.email) {
+            if ("Y" == JW1001Data.value?.resbody?.emailValid) {
                 emailError = R.string.signup_email_confirm
             }
         }else {

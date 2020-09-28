@@ -9,6 +9,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 
 /**
  * api
@@ -19,7 +20,7 @@ import retrofit2.http.Path;
 public interface ApiService {
 //    final String Base_URL = " http://192.168.219.189:3000/process/";
     String Base_URL = "https://joowon12.herokuapp.com/process/";
-    String BASE_URL_NAVER_API = "https://openapi.naver.com/";
+    String BASE_URL_NAVER_API = "https://openapi.naver.com/v1/nid/me";
 
     @POST("login_p/{method}")
     Call<ResponseBody> LoginProcessService(@Path("method")  String method,  @Body JsonObject jsonBodyString);
@@ -32,7 +33,7 @@ public interface ApiService {
     @POST("boardprocess")
     Call<ResponseBody> BoardProcessService(@Body JsonObject jsonBodyString);
 
-    @POST("v1/nid/me")
-    Call<ResponseBody> NaverOpenApiService(@Header("Authorization") String accT);
+    @POST()
+    Call<ResponseBody> NaverOpenApiService(@Url String url, @Header("Authorization") String accT);
 
 }

@@ -79,7 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp16"
-                    android:textColor="@{signUpVm.su1001Data.resbody.emailValid.equals(&quot;Y&quot;)?  @color/c_004680 : @color/c_f13e51}"
+                    android:textColor="@{signUpVm.jW1001Data.resbody.emailValid.equals(&quot;Y&quot;)?  @color/c_004680 : @color/c_f13e51}"
                     android:textSize="@dimen/dp10"
                     app:argId="@{signUpVm.signUpFormState.emailMsg}"
                     app:format="@{@string/string_format}"

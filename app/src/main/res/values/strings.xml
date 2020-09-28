@@ -123,4 +123,7 @@
     <string name="signup_password_err4">비밀번호가 일치하지 않습니다.</string>
     <string name="signup_btn_email_overlap">중복확인</string>
     <string name="signup_btn_signup">가입하기</string>
+
+    <!-- SignInActivity-->
+    <string name="signin_dialog_msg">이미 등록된 이메일 입니다. 네이버아이디로 연동하시겠습니까?</string>
 </resources>

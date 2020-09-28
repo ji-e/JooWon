@@ -1,4 +1,4 @@
-package com.example.uohih.joowon.model.signup
+package com.example.uohih.joowon.model
 
 data class SignUpFormState(val emailMsg: Int? = null,                   // 이메일
                            val passwordError: Int? = null,              // 비밀번호
