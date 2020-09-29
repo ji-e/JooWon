@@ -5,6 +5,6 @@ data class JW1004(
 
 ) : BaseResBody() {
     data class resbodyInfo(
-            val successYN: String? = null   // 회원가입 검증여부
+            val successYn: String? = null   // 회원가입 검증여부
     )
 }

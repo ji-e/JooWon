@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true" android:drawable="@drawable/bottom_btn_foc"/>
     <item android:state_focused="true" android:drawable="@drawable/bottom_btn_foc"/>
-    <item android:state_enabled="false" android:drawable="@color/c_cccccc"/>
+    <item android:state_enabled="false" android:drawable="@color/c_e6e6e6" />
     <item android:drawable="@color/c_004680" />
 
 </selector>
