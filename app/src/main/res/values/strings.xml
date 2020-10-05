@@ -7,10 +7,10 @@
     <string name="string_format" formatted="false">%s</string>
 
     <!--button-->
-    <string name="btn01">확인</string>
-    <string name="btn02">취소</string>
-    <string name="btn03">검색</string>
-    <string name="btn04">등록</string>
+    <string name="btnConfirm">확인</string>
+    <string name="btnCancel">취소</string>
+    <string name="btnSearch">검색</string>
+    <string name="btnRegistration">등록</string>
 
     <!--menu-->
     <string name="menu01">카메라</string>
@@ -134,5 +134,6 @@
     <string name="signin_pw_hint">비밀번호를 입력해주세요.</string>
     <string name="signin_find_pw">비밀번호찾기</string>
     <string name="signin_sign_up">회원가입</string>
+    <string name="signin_err">아이디 또는 비밀번호를 확인해주세요.</string>
 
 </resources>

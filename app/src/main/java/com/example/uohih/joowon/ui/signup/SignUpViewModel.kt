@@ -8,40 +8,44 @@ import com.example.uohih.joowon.R
 import com.example.uohih.joowon.model.JW1001
 import com.example.uohih.joowon.model.JW1002
 import com.example.uohih.joowon.model.SignUpFormState
-
-import com.example.uohih.joowon.repository.signup.SignUpRepository
-import com.example.uohih.joowon.repository.signup.SignUpRepository.GetResbodyCallback
+import com.example.uohih.joowon.repository.JWBaseRepository
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.json.JSONObject
+import org.mindrot.jbcrypt.BCrypt
 import java.util.regex.Pattern
 
 
-class SignUpViewModel(private val signUpRepository: SignUpRepository) : ViewModel() {
+class SignUpViewModel(private val jwBaseRepository: JWBaseRepository) : ViewModel() {
     private val gson = Gson()
 
     private val _signUpForm = MutableLiveData<SignUpFormState>()
-    private val _su1001Data = MutableLiveData<JW1001>()
-    private val _su1002Data = MutableLiveData<JW1002>()
+    private val _jw1001Data = MutableLiveData<JW1001>()
+    private val _jw1002Data = MutableLiveData<JW1002>()
 
     val signUpFormState: LiveData<SignUpFormState> = _signUpForm
-    val JW1001Data: LiveData<JW1001> = _su1001Data
-    val JW1002Data: LiveData<JW1002> = _su1002Data
+    val JW1001Data: LiveData<JW1001> = _jw1001Data
+    val JW1002Data: LiveData<JW1002> = _jw1002Data
+
+
+    private lateinit var passwordHashed: String
+    private lateinit var passwordHashed2: String
 
 
     fun signUp(jsonObject: JsonObject) {
-        signUpRepository.jw1002(jsonObject, object : GetResbodyCallback<JSONObject> {
+        jwBaseRepository.requestSignInService(jsonObject, object : JWBaseRepository.GetResbodyCallback<JSONObject> {
 
             override fun onSuccess(data: JSONObject) {
-//                LogUtil.d(data..result as String)
+                val jw1002Data = gson.fromJson(data.toString(), JW1002::class.java)
+                _jw1002Data.value = jw1002Data
             }
 
             override fun onFailure(code: Int) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onError(throwable: Throwable) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
 
@@ -53,14 +57,17 @@ class SignUpViewModel(private val signUpRepository: SignUpRepository) : ViewMode
         if (_signUpForm.value?.emailMsg == R.string.signup_email_confirm
                 && _signUpForm.value?.passwordError == null
                 && _signUpForm.value?.password2Error == null) {
-            _signUpForm.value = SignUpFormState(emailMsg = signUpFormState.value?.emailMsg, isDataValid = true)
+            _signUpForm.value = SignUpFormState(
+                    emailMsg = signUpFormState.value?.emailMsg,
+                    isDataValid = true,
+                    cryptoPw = passwordHashed2)
         }
     }
 
     fun signUpDataChanged(email: String, password: String, password2: String) {
         val emailError = isEmailValid(email)
         val passwordErr = isPasswordValid(password)
-        val password2Err = isPassword2Valid(password, password2)
+        val password2Err = isPassword2Valid(password2)
 
         _signUpForm.value = SignUpFormState(
                 emailMsg = emailError,
@@ -72,10 +79,10 @@ class SignUpViewModel(private val signUpRepository: SignUpRepository) : ViewMode
     }
 
     fun isEmailOverlapConfirm(jsonObject: JsonObject) {
-        signUpRepository.jw1001(jsonObject, object : GetResbodyCallback<JSONObject> {
+        jwBaseRepository.requestSignInService(jsonObject, object : JWBaseRepository.GetResbodyCallback<JSONObject> {
             override fun onSuccess(data: JSONObject) {
                 val jw1001Data = gson.fromJson(data.toString(), JW1001::class.java)
-                _su1001Data.value = jw1001Data
+                _jw1001Data.value = jw1001Data
                 if ("Y" == jw1001Data.resbody?.emailValid) {
                     _signUpForm.value = SignUpFormState(
                             emailMsg = R.string.signup_email_confirm,
@@ -104,8 +111,8 @@ class SignUpViewModel(private val signUpRepository: SignUpRepository) : ViewMode
             if ("Y" == JW1001Data.value?.resbody?.emailValid) {
                 emailError = R.string.signup_email_confirm
             }
-        }else {
-            _su1001Data.value = null
+        } else {
+            _jw1001Data.value = null
         }
 
         if (!Pattern.matches(Constants.EMAIL_PATTERN, email)) {
@@ -119,6 +126,8 @@ class SignUpViewModel(private val signUpRepository: SignUpRepository) : ViewMode
      * 비밀번호 검증
      */
     private fun isPasswordValid(password: String): Int? {
+        passwordHashed = BCrypt.hashpw(password, BCrypt.gensalt(10))
+
         if (password.isEmpty()) {
             return R.string.blank
         }
@@ -137,11 +146,13 @@ class SignUpViewModel(private val signUpRepository: SignUpRepository) : ViewMode
     /**
      * 비밀번호재입력 검증
      */
-    private fun isPassword2Valid(password: String, password2: String): Int? {
+    private fun isPassword2Valid(password2: String): Int? {
+        passwordHashed2 = BCrypt.hashpw(password2, BCrypt.gensalt(10))
+
         if (password2.isEmpty()) {
             return R.string.blank
         }
-        if (password != password2) {
+        if (!BCrypt.checkpw(password2, passwordHashed)) {
             return R.string.signup_password_err4
         }
         return null

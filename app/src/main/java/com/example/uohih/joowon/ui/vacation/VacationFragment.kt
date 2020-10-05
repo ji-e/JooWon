@@ -172,7 +172,7 @@ class VacationFragment : Fragment(), View.OnClickListener {
             customDialog.showDialog(
                     mContext,
                     resources.getString(R.string.vacation_dialog_msg4),
-                    resources.getString(R.string.btn01), null)
+                    resources.getString(R.string.btnConfirm), null)
             return false
         }
         if (vacation_edt_content.text.isNullOrEmpty())
@@ -249,7 +249,7 @@ class VacationFragment : Fragment(), View.OnClickListener {
             if (mTv.id == R.id.vacation_tv_endD) {
                 val startD = vacation_tv_startD.text.toString().replace("-", "").toInt()
                 if (startD > baseApplication.getSelectDate().toInt()) {
-                    customDialog.showDialog(mContext, resources.getString(R.string.vacation_dialog_msg3), resources.getString(R.string.btn01), null)
+                    customDialog.showDialog(mContext, resources.getString(R.string.vacation_dialog_msg3), resources.getString(R.string.btnConfirm), null)
                     return@setOnDismissListener
                 }
             }
@@ -286,7 +286,7 @@ class VacationFragment : Fragment(), View.OnClickListener {
                 customDialog.showDialog(
                         mContext,
                         getString(R.string.vacation_dialog_msg2),
-                        getString(R.string.btn01), null)
+                        getString(R.string.btnConfirm), null)
 
                 return
             }
@@ -300,7 +300,7 @@ class VacationFragment : Fragment(), View.OnClickListener {
         customDialog.showDialog(
                 mContext,
                 getString(R.string.vacation_dialog_msg),
-                getString(R.string.btn01),
+                getString(R.string.btnConfirm),
                 DialogInterface.OnClickListener { dialog, which ->
 
                     if (mContext is VacationActivity) {

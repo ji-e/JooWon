@@ -37,8 +37,7 @@ class CustomDialog(context: Context, theme: Int) : Dialog(context, theme) {
         /**
          * 취소 버튼 리스너
          */
-        fun setmNoBtnClickListener(text: String?, mNoBtnClickListener: DialogInterface.OnClickListener?): Builder {
-//            dialog.dialogBtnNo.setOnClickListener(mNoBtnClickListener)
+        fun setNoBtnClickListener(text: String?, mNoBtnClickListener: DialogInterface.OnClickListener?): Builder {
             dialogBtnNoText = text
             this.mNoBtnClickListener = mNoBtnClickListener
             return this
@@ -47,8 +46,7 @@ class CustomDialog(context: Context, theme: Int) : Dialog(context, theme) {
         /**
          * 확인 버튼 리스너
          */
-        fun setmYesBtnClickListener(text: String, mYesBtnClickListener: DialogInterface.OnClickListener?): Builder {
-//            dialog.dialogBtnYes.setOnClickListener(mYesBtnClickListener)
+        fun setYesBtnClickListener(text: String, mYesBtnClickListener: DialogInterface.OnClickListener?): Builder {
             dialogBtnYesText = text
             this.mYesBtnClickListener = mYesBtnClickListener
             return this
@@ -75,14 +73,12 @@ class CustomDialog(context: Context, theme: Int) : Dialog(context, theme) {
                 contentView.dialog_no.visibility = View.GONE
             } else {
                 contentView.dialog_no.text = dialogBtnNoText
-                if(mNoBtnClickListener!=null){
+                if (mNoBtnClickListener != null) {
                     contentView.dialog_no.setOnClickListener {
                         mNoBtnClickListener!!.onClick(dialog, DialogInterface.BUTTON_NEGATIVE)
                         dialog.dismiss()
                     }
-
-//                    contentView.dialog_no.setOnClickListener(mNoBtnClickListener)
-                }else{
+                } else {
                     contentView.dialog_no.setOnClickListener {
                         dialog.dismiss()
                     }
@@ -95,21 +91,18 @@ class CustomDialog(context: Context, theme: Int) : Dialog(context, theme) {
                 contentView.dialog_yes.visibility = View.GONE
             } else {
                 contentView.dialog_yes.text = dialogBtnYesText
-                if(mYesBtnClickListener!=null){
+                if (mYesBtnClickListener != null) {
                     contentView.dialog_yes.setOnClickListener {
                         mYesBtnClickListener!!.onClick(dialog, DialogInterface.BUTTON_POSITIVE)
                         dialog.dismiss()
                     }
-//                    contentView.dialog_yes.setOnClickListener(mYesBtnClickListener)
-                }else{
+                } else {
                     contentView.dialog_yes.setOnClickListener {
                         dialog.dismiss()
                     }
                 }
 
             }
-
-
 
             return dialog
         }
@@ -140,15 +133,12 @@ class CustomDialog(context: Context, theme: Int) : Dialog(context, theme) {
             }
         }
 
-        val builder = CustomDialog.Builder(context)
+        val builder = Builder(context)
         builder.setMsg(msg)
-        builder.setmNoBtnClickListener(pnoBtnTxt, noBtnListener)
-        builder.setmYesBtnClickListener(yesBtnTxt, yesBtnListener)
+        builder.setNoBtnClickListener(pnoBtnTxt, noBtnListener)
+        builder.setYesBtnClickListener(yesBtnTxt, yesBtnListener)
         val dialog = builder.create()
         dialog.show()
         return dialog
     }
-
-
-
 }

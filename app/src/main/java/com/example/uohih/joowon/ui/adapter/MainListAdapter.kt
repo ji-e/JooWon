@@ -184,8 +184,8 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
                     val customDialog = CustomDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
                     customDialog.showDialog(mContext, String.format(mContext.resources.getString(R.string.workerUpdate_delete_msg),
                             holder.mTvName.text.toString()),
-                            mContext.resources.getString(R.string.btn02), null,
-                            mContext.resources.getString(R.string.btn01), DialogInterface.OnClickListener { dialog, which ->
+                            mContext.resources.getString(R.string.btnCancel), null,
+                            mContext.resources.getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
                         dbHelper.delete(dbHelper.tableNameWorkerJW, workerList[position].no.toString())
 
 

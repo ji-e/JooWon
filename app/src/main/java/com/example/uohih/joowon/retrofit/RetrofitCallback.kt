@@ -9,7 +9,7 @@ import org.json.JSONObject
  * date: 2020-09-26
  * author: jieun
  */
-internal interface RetroCallback {
+interface RetroCallback {
     fun onError(t: Throwable)
     fun onSuccess(code: Int, resbodyData: JSONObject)
     fun onFailure(code: Int)

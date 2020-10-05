@@ -25,6 +25,8 @@ class SignUpActivity : JWBaseActivity() {
     private lateinit var edtPW2: EditText
     private lateinit var btnEmailConfirm: Button
 
+    private lateinit var cryptoPw: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -46,20 +48,32 @@ class SignUpActivity : JWBaseActivity() {
         edtEmail.addTextChangedListener(SignUpTextWatcher(edtEmail))
         edtPW.addTextChangedListener(SignUpTextWatcher(edtPW))
         edtPW2.addTextChangedListener(SignUpTextWatcher(edtPW2))
+
+        setObserve()
+    }
+
+    private fun setObserve() {
+        signUpViewModel.signUpFormState.observe(this@SignUpActivity, Observer {
+            val signUpFormState = it ?: return@Observer
+
+            if (signUpFormState.cryptoPw != null) {
+                cryptoPw = signUpFormState.cryptoPw
+            }
+        })
     }
 
     fun onClickSignUp(view: View) {
         when (view.id) {
             R.id.signup_btn_signup -> {
                 val jsonObject = JsonObject()
-                jsonObject.addProperty("methodid", "SU1002")
+                jsonObject.addProperty("methodid", Constants.JW1002)
                 jsonObject.addProperty("email", edtEmail.text.toString())
-                jsonObject.addProperty("password", edtPW.text.toString())
+                jsonObject.addProperty("password", cryptoPw)
                 signUpViewModel.signUp(jsonObject)
             }
             R.id.signup_btn_email_confirm -> {
                 val jsonObject = JsonObject()
-                jsonObject.addProperty("methodid", "SU1001")
+                jsonObject.addProperty("methodid", Constants.JW1001)
                 jsonObject.addProperty("email", edtEmail.text.toString())
                 signUpViewModel.isEmailOverlapConfirm(jsonObject)
             }
@@ -78,7 +92,7 @@ class SignUpActivity : JWBaseActivity() {
         override fun onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {}
 
         override fun afterTextChanged(s: Editable) {
-            if(mEditText == edtPW){
+            if (mEditText == edtPW) {
                 edtPW2.setText("")
             }
 

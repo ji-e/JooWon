@@ -284,8 +284,8 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
             }
             worker_layout_delete       -> {
                 customDialog.showDialog(this, String.format(resources.getString(R.string.workerUpdate_delete_msg), name),
-                        resources.getString(R.string.btn02), null,
-                        resources.getString(R.string.btn01), DialogInterface.OnClickListener { dialog, which ->
+                        resources.getString(R.string.btnCancel), null,
+                        resources.getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
                     dbHelper.delete(dbHelper.tableNameWorkerJW, no)
 
 
@@ -316,13 +316,13 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
     private fun validation() {
         // 이름
         if (worker_insert_edt_name.text.toString().isEmpty()) {
-            customDialog.showDialog(this, resources.getString(R.string.workerInsert_name2), resources.getString(R.string.btn01), null)
+            customDialog.showDialog(this, resources.getString(R.string.workerInsert_name2), resources.getString(R.string.btnConfirm), null)
             worker_insert_edt_name.requestFocus()
             return
         }
         // 핸드폰 번호
         if (worker_insert_edt_phone.text.toString().length in 1..9) {
-            customDialog.showDialog(this, resources.getString(R.string.workerInsert_phone3), resources.getString(R.string.btn01), null)
+            customDialog.showDialog(this, resources.getString(R.string.workerInsert_phone3), resources.getString(R.string.btnConfirm), null)
             worker_insert_edt_phone.requestFocus()
             return
         }
@@ -335,7 +335,7 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
         }
         // 사용휴가
         if ("Y" == workerUpdate && worker_insert_edt_use.text.toString().isEmpty()) {
-            customDialog.showDialog(this, resources.getString(R.string.workerInsert_use2), resources.getString(R.string.btn01), null)
+            customDialog.showDialog(this, resources.getString(R.string.workerInsert_use2), resources.getString(R.string.btnConfirm), null)
             worker_insert_edt_vacation.requestFocus()
             return
         }
