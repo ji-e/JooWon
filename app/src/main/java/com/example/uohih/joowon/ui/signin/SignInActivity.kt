@@ -75,6 +75,9 @@ class SignInActivity : JWBaseActivity() {
         chkPwVisible.setOnCheckedChangeListener(SignInCheckChange())
 
         setObserve()
+
+
+
     }
 
     private fun setObserve() {
@@ -145,7 +148,7 @@ class SignInActivity : JWBaseActivity() {
         mOAuthLoginInstance = OAuthLogin.getInstance()
         mOAuthLoginInstance.showDevelopersLog(true)
         mOAuthLoginInstance.init(this, Constants.OAUTH_CLIENT_ID, Constants.OAUTH_CLIENT_SECRET, Constants.OAUTH_CLIENT_NAME)
-
+        mOAuthLoginInstance.startOauthLoginActivity(this, mOAuthLoginHandler)
     }
 
     private fun goMain() {
