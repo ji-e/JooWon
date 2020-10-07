@@ -12,7 +12,6 @@ import com.example.uohih.joowon.repository.JWBaseRepository
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.json.JSONObject
-import org.mindrot.jbcrypt.BCrypt
 import java.util.regex.Pattern
 
 
@@ -26,10 +25,6 @@ class SignUpViewModel(private val jwBaseRepository: JWBaseRepository) : ViewMode
     val signUpFormState: LiveData<SignUpFormState> = _signUpForm
     val JW1001Data: LiveData<JW1001> = _jw1001Data
     val JW1002Data: LiveData<JW1002> = _jw1002Data
-
-
-    private lateinit var passwordHashed: String
-    private lateinit var passwordHashed2: String
 
 
     fun signUp(jsonObject: JsonObject) {
@@ -59,15 +54,14 @@ class SignUpViewModel(private val jwBaseRepository: JWBaseRepository) : ViewMode
                 && _signUpForm.value?.password2Error == null) {
             _signUpForm.value = SignUpFormState(
                     emailMsg = signUpFormState.value?.emailMsg,
-                    isDataValid = true,
-                    cryptoPw = passwordHashed2)
+                    isDataValid = true)
         }
     }
 
     fun signUpDataChanged(email: String, password: String, password2: String) {
         val emailError = isEmailValid(email)
         val passwordErr = isPasswordValid(password)
-        val password2Err = isPassword2Valid(password2)
+        val password2Err = isPassword2Valid(password, password2)
 
         _signUpForm.value = SignUpFormState(
                 emailMsg = emailError,
@@ -126,7 +120,6 @@ class SignUpViewModel(private val jwBaseRepository: JWBaseRepository) : ViewMode
      * 비밀번호 검증
      */
     private fun isPasswordValid(password: String): Int? {
-        passwordHashed = BCrypt.hashpw(password, BCrypt.gensalt(10))
 
         if (password.isEmpty()) {
             return R.string.blank
@@ -146,13 +139,11 @@ class SignUpViewModel(private val jwBaseRepository: JWBaseRepository) : ViewMode
     /**
      * 비밀번호재입력 검증
      */
-    private fun isPassword2Valid(password2: String): Int? {
-        passwordHashed2 = BCrypt.hashpw(password2, BCrypt.gensalt(10))
-
+    private fun isPassword2Valid(password: String, password2: String): Int? {
         if (password2.isEmpty()) {
             return R.string.blank
         }
-        if (!BCrypt.checkpw(password2, passwordHashed)) {
+        if (password != password2) {
             return R.string.signup_password_err4
         }
         return null

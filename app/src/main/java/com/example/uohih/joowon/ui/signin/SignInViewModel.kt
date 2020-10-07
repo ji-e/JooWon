@@ -39,8 +39,7 @@ class SignInViewModel(private val jwBaseRepository: JWBaseRepository) : ViewMode
 
         _signInForm.value = SignInFormState(
                 emailMsg = emailError,
-                passwordError = passwordErr,
-                isEmailVisibleValid = email.isNotEmpty())
+                passwordError = passwordErr)
 
         isDataValidCheck()
     }
@@ -85,7 +84,8 @@ class SignInViewModel(private val jwBaseRepository: JWBaseRepository) : ViewMode
                 val jsonObject = JsonObject()
                 jsonObject.addProperty("methodid", Constants.JW1006)
                 jsonObject.addProperty("email", jw1003Data.response?.email)
-                jsonObject.addProperty("sns_id", jw1003Data.response?.id)
+                jsonObject.addProperty("authToken", jw1003Data.response?.id)
+                jsonObject.addProperty("password", " ")
 
 
                 val snsProvider = JsonObject()

@@ -32,6 +32,7 @@ interface ApiService {
 
     companion object {
         const val Base_URL = "https://joowon12.herokuapp.com/process/"
+//        const val Base_URL = "http://10.0.2.2:8080/process/"
         const val BASE_URL_NAVER_API = "https://openapi.naver.com/v1/nid/me"
     }
 }

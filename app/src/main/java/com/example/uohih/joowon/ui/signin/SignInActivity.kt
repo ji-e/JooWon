@@ -64,6 +64,10 @@ class SignInActivity : JWBaseActivity() {
         edtEmail = signin_edt_email
         edtPW = signin_edt_pw
         chkPwVisible = signin_chk_pw_visible
+        btnEmailDelete = signin_btn_delete
+
+        edtEmail.onFocusChangeListener = SignInFocusChangeListner()
+        edtPW.onFocusChangeListener = SignInFocusChangeListner()
 
         edtEmail.addTextChangedListener(SignInTextWatcher(edtEmail))
         edtPW.addTextChangedListener(SignInTextWatcher(edtPW))
@@ -180,6 +184,29 @@ class SignInActivity : JWBaseActivity() {
     }
 
     /**
+     * 포커스 체인지 리스너
+     */
+    private inner class SignInFocusChangeListner : View.OnFocusChangeListener {
+        override fun onFocusChange(v: View?, hasFocus: Boolean) {
+            if (hasFocus) {
+                if (v == edtEmail) {
+                    btnEmailDelete.visibility =
+                            if (edtEmail.text.isNotEmpty()) View.VISIBLE
+                            else View.GONE
+                } else if (v == edtPW) {
+                    chkPwVisible.visibility = View.VISIBLE
+                }
+            } else {
+                if (v == edtEmail) {
+                    btnEmailDelete.visibility = View.GONE
+                } else if (v == edtPW) {
+                    chkPwVisible.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    /**
      * 텍스트 입력 리스너
      */
     private inner class SignInTextWatcher(private val mEditText: EditText) : TextWatcher {
@@ -188,9 +215,9 @@ class SignInActivity : JWBaseActivity() {
 
         override fun onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {
             if (mEditText == edtEmail) {
-//                btnEmailDelete.visibility =
-//                        if (charSequence.isNotEmpty()) View.GONE
-//                        else View.VISIBLE
+                btnEmailDelete.visibility =
+                        if (charSequence.isNotEmpty()) View.VISIBLE
+                        else View.GONE
             }
         }
 

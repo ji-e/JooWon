@@ -5,8 +5,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="signInVm"
             type="com.example.uohih.joowon.ui.signin.SignInViewModel" />
@@ -68,17 +66,11 @@
                 android:layout_marginRight="@dimen/dp10"
                 android:background="@drawable/btn_delete_selector"
                 android:onClick="onClickSignIn"
-                android:visibility="@{signInVm.signInFormState.emailVisibleValid? View.VISIBLE: View.GONE}"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/signin_edt_email"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/signin_edt_email"
                 tools:visibility="visible" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@{signInVm.signInFormState.emailVisibleValid? &quot;Y&quot;: &quot;N&quot;}" />
-
 
             <TextView
                 android:id="@+id/signin_tv_email_err"
@@ -118,10 +110,14 @@
 
             <CheckBox
                 android:id="@+id/signin_chk_pw_visible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp20"
+                android:layout_height="@dimen/dp20"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
+                android:layout_marginRight="@dimen/dp10"
+                android:background="@drawable/btn_eye_selector"
+                android:button="@null"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/signin_edt_pw"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/signin_edt_pw" />
