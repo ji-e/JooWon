@@ -12,8 +12,8 @@ import retrofit2.http.*
  * author: jieun
  */
 interface ApiService {
-    @POST("login_p/{method}")
-    fun LoginProcessService(@Path("method") method: String, @Body jsonBodyString: JsonObject): Call<ResponseBody?>
+    @POST("sign_p/{method}")
+    fun signInProcessService(@Path("method") method: String, @Body jsonBodyString: JsonObject): Call<ResponseBody?>
 
     @POST("base")
     fun BaseProcessService(@Body jsonBodyString: JsonObject?): Call<ResponseBody?>
