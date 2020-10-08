@@ -1,4 +1,4 @@
-package com.example.uohih.joowon.retrofit
+package com.example.uohih.joowon.repository
 
 import com.google.gson.JsonObject
 import okhttp3.ResponseBody

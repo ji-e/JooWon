@@ -12,10 +12,16 @@ import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.database.DBHelper
+import com.example.uohih.joowon.model.JW0000
+import com.example.uohih.joowon.repository.JWBaseRepository
+import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.example.uohih.joowon.ui.setting.SettingActivity
 import com.example.uohih.joowon.ui.worker.WorkerInsertActivity
 import com.example.uohih.joowon.ui.worker.WorkerMainActivity
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_main_list.*
+import org.json.JSONObject
 
 //import sun.jvm.hotspot.utilities.IntArray
 //import javax.swing.UIManager.put
@@ -72,6 +78,10 @@ class MainListActivity : JWBaseActivity() {
         if (view.id == R.id.main_list_btn_plus) {
             val intent = Intent(this, WorkerInsertActivity::class.java)
             startActivity(intent)
+        } else if (view.id == R.id.main_list_btn_signout) {
+            signOut(this)
+        } else if (view.id == R.id.main_list_btn_session) {
+            ssss()
         }
     }
 
@@ -104,6 +114,28 @@ class MainListActivity : JWBaseActivity() {
         })
 
 //        main_list_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+    }
+
+
+    fun ssss() {
+        JWBaseRepository().requestSignInService(JsonObject(), object : GetResbodyCallback {
+            override fun onSuccess(code: Int, data: JSONObject) {
+                val jw0000Data = Gson().fromJson(data.toString(), JW0000::class.java)
+                if ("N" == jw0000Data.result) {
+                    return
+                }
+
+            }
+
+            override fun onFailure(code: Int) {
+
+            }
+
+            override fun onError(throwable: Throwable) {
+
+            }
+
+        })
     }
 
 

@@ -9,6 +9,7 @@ import com.example.uohih.joowon.model.JW1001
 import com.example.uohih.joowon.model.JW1002
 import com.example.uohih.joowon.model.SignUpFormState
 import com.example.uohih.joowon.repository.JWBaseRepository
+import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.json.JSONObject
@@ -16,31 +17,35 @@ import java.util.regex.Pattern
 
 
 class SignUpViewModel(private val jwBaseRepository: JWBaseRepository) : ViewModel() {
-    private val gson = Gson()
 
+    private val _isLoding = MutableLiveData<Boolean>()
     private val _signUpForm = MutableLiveData<SignUpFormState>()
     private val _jw1001Data = MutableLiveData<JW1001>()
     private val _jw1002Data = MutableLiveData<JW1002>()
 
+    val isLoading: LiveData<Boolean> = _isLoding
     val signUpFormState: LiveData<SignUpFormState> = _signUpForm
     val JW1001Data: LiveData<JW1001> = _jw1001Data
     val JW1002Data: LiveData<JW1002> = _jw1002Data
 
 
     fun signUp(jsonObject: JsonObject) {
-        jwBaseRepository.requestSignInService(jsonObject, object : JWBaseRepository.GetResbodyCallback<JSONObject> {
+        _isLoding.value = true
+        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
 
-            override fun onSuccess(data: JSONObject) {
-                val jw1002Data = gson.fromJson(data.toString(), JW1002::class.java)
+            override fun onSuccess(code: Int, data: JSONObject) {
+
+                val jw1002Data = Gson().fromJson(data.toString(), JW1002::class.java)
                 _jw1002Data.value = jw1002Data
+                _isLoding.value = false
             }
 
             override fun onFailure(code: Int) {
-
+                _isLoding.value = false
             }
 
             override fun onError(throwable: Throwable) {
-
+                _isLoding.value = false
             }
 
 
@@ -73,24 +78,27 @@ class SignUpViewModel(private val jwBaseRepository: JWBaseRepository) : ViewMode
     }
 
     fun isEmailOverlapConfirm(jsonObject: JsonObject) {
-        jwBaseRepository.requestSignInService(jsonObject, object : JWBaseRepository.GetResbodyCallback<JSONObject> {
-            override fun onSuccess(data: JSONObject) {
-                val jw1001Data = gson.fromJson(data.toString(), JW1001::class.java)
+        _isLoding.value = true
+        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
+            override fun onSuccess(code: Int, data: JSONObject) {
+                val jw1001Data = Gson().fromJson(data.toString(), JW1001::class.java)
                 _jw1001Data.value = jw1001Data
-                if ("Y" == jw1001Data.resbody?.emailValid) {
+                if ("N" == jw1001Data.resbody?.emailValid) {
                     _signUpForm.value = SignUpFormState(
                             emailMsg = R.string.signup_email_confirm,
                             passwordError = signUpFormState.value?.passwordError,
                             password2Error = signUpFormState.value?.password2Error)
                 }
                 isDataValidCheck()
-
+                _isLoding.value = false
             }
 
             override fun onFailure(code: Int) {
+                _isLoding.value = false
             }
 
             override fun onError(throwable: Throwable) {
+                _isLoding.value = false
             }
         })
     }
@@ -102,7 +110,7 @@ class SignUpViewModel(private val jwBaseRepository: JWBaseRepository) : ViewMode
         var emailError: Int? = null
 
         if (email == JW1001Data.value?.resbody?.email) {
-            if ("Y" == JW1001Data.value?.resbody?.emailValid) {
+            if ("N" == JW1001Data.value?.resbody?.emailValid) {
                 emailError = R.string.signup_email_confirm
             }
         } else {

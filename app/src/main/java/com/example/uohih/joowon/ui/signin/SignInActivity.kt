@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
+import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.customview.CustomDialog
 import com.example.uohih.joowon.databinding.ActivitySigninBinding
@@ -27,6 +28,7 @@ import com.example.uohih.joowon.ui.signup.SignUpActivity
 import com.google.gson.JsonObject
 import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.OAuthLoginHandler
+import com.nhn.android.naverlogin.data.OAuthLoginState
 import kotlinx.android.synthetic.main.activity_signin.*
 
 class SignInActivity : JWBaseActivity() {
@@ -58,6 +60,7 @@ class SignInActivity : JWBaseActivity() {
 
         initView()
         initNaverLoginData()
+        signInViewModel.getSignInState()
     }
 
     private fun initView() {
@@ -75,15 +78,33 @@ class SignInActivity : JWBaseActivity() {
         chkPwVisible.setOnCheckedChangeListener(SignInCheckChange())
 
         setObserve()
-
+//        setPreference("F","f")
+//        LogUtil.e(getPreference("F"))
 
 
     }
 
     private fun setObserve() {
+        signInViewModel.isLoading.observe(this@SignInActivity, Observer {
+            val isLoading = it ?: return@Observer
+
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+        signInViewModel.jw0000Data.observe(this@SignInActivity, Observer {
+            val jw0000Data = it ?: return@Observer
+
+            if ("Y" == jw0000Data.resbody?.signInValid) {
+                goMain()
+            }
+        })
+
         signInViewModel.jw1002Data.observe(this@SignInActivity, Observer {
             val jw1002Data = it ?: return@Observer
-            if ("Y" == jw1002Data.resbody?.successYn) {
+            if ("Y" == jw1002Data.resbody?.signUpValid) {
                 goMain()
             }
         })
@@ -134,8 +155,9 @@ class SignInActivity : JWBaseActivity() {
 
     private val mOAuthLoginHandler = object : OAuthLoginHandler() {
         override fun run(success: Boolean) {
-            LogUtil.e(mOAuthLoginInstance.getAccessToken(thisActivity))
+            hideLoading()
             if (success) {
+                LogUtil.e(mOAuthLoginInstance.getAccessToken(thisActivity))
                 signInViewModel.getSnsSignInInfo(mOAuthLoginInstance.getAccessToken(thisActivity))
             } else {
             }
@@ -148,7 +170,11 @@ class SignInActivity : JWBaseActivity() {
         mOAuthLoginInstance = OAuthLogin.getInstance()
         mOAuthLoginInstance.showDevelopersLog(true)
         mOAuthLoginInstance.init(this, Constants.OAUTH_CLIENT_ID, Constants.OAUTH_CLIENT_SECRET, Constants.OAUTH_CLIENT_NAME)
-        mOAuthLoginInstance.startOauthLoginActivity(this, mOAuthLoginHandler)
+
+        if (OAuthLoginState.NEED_LOGIN != OAuthLogin.getInstance().getState(this)
+                && OAuthLoginState.NEED_INIT != mOAuthLoginInstance.getState(this)) {
+            goMain()
+        }
     }
 
     private fun goMain() {
@@ -177,7 +203,8 @@ class SignInActivity : JWBaseActivity() {
             }
             R.id.signin_btn_OAuthLoginImg -> {
                 // 네이버아이디로 로그인
-                OAuthLogin.getInstance().startOauthLoginActivity(thisActivity, mOAuthLoginHandler)
+                showLoading()
+                mOAuthLoginInstance.startOauthLoginActivity(thisActivity, mOAuthLoginHandler)
             }
             R.id.signin_btn_delete -> {
                 // 입력한 아이디 삭제

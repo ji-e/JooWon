@@ -1,6 +1,8 @@
 package com.example.uohih.joowon.base
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.graphics.Bitmap
 import android.graphics.Matrix
@@ -8,9 +10,18 @@ import android.media.ExifInterface
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.customview.CalendarDayInfo
 import com.example.uohih.joowon.customview.CustomLoadingBar
+import com.example.uohih.joowon.model.JW2002
+import com.example.uohih.joowon.repository.JWBaseRepository
+import com.example.uohih.joowon.retrofit.GetResbodyCallback
+import com.example.uohih.joowon.ui.signin.SignInActivity
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.nhn.android.naverlogin.OAuthLogin
+import com.nhn.android.naverlogin.data.OAuthLoginState
 import org.json.JSONObject
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -86,6 +97,7 @@ open class JWBaseActivity : AppCompatActivity() {
         val pref = getSharedPreferences(key, MODE_PRIVATE)
         return pref.getString(key, "")
     }
+
 
     /**
      * 앱 종료
@@ -251,6 +263,49 @@ open class JWBaseActivity : AppCompatActivity() {
         fragmentTransaction.replace(layoutId, fragment, classNameTag).commit()
 
     }
+
+    fun signOut(mContext: Context) {
+        var mOAuthLoginInstance = OAuthLogin.getInstance()
+
+
+        if (OAuthLoginState.NEED_LOGIN != mOAuthLoginInstance.getState(mContext)) {
+            mOAuthLoginInstance.logout(mContext)
+            (mContext as Activity).finish()
+            val intent = Intent(mContext, SignInActivity::class.java)
+            startActivity(intent)
+        } else {
+            val jsonObject = JsonObject()
+            jsonObject.addProperty("methodid", Constants.JW2002)
+
+            JWBaseRepository().requestSignInService(jsonObject, object : GetResbodyCallback {
+                override fun onSuccess(code: Int, data: JSONObject) {
+                    val jw2002Data = Gson().fromJson(data.toString(), JW2002::class.java)
+                    if ("false" == jw2002Data.result) {
+                        return
+                    }
+                    if ("N" == jw2002Data.resbody?.signOutValid) {
+                        return
+                    }
+                    (mContext as Activity).finish()
+                    val intent = Intent(mContext, SignInActivity::class.java)
+                    startActivity(intent)
+
+                }
+
+                override fun onFailure(code: Int) {
+                    LogUtil.e(code)
+
+                }
+
+                override fun onError(throwable: Throwable) {
+
+                }
+
+            })
+        }
+    }
+
+
 
 
 }

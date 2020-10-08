@@ -9,7 +9,7 @@ class SignUpViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SignUpViewModel::class.java)) {
             return SignUpViewModel(
-                    jwBaseRepository = JWBaseRepository(dataSource = JWBaseDataSource())
+                    jwBaseRepository = JWBaseRepository()
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

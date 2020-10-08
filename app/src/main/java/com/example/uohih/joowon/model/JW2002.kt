@@ -1,10 +1,10 @@
 package com.example.uohih.joowon.model
 
-data class JW1002(
+data class JW2002(
         val resbody: resbodyInfo? = null
 
 ) : BaseResBody() {
     data class resbodyInfo(
-            val signUpValid: String? = null   // 회원가입 검증여부
+            val signOutValid: String? = null   // 로그아웃 여부
     )
 }

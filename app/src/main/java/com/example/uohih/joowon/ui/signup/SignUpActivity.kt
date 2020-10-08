@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.databinding.ActivitySignupBinding
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_signup.*
@@ -24,8 +23,6 @@ class SignUpActivity : JWBaseActivity() {
     private lateinit var edtPW: EditText
     private lateinit var edtPW2: EditText
     private lateinit var btnEmailConfirm: Button
-
-    private lateinit var cryptoPw: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +50,20 @@ class SignUpActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
-        signUpViewModel.signUpFormState.observe(this@SignUpActivity, Observer {
-            val signUpFormState = it ?: return@Observer
+        signUpViewModel.isLoading.observe(this@SignUpActivity, Observer {
+            val isLoading = it ?: return@Observer
 
-            if (signUpFormState.cryptoPw != null) {
-                cryptoPw = signUpFormState.cryptoPw
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+        signUpViewModel.JW1002Data.observe(this@SignUpActivity, Observer {
+            val jw1002Data = it ?: return@Observer
+
+            if ("Y" == jw1002Data.resbody?.signUpValid) {
+                finish()
             }
         })
     }
@@ -68,7 +74,7 @@ class SignUpActivity : JWBaseActivity() {
                 val jsonObject = JsonObject()
                 jsonObject.addProperty("methodid", Constants.JW1002)
                 jsonObject.addProperty("email", edtEmail.text.toString())
-                jsonObject.addProperty("password", cryptoPw)
+                jsonObject.addProperty("password", edtPW.text.toString())
                 signUpViewModel.signUp(jsonObject)
             }
             R.id.signup_btn_email_confirm -> {

@@ -4,14 +4,14 @@ class Constants {
     companion object {
 
         val SERVICE_ADMIN = "admin"
-        val JW1001 = "JW1001"
-        val JW1002 = "JW1002"
+        val JW1001 = "JW1001"   // 이메일 중복확인
+        val JW1002 = "JW1002"   // 회원가입
         val JW1003 = "JW1003"
         val JW1004 = "JW1004"
         val JW1005 = "JW1005"
-        val JW1006 = "JW1006"
-        val JW2001 = "JW2001"
-
+        val JW1006 = "JW1006"   // 이메일 및 네이버ID 중복확인
+        val JW2001 = "JW2001"   // 로그인
+        val JW2002 = "JW2002"   // 로그아웃
 
         // PasswordCheckActivity requestCode
         val passwordCheck = 1000

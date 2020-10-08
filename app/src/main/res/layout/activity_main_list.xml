@@ -39,4 +39,19 @@
         android:background="@drawable/btn_plus_selector"
         android:onClick="onClickMainList" />
 
+    <Button
+        android:id="@+id/main_list_btn_signout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="로그아웃"
+        android:onClick="onClickMainList" />
+
+    <Button
+        android:id="@+id/main_list_btn_session"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="세션확인"
+        android:layout_marginTop="@dimen/dp50"
+        android:onClick="onClickMainList" />
+
 </RelativeLayout>
