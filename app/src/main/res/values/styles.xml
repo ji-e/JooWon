@@ -91,5 +91,12 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="Font_25_000000">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_000000</item>
+        <item name="android:textSize">@dimen/dp25</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
 
 </resources>

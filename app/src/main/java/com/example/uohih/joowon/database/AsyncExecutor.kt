@@ -28,7 +28,7 @@ open class AsyncExecutor(mContext: Context) : AsyncTask<String, Void?, Cursor?>(
 
 //        asyncDialog.dismiss()
 
-        callback?.onPostExecute()
+        callback?.onPostExecute(result)
 
     }
 

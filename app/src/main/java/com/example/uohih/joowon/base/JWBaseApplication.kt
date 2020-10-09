@@ -1,13 +1,20 @@
 package com.example.uohih.joowon.base
 
-import android.app.Activity
 import android.app.Application
-import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
-import java.util.HashSet
+
+import com.example.uohih.joowon.util.UseSharedPreferences
+import java.net.CookieManager
+import java.net.CookiePolicy
+import kotlin.collections.ArrayList
 
 
 class JWBaseApplication : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        useSharedPreference = UseSharedPreferences(this)
+
+    }
 
 
     /**
@@ -36,33 +43,19 @@ class JWBaseApplication : Application() {
         return deleteItem
     }
 
-    fun putHashSet(key: String?, set: HashSet<String>) {
-        val PREF_NAME = "joowonCok"
-        val pref = applicationContext.getSharedPreferences(PREF_NAME, AppCompatActivity.MODE_PRIVATE)
-
-        val editor = pref.edit()
-        editor.putStringSet(key, set)
-    }
-
-    fun getHashSet(key: String?, dftValue: HashSet<String>): HashSet<String> {
-
-        return try {
-            val PREF_NAME = "joowonCok"
-            val pref = getSharedPreferences(PREF_NAME, AppCompatActivity.MODE_PRIVATE)
-
-            pref.getStringSet(key, dftValue) as HashSet<String>
-        } catch (e: Exception) {
-            e.printStackTrace()
-            dftValue
-        }
-    }
-
 
     companion object {
         private var selectDate = JWBaseActivity().getToday().get("yyyymmdd").toString()
         private var deleteItem = ArrayList<String>()//삭제 항목
+        lateinit var useSharedPreference: UseSharedPreferences
 
-        const val KEY_COOKIE = "cookie"
+        val cookieManager = CookieManager().apply {
+            setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+        }
+
+//        val cookieJar by lazy {
+//            PersistentCookieJar(SetCookieCache(), SharedPrefsCookiePersistor(UseSharedPreferences.preferences))
+//        }
 
     }
 

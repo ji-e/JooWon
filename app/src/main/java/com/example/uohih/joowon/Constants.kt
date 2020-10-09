@@ -12,6 +12,7 @@ class Constants {
         val JW1006 = "JW1006"   // 이메일 및 네이버ID 중복확인
         val JW2001 = "JW2001"   // 로그인
         val JW2002 = "JW2002"   // 로그아웃
+        val JW2003 = "JW2003"   // 자동로그인
 
         // PasswordCheckActivity requestCode
         val passwordCheck = 1000
@@ -20,7 +21,8 @@ class Constants {
         val activitySetting = "activitySetting"
         val passwordSetting = "passwordSetting"
         val passwordTemp = "passwordTemp"
-
+        val PREFERENCE_AUTO_SIGNIN_TOKEN = "PREFERENCE_AUTO_SIGNIN_TOKEN"
+        val PREFERENCE_APP_INSTANCE_ID = "PREFERENCE_APP_INSTANCE_ID"
 
         // 정규식
         val PHONE_NUM_PATTERN = "(\\d{3})(\\d{3,4})(\\d{4})"

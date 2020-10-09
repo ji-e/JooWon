@@ -1,6 +1,6 @@
 package com.example.uohih.joowon.model
 
-data class JW2001(
+data class JW2003(
         val resbody: resbodyInfo? = null
 
 ) : BaseResBody() {

@@ -465,7 +465,7 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
                 }
                 REQUEST_IMAGE_GALLERY -> {
                     try {
-                        val inputStream = contentResolver.openInputStream(data?.data)
+                        val inputStream = data?.data?.let { contentResolver.openInputStream(it) }
                         val img = BitmapFactory.decodeStream(inputStream)
                         val out = FileOutputStream(imageFilePath)
 
@@ -473,7 +473,7 @@ class WorkerInsertActivity : JWBaseActivity(), View.OnFocusChangeListener, TextV
 
                         out.close()
 
-                        inputStream.close()
+                        inputStream?.close()
 //                        (findViewById<ImageView>(R.id.worker_img)).setImageBitmap(img)
                         Glide.with(this).load(img).apply(RequestOptions().circleCrop()).into(worker_img)
 

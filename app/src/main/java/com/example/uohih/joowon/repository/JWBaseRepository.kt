@@ -10,21 +10,6 @@ import org.json.JSONObject
 import java.util.*
 
 open class JWBaseRepository {
-
-//    fun requestNaverService(accessToken: String, callback: GetResbodyCallback<JSONObject>) {
-//        dataSource.requestNaverService(accessToken, callback)
-//    }
-//
-//    fun requestSignInService(reqbody: JsonObject, callback: GetResbodyCallback<JSONObject>) {
-//        dataSource.requestSignInService(reqbody, callback)
-//    }
-//
-//    interface GetResbodyCallback<json : JSONObject> {
-//        fun onSuccess(data: json)
-//        fun onFailure(code: Int)
-//        fun onError(throwable: Throwable)
-//    }
-
     /**
      * 네이버Api
      */

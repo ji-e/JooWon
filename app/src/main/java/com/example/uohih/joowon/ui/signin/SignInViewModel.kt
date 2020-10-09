@@ -3,14 +3,12 @@ package com.example.uohih.joowon.ui.signin
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.model.*
 import com.example.uohih.joowon.repository.JWBaseRepository
-import com.example.uohih.joowon.repository.RetrofitSharedPreferences
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -32,11 +30,6 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
     val jw1002Data: LiveData<JW1002> = _jw1002Data
     val jw2001Data: LiveData<JW2001> = _jw2001Data
     val signInFormState: LiveData<SignInFormState> = _signInForm
-
-    init {
-        val d = RetrofitSharedPreferences()
-        d.getddd(application)
-    }
 
     private fun isDataValidCheck() {
         if (_signInForm.value?.emailMsg == null
@@ -69,7 +62,6 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
 
         return emailError
     }
-
 
     /**
      * 비밀번호 검증

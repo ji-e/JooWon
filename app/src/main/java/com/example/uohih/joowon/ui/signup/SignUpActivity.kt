@@ -12,7 +12,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
+import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.databinding.ActivitySignupBinding
+import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_signup.*
 
@@ -31,7 +33,7 @@ class SignUpActivity : JWBaseActivity() {
 
         signUpViewModel = ViewModelProviders.of(this, SignUpViewModelFactory()).get(SignUpViewModel::class.java)
         binding.signUpVm = signUpViewModel
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
 
         initView()
     }
@@ -75,6 +77,7 @@ class SignUpActivity : JWBaseActivity() {
                 jsonObject.addProperty("methodid", Constants.JW1002)
                 jsonObject.addProperty("email", edtEmail.text.toString())
                 jsonObject.addProperty("password", edtPW.text.toString())
+                jsonObject.addProperty("provider", UICommonUtil.getPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID))
                 signUpViewModel.signUp(jsonObject)
             }
             R.id.signup_btn_email_confirm -> {

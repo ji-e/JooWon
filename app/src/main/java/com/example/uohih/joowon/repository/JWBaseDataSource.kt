@@ -1,7 +1,9 @@
 package com.example.uohih.joowon.repository
 
-import com.example.uohih.joowon.base.JWBaseActivity
+import com.example.uohih.joowon.BuildConfig
+import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
+import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
@@ -14,8 +16,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
-import java.net.CookieManager
-import java.net.CookiePolicy
 import java.util.concurrent.TimeUnit
 
 
@@ -83,53 +83,26 @@ class JWBaseDataSource private constructor() {
     }
 
     init {
-        /**
-         * OkHttpClient 객체 생성 과정
-         *
-         * 1. OkHttpClient 객체 생성
-         * 2. 세션 데이터의 획득을 위해 response 데이터 중 헤더 영역의 쿠키 값을 가로채기 위한 RecivedCookiesInterceptor 추가
-         * 3. 서버로 데이터를 보내기 전 세션 데이터 삽입을 위해 AddCookiesInterceptor 추가
-         * 4. OkHttpClient 빌드
-         *
-         * 주의) 가로채기 위한 메소드는 addInterceptor이고 삽입하기 위한 메소드는 addNetworkInterceptor
-         */
-        var logging: HttpLoggingInterceptor? = HttpLoggingInterceptor()
-        val cookieManager = CookieManager()
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-//        if (BuildConfig.DEBUGMODE) {
-        logging!!.level = HttpLoggingInterceptor.Level.BODY
-//        }
-        val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor { chain ->
-                    val original = chain.request()
-                    val request = original.newBuilder()
-                            .header("User-Agent", "RobClient/1.0")
-                            .header("Content-Type", "application/json ; charset=utf8")
-                            .header("dataTye", "json")
-                            .header("charset", "UTF-8")
-                            .header("Accept-Language", "ko-KR")
-//                            .header("X-MPZ-DEVICE",framwork.http.core.RetrofitAdapter.deviceUUID)
-                            .header("Accept-Encoding", "gzip, deflate")
-                            .header("Connection", "Keep-Alive")
-                            .header("OS", "android")
-                            .method(original.method(), original.body())
-                            .build()
-                    chain.proceed(request)
-                }
+        val logging = HttpLoggingInterceptor()
+
+        if (BuildConfig.DEBUG) {
+            logging.level = HttpLoggingInterceptor.Level.BODY
+        }
+
+        val okHttpClient = OkHttpClient().newBuilder()
+
                 .addInterceptor(logging)
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(RetrofitRecivedInterceptor())
-                .addNetworkInterceptor(RetrofitAddInterceptor())
-//                .cookieJar(WebviewCookieHandler())
+                .cookieJar(JavaNetCookieJar(JWBaseApplication.cookieManager))
                 .build()
+
         retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(baseUrl)
                 .client(okHttpClient)
                 .build()
     }
-
 
 }

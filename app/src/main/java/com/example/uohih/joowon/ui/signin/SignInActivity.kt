@@ -4,7 +4,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -19,12 +18,12 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.customview.CustomDialog
 import com.example.uohih.joowon.databinding.ActivitySigninBinding
 import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.ui.signup.SignUpActivity
+import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.OAuthLoginHandler
@@ -47,6 +46,7 @@ class SignInActivity : JWBaseActivity() {
     private lateinit var edtPW: EditText
     private lateinit var btnEmailDelete: ImageButton
     private lateinit var chkPwVisible: CheckBox
+    private lateinit var chkAutoSignIn: CheckBox
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,11 +56,13 @@ class SignInActivity : JWBaseActivity() {
         signInViewModel = ViewModelProviders.of(this, SignInViewModelFactory()).get(SignInViewModel::class.java)
 
         binding.signInVm = signInViewModel
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
 
         initView()
         initNaverLoginData()
-        signInViewModel.getSignInState()
+
+
+//        signInViewModel.getSignInState()
     }
 
     private fun initView() {
@@ -68,6 +70,7 @@ class SignInActivity : JWBaseActivity() {
         edtPW = signin_edt_pw
         chkPwVisible = signin_chk_pw_visible
         btnEmailDelete = signin_btn_delete
+        chkAutoSignIn = signin_chkAutoSignIn
 
         edtEmail.onFocusChangeListener = SignInFocusChangeListner()
         edtPW.onFocusChangeListener = SignInFocusChangeListner()
@@ -76,6 +79,7 @@ class SignInActivity : JWBaseActivity() {
         edtPW.addTextChangedListener(SignInTextWatcher(edtPW))
 
         chkPwVisible.setOnCheckedChangeListener(SignInCheckChange())
+        chkAutoSignIn.setOnCheckedChangeListener(SignInCheckChange())
 
         setObserve()
 //        setPreference("F","f")
@@ -94,13 +98,13 @@ class SignInActivity : JWBaseActivity() {
                 hideLoading()
             }
         })
-        signInViewModel.jw0000Data.observe(this@SignInActivity, Observer {
-            val jw0000Data = it ?: return@Observer
-
-            if ("Y" == jw0000Data.resbody?.signInValid) {
-                goMain()
-            }
-        })
+//        signInViewModel.jw0000Data.observe(this@SignInActivity, Observer {
+//            val jw0000Data = it ?: return@Observer
+//
+//            if ("Y" == jw0000Data.resbody?.signInValid) {
+//                goMain()
+//            }
+//        })
 
         signInViewModel.jw1002Data.observe(this@SignInActivity, Observer {
             val jw1002Data = it ?: return@Observer
@@ -138,18 +142,18 @@ class SignInActivity : JWBaseActivity() {
 
             if ("Y" == jw2001Data.resbody?.signInValid) {
                 // todo 로그인완료?
+                if (chkAutoSignIn.isChecked) {
+                    jw2001Data.resbody.autoToken?.let { it1 -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, it1) }
+                }
+
                 goMain()
             } else {
                 customDialog.showDialog(
                         thisActivity,
                         getString(R.string.signin_err),
                         getString(R.string.btnConfirm),
-                        DialogInterface.OnClickListener { dialog, which ->
-
-                            //todo
-                        })
+                        null)
             }
-
         })
     }
 
@@ -263,14 +267,17 @@ class SignInActivity : JWBaseActivity() {
      */
     private inner class SignInCheckChange : CompoundButton.OnCheckedChangeListener {
         override fun onCheckedChanged(view: CompoundButton?, isChecked: Boolean) {
-            if (isChecked) {
-                edtPW.transformationMethod = HideReturnsTransformationMethod.getInstance()
-            } else {
-                edtPW.transformationMethod = PasswordTransformationMethod.getInstance()
+            when (view) {
+                chkAutoSignIn -> {
+//                    if (isChecked) signInViewModel.getSignInState()
+                }
+                chkPwVisible -> {
+                    edtPW.transformationMethod =
+                            if (isChecked) HideReturnsTransformationMethod.getInstance()
+                            else PasswordTransformationMethod.getInstance()
+                    edtPW.setSelection(edtPW.text.length)
+                }
             }
-
-            edtPW.setSelection(edtPW.text.length)
         }
-
     }
 }

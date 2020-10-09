@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "464990106239",
+    "firebase_url": "https://joowon-81c19.firebaseio.com",
+    "project_id": "joowon-81c19",
+    "storage_bucket": "joowon-81c19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464990106239:android:13340e64efc3c7c15cc54a",
+        "android_client_info": {
+          "package_name": "com.example.uohih.joowon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "464990106239-ecqhm72vosj88itjj1nk6o3bu2r9hapn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApsoYpl3UipdAj1TllDhq87M-U7gH4Y6E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "464990106239-ecqhm72vosj88itjj1nk6o3bu2r9hapn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

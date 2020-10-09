@@ -60,7 +60,7 @@ object LogUtil {
             val simpleClassName = fullClassName.substring(fullClassName.lastIndexOf(".") + 1)
 
             //add class and method data to logText
-            log = MessageFormat.format("T:{0} | {1} {2}() {3}|" +
+            log = MessageFormat.format("\nT:{0} | {1} {2}() {3}|" +
                     "\n------------------------------\n" +
                     "{4}" +
                     "\n------------------------------", Thread.currentThread()

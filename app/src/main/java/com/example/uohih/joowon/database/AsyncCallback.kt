@@ -1,6 +1,6 @@
 package com.example.uohih.joowon.database
 
 interface AsyncCallback {
-    fun onPostExecute()
+    fun onPostExecute(any: Any?)
     fun doInBackground()
 }

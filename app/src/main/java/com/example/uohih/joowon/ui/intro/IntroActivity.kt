@@ -1,4 +1,4 @@
-package com.example.uohih.joowon.ui.main
+package com.example.uohih.joowon.ui.intro
 
 import android.Manifest
 import android.content.Intent
@@ -6,13 +6,22 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.LogUtil
+import com.example.uohih.joowon.customview.CustomDialog
 import com.example.uohih.joowon.database.DBHelper
-import com.example.uohih.joowon.ui.setting.PasswordCheckActivity
+import com.example.uohih.joowon.databinding.ActivityIntroBinding
+import com.example.uohih.joowon.databinding.ActivitySigninBinding
+import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.ui.signin.SignInActivity
+import com.example.uohih.joowon.ui.signin.SignInViewModel
+import com.example.uohih.joowon.ui.signin.SignInViewModelFactory
+import com.example.uohih.joowon.util.UICommonUtil
+import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_intro.*
 
 
@@ -21,15 +30,30 @@ import kotlinx.android.synthetic.main.activity_intro.*
  * 2초 후 MainListActivity()로 이동
  */
 class IntroActivity : JWBaseActivity() {
-    private lateinit var mListener: PermissionListener
+    private val thisActivity by lazy { this }
 
+    private lateinit var mListener: PermissionListener
+    private lateinit var signInViewModel: SignInViewModel
+
+    private val customDialog by lazy {
+        CustomDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_intro)
+
+        val binding = DataBindingUtil.setContentView<ActivityIntroBinding>(this, R.layout.activity_intro)
+
+        signInViewModel = ViewModelProviders.of(this, SignInViewModelFactory()).get(SignInViewModel::class.java)
+
+        binding.signInVm = signInViewModel
+        binding.lifecycleOwner = this
+
+        setObserve()
 
         //step1
         permissionCheck()
+
     }
 
     /**
@@ -67,7 +91,6 @@ class IntroActivity : JWBaseActivity() {
                     nextActivity()
                 }
             })
-
         }
 
         if (arrayList.isEmpty()) {
@@ -82,26 +105,40 @@ class IntroActivity : JWBaseActivity() {
      * 다음 액티비티로 이동
      */
     fun nextActivity() {
-        intro_activity.postDelayed({
-            LogUtil.d((getPreference(Constants.passwordSetting)))
 
-            //설정된 비밀번호가 존재할 경우
-            if (getPreference(Constants.passwordSetting).isNotEmpty()) {
-                val intent = Intent(this, PasswordCheckActivity::class.java)
-                startActivityForResult(intent, Constants.passwordCheck)
-            }
-            //설정된 비밀번호가 존재하지 않을 경우
-            else{
-//                goMainActivity()
+        // 앱 인스턴스 ID 설정
+        setInstanceID()
 
-//                val intent = Intent(this, LoginActivity::class.java)
+        val instanceId = UICommonUtil.getPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID)
+        val autoSigninToken = UICommonUtil.getPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN)
+
+        if (autoSigninToken.isNotEmpty()) {
+            // 자동로그인
+            val jsonObject = JsonObject()
+            jsonObject.addProperty("methodid", Constants.JW2003)
+            jsonObject.addProperty("email", instanceId)
+            jsonObject.addProperty("password", autoSigninToken)
+            signInViewModel.signIn(jsonObject)
+        } else {
+            // 로그인 화면으로 이동
+            intro_activity.postDelayed({
+                //            LogUtil.d((getPreference(Constants.passwordSetting)))
+//            //설정된 비밀번호가 존재할 경우
+//            if (getPreference(Constants.passwordSetting).isNotEmpty()) {
+//                val intent = Intent(this, PasswordCheckActivity::class.java)
+//                startActivityForResult(intent, Constants.passwordCheck)
+//            }
+//            //설정된 비밀번호가 존재하지 않을 경우
+//            else{
+////                goMainActivity()
+//
+////                val intent = Intent(this, LoginActivity::class.java)
                 val intent = Intent(this, SignInActivity::class.java)
                 startActivity(intent)
                 finish()
-            }
-
-
-        }, 2000)
+//            }
+            }, 2000)
+        }
     }
 
 
@@ -156,4 +193,21 @@ class IntroActivity : JWBaseActivity() {
     /** ----------- permission check end ----------*/
 
 
+    private fun setObserve() {
+        signInViewModel.jw2001Data.observe(this@IntroActivity, Observer {
+            val jw2001Data = it ?: return@Observer
+
+            if ("Y" == jw2001Data.resbody?.signInValid) {
+                // todo 로그인완료?
+                jw2001Data.resbody.autoToken?.let { it1 -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, it1) }
+                goMainActivity()
+            } else {
+                customDialog.showDialog(
+                        thisActivity,
+                        getString(R.string.signin_err),
+                        getString(R.string.btnConfirm),
+                        null)
+            }
+        })
+    }
 }

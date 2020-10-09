@@ -105,7 +105,7 @@ class ExportExcel(mContext: Context) {
 
         val asyncExecutor = AsyncExecutor(mContext)
         asyncExecutor.setAsyncCallback(object : AsyncCallback {
-            override fun onPostExecute() {
+            override fun onPostExecute(any:Any?) {
                 writeExcelFile()
             }
 
@@ -178,7 +178,7 @@ class ExportExcel(mContext: Context) {
     fun readExcelFile() {
         val asyncExecutor = AsyncExecutor(mContext)
         asyncExecutor.setAsyncCallback(object : AsyncCallback {
-            override fun onPostExecute() {
+            override fun onPostExecute(any: Any?) {
                 Toast.makeText(mContext, "엑셀 가져오기가 완료되었습니다.", Toast.LENGTH_SHORT).show()
             }
 

@@ -1,5 +1,6 @@
 package com.example.uohih.joowon.base
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -8,16 +9,20 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.os.Handler
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.customview.CalendarDayInfo
 import com.example.uohih.joowon.customview.CustomLoadingBar
+import com.example.uohih.joowon.database.AsyncCallback
 import com.example.uohih.joowon.model.JW2002
+import com.example.uohih.joowon.repository.GoogleIdAsyncTask
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.example.uohih.joowon.ui.signin.SignInActivity
+import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.nhn.android.naverlogin.OAuthLogin
@@ -33,6 +38,8 @@ import kotlin.collections.ArrayList
 open class JWBaseActivity : AppCompatActivity() {
 
     val mContext: Context by lazy { this }
+
+//    val ss = getPreference("cookie")
 
     /**
      * 앱 버전 정보 가져오기
@@ -95,7 +102,7 @@ open class JWBaseActivity : AppCompatActivity() {
      */
     fun getPreference(key: String): String {
         val pref = getSharedPreferences(key, MODE_PRIVATE)
-        return pref.getString(key, "")
+        return pref.getString(key, "")!!
     }
 
 
@@ -286,6 +293,10 @@ open class JWBaseActivity : AppCompatActivity() {
                     if ("N" == jw2002Data.resbody?.signOutValid) {
                         return
                     }
+
+                    // 자동로그인 토큰 제거
+                    UICommonUtil.removePreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN)
+
                     (mContext as Activity).finish()
                     val intent = Intent(mContext, SignInActivity::class.java)
                     startActivity(intent)
@@ -303,6 +314,32 @@ open class JWBaseActivity : AppCompatActivity() {
 
             })
         }
+    }
+
+
+    /**
+     * 앱 인스턴스 ID 설정
+     */
+    fun setInstanceID() {
+        val androidId = Settings.Secure.getString(applicationContext.contentResolver, Settings.Secure.ANDROID_ID)
+
+        val v = GoogleIdAsyncTask(this).apply {
+            setGoogleAsyncCallback(object : AsyncCallback {
+                override fun onPostExecute(adid: Any?) {
+                    adid?.let {
+                        val appInstanceID = UUID(androidId.hashCode().toLong(), adid.hashCode().toLong()).toString()
+                        if(appInstanceID != UICommonUtil.getPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID)) {
+                            UICommonUtil.setPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID, appInstanceID)
+                        }
+                    }
+                }
+
+                override fun doInBackground() {
+                }
+
+            })
+        }
+        v.executeSync()
     }
 
 

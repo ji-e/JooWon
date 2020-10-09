@@ -128,6 +128,7 @@
     <string name="signin_title">로그인</string>
     <string name="signin_email">이메일</string>
     <string name="signin_pw">비밀번호</string>
+    <string name="signin_auto_signin">자동로그인</string>
     <string name="signin_dialog_msg_email_registration">이미 등록된 이메일 입니다. 네이버아이디로 연동하시겠습니까?</string>
     <string name="signin_dialog_mst_sns_registration">네이버아이디로 연동된 이메일입니다. 네이버아이디로 로그인...?</string>
     <string name="signin_email_hint">이메일을 입력해주세요.</string>
@@ -135,5 +136,6 @@
     <string name="signin_find_pw">비밀번호찾기</string>
     <string name="signin_sign_up">회원가입</string>
     <string name="signin_err">아이디 또는 비밀번호를 확인해주세요.</string>
+
 
 </resources>

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.beloo.widget.chipslayoutmanager.util.log.Log
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.ui.adapter.MainListAdapter
 import com.example.uohih.joowon.ui.adapter.StaffData
@@ -22,6 +23,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_main_list.*
 import org.json.JSONObject
+import java.net.CookieManager
+import java.net.CookiePolicy
 
 //import sun.jvm.hotspot.utilities.IntArray
 //import javax.swing.UIManager.put
@@ -48,7 +51,7 @@ class MainListActivity : JWBaseActivity() {
         backPressCloseHandler = BackPressCloseHandler(this)
 
         val boardId =
-                if (intent.action == Intent.ACTION_VIEW) intent.data.getQueryParameter("key").toString()
+                if (intent.action == Intent.ACTION_VIEW) intent.data?.getQueryParameter("key").toString()
                 else ""
         LogUtil.e(boardId)
 
