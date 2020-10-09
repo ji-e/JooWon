@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="signInVm"
             type="com.example.uohih.joowon.ui.signin.SignInViewModel" />
@@ -103,8 +104,8 @@
                 android:background="@drawable/input_selector"
                 android:hint="@string/signin_pw_hint"
                 android:inputType="textPassword"
+                android:maxLength="15"
                 android:paddingLeft="@dimen/dp10"
-                android:paddingRight="@dimen/dp30"
                 android:singleLine="true"
                 app:layout_constraintTop_toBottomOf="@id/signin_tv_pw" />
 
@@ -120,7 +121,8 @@
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/signin_edt_pw"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/signin_edt_pw" />
+                app:layout_constraintTop_toTopOf="@id/signin_edt_pw"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/signin_tv_pw_err"
@@ -151,19 +153,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginRight="@dimen/dp10"
                 android:layout_marginTop="@dimen/dp06"
-                app:layout_constraintTop_toBottomOf="@id/signin_btn_signin"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                android:layout_marginRight="@dimen/dp10"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/signin_btn_signin" />
 
             <TextView
                 style="@style/Font_12_4a4a4a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/signin_auto_signin"
                 android:layout_marginTop="@dimen/dp16"
-                app:layout_constraintTop_toBottomOf="@id/signin_btn_signin"
-                app:layout_constraintLeft_toRightOf="@id/signin_chkAutoSignIn"/>
+                android:text="@string/signin_auto_signin"
+                app:layout_constraintLeft_toRightOf="@id/signin_chkAutoSignIn"
+                app:layout_constraintTop_toBottomOf="@id/signin_btn_signin" />
 
             <LinearLayout
                 android:id="@+id/signin_lay_signup"
@@ -205,9 +207,9 @@
                 android:id="@+id/signin_lay_sns"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp20"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:layout_marginTop="@dimen/dp20"
                 app:layout_constraintTop_toBottomOf="@id/signin_lay_signup">
 
                 <ImageView

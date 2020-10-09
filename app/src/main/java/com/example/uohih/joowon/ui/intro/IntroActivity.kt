@@ -205,8 +205,7 @@ class IntroActivity : JWBaseActivity() {
                 customDialog.showDialog(
                         thisActivity,
                         getString(R.string.signin_err),
-                        getString(R.string.btnConfirm),
-                        null)
+                        getString(R.string.btnConfirm), null)
             }
         })
     }

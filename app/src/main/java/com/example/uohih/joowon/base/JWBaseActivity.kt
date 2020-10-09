@@ -277,43 +277,40 @@ open class JWBaseActivity : AppCompatActivity() {
 
         if (OAuthLoginState.NEED_LOGIN != mOAuthLoginInstance.getState(mContext)) {
             mOAuthLoginInstance.logout(mContext)
-            (mContext as Activity).finish()
-            val intent = Intent(mContext, SignInActivity::class.java)
-            startActivity(intent)
-        } else {
-            val jsonObject = JsonObject()
-            jsonObject.addProperty("methodid", Constants.JW2002)
-
-            JWBaseRepository().requestSignInService(jsonObject, object : GetResbodyCallback {
-                override fun onSuccess(code: Int, data: JSONObject) {
-                    val jw2002Data = Gson().fromJson(data.toString(), JW2002::class.java)
-                    if ("false" == jw2002Data.result) {
-                        return
-                    }
-                    if ("N" == jw2002Data.resbody?.signOutValid) {
-                        return
-                    }
-
-                    // 자동로그인 토큰 제거
-                    UICommonUtil.removePreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN)
-
-                    (mContext as Activity).finish()
-                    val intent = Intent(mContext, SignInActivity::class.java)
-                    startActivity(intent)
-
-                }
-
-                override fun onFailure(code: Int) {
-                    LogUtil.e(code)
-
-                }
-
-                override fun onError(throwable: Throwable) {
-
-                }
-
-            })
         }
+        val jsonObject = JsonObject()
+        jsonObject.addProperty("methodid", Constants.JW2002)
+
+        JWBaseRepository().requestSignInService(jsonObject, object : GetResbodyCallback {
+            override fun onSuccess(code: Int, data: JSONObject) {
+                val jw2002Data = Gson().fromJson(data.toString(), JW2002::class.java)
+                if ("false" == jw2002Data.result) {
+                    return
+                }
+                if ("N" == jw2002Data.resbody?.signOutValid) {
+                    return
+                }
+
+                // 자동로그인 토큰 제거
+                UICommonUtil.removePreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN)
+
+                (mContext as Activity).finish()
+                val intent = Intent(mContext, SignInActivity::class.java)
+                startActivity(intent)
+
+            }
+
+            override fun onFailure(code: Int) {
+                LogUtil.e(code)
+
+            }
+
+            override fun onError(throwable: Throwable) {
+
+            }
+
+        })
+
     }
 
 
@@ -328,7 +325,7 @@ open class JWBaseActivity : AppCompatActivity() {
                 override fun onPostExecute(adid: Any?) {
                     adid?.let {
                         val appInstanceID = UUID(androidId.hashCode().toLong(), adid.hashCode().toLong()).toString()
-                        if(appInstanceID != UICommonUtil.getPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID)) {
+                        if (appInstanceID != UICommonUtil.getPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID)) {
                             UICommonUtil.setPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID, appInstanceID)
                         }
                     }
@@ -341,8 +338,6 @@ open class JWBaseActivity : AppCompatActivity() {
         }
         v.executeSync()
     }
-
-
 
 
 }

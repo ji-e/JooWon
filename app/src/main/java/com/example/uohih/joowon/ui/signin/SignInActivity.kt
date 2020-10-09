@@ -7,11 +7,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.view.KeyEvent
 import android.view.View
-import android.widget.CheckBox
-import android.widget.CompoundButton
-import android.widget.EditText
-import android.widget.ImageButton
+import android.view.inputmethod.EditorInfo
+import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -29,6 +28,9 @@ import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.OAuthLoginHandler
 import com.nhn.android.naverlogin.data.OAuthLoginState
 import kotlinx.android.synthetic.main.activity_signin.*
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class SignInActivity : JWBaseActivity() {
     private lateinit var signInViewModel: SignInViewModel
@@ -47,6 +49,8 @@ class SignInActivity : JWBaseActivity() {
     private lateinit var btnEmailDelete: ImageButton
     private lateinit var chkPwVisible: CheckBox
     private lateinit var chkAutoSignIn: CheckBox
+
+    private var isNaverSignIn = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,20 +76,17 @@ class SignInActivity : JWBaseActivity() {
         btnEmailDelete = signin_btn_delete
         chkAutoSignIn = signin_chkAutoSignIn
 
-        edtEmail.onFocusChangeListener = SignInFocusChangeListner()
-        edtPW.onFocusChangeListener = SignInFocusChangeListner()
+        edtEmail.onFocusChangeListener = SignInFocusChangeListener()
+        edtPW.onFocusChangeListener = SignInFocusChangeListener()
 
         edtEmail.addTextChangedListener(SignInTextWatcher(edtEmail))
         edtPW.addTextChangedListener(SignInTextWatcher(edtPW))
 
-        chkPwVisible.setOnCheckedChangeListener(SignInCheckChange())
-        chkAutoSignIn.setOnCheckedChangeListener(SignInCheckChange())
+        edtPW.setOnEditorActionListener(SignInEditActionListener())
+
+        chkPwVisible.setOnCheckedChangeListener(SignInCheckChangeListener())
 
         setObserve()
-//        setPreference("F","f")
-//        LogUtil.e(getPreference("F"))
-
-
     }
 
     private fun setObserve() {
@@ -98,13 +99,6 @@ class SignInActivity : JWBaseActivity() {
                 hideLoading()
             }
         })
-//        signInViewModel.jw0000Data.observe(this@SignInActivity, Observer {
-//            val jw0000Data = it ?: return@Observer
-//
-//            if ("Y" == jw0000Data.resbody?.signInValid) {
-//                goMain()
-//            }
-//        })
 
         signInViewModel.jw1002Data.observe(this@SignInActivity, Observer {
             val jw1002Data = it ?: return@Observer
@@ -113,25 +107,37 @@ class SignInActivity : JWBaseActivity() {
             }
         })
 
+        signInViewModel.jw1005Data.observe(this@SignInActivity, Observer {
+            val jw1005Data = it ?: return@Observer
+            if ("Y" == jw1005Data.resbody?.adminUpdateValid) {
+                goMain()
+            }
+        })
 
         signInViewModel.jw1006Data.observe(this@SignInActivity, Observer {
             val jw1006Data = it ?: return@Observer
 
             if ("Y" == jw1006Data.resbody?.isSnsIdRegisted) {
-                // todo 로그인완료?
-                goMain()
+//                // todo 로그인완료?
+//                goMain()
             } else {
                 if ("Y" == jw1006Data.resbody?.isEmailRegisted) {
-                    // 중복임
-                    customDialog.showDialog(
-                            thisActivity,
-                            getString(R.string.signin_dialog_msg_email_registration),
-                            getString(R.string.btnCancel), null,
-                            getString(R.string.btnConfirm),
-                            DialogInterface.OnClickListener { dialog, which ->
-
-                                //todo
-                            })
+                    if(isNaverSignIn) {
+                        // 중복임
+                        customDialog.showDialog(
+                                thisActivity,
+                                getString(R.string.signin_dialog_msg_email_registration),
+                                getString(R.string.btnCancel),
+                                DialogInterface.OnClickListener { dialog, which ->
+                                    goMain()
+                                },
+                                getString(R.string.btnConfirm),
+                                DialogInterface.OnClickListener { dialog, which ->
+                                   adminUpdate()
+                                })
+                    } else {
+                        goMain()
+                    }
                 }
             }
         })
@@ -145,14 +151,12 @@ class SignInActivity : JWBaseActivity() {
                 if (chkAutoSignIn.isChecked) {
                     jw2001Data.resbody.autoToken?.let { it1 -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, it1) }
                 }
-
-                goMain()
+                if(signInViewModel.jw1006Data.value?.resbody?.isSnsIdRegisted == "Y" || !isNaverSignIn) goMain()
             } else {
                 customDialog.showDialog(
                         thisActivity,
                         getString(R.string.signin_err),
-                        getString(R.string.btnConfirm),
-                        null)
+                        getString(R.string.btnConfirm), null)
             }
         })
     }
@@ -161,6 +165,7 @@ class SignInActivity : JWBaseActivity() {
         override fun run(success: Boolean) {
             hideLoading()
             if (success) {
+                isNaverSignIn = true
                 LogUtil.e(mOAuthLoginInstance.getAccessToken(thisActivity))
                 signInViewModel.getSnsSignInInfo(mOAuthLoginInstance.getAccessToken(thisActivity))
             } else {
@@ -177,7 +182,7 @@ class SignInActivity : JWBaseActivity() {
 
         if (OAuthLoginState.NEED_LOGIN != OAuthLogin.getInstance().getState(this)
                 && OAuthLoginState.NEED_INIT != mOAuthLoginInstance.getState(this)) {
-            goMain()
+            signInViewModel.getSnsSignInInfo(mOAuthLoginInstance.getAccessToken(thisActivity))
         }
     }
 
@@ -199,11 +204,7 @@ class SignInActivity : JWBaseActivity() {
             }
             R.id.signin_btn_signin -> {
                 // 로그인
-                val jsonObject = JsonObject()
-                jsonObject.addProperty("methodid", Constants.JW2001)
-                jsonObject.addProperty("email", edtEmail.text.toString())
-                jsonObject.addProperty("password", edtPW.text.toString())
-                signInViewModel.signIn(jsonObject)
+                signIn()
             }
             R.id.signin_btn_OAuthLoginImg -> {
                 // 네이버아이디로 로그인
@@ -218,9 +219,44 @@ class SignInActivity : JWBaseActivity() {
     }
 
     /**
+     * 로그인
+     */
+    private fun signIn() {
+        val jsonObject = JsonObject()
+        jsonObject.addProperty("methodid", Constants.JW2001)
+        jsonObject.addProperty("email", edtEmail.text.toString())
+        jsonObject.addProperty("password", edtPW.text.toString())
+        signInViewModel.signIn(jsonObject)
+
+        edtEmail.clearFocus()
+        edtPW.clearFocus()
+    }
+
+    private fun adminUpdate(){
+        val jw1003Data = signInViewModel.jw1003Data.value?. response
+        val jsonObject = JsonObject()
+        jsonObject.addProperty("methodid", Constants.JW1005)
+        jsonObject.addProperty("email",jw1003Data?.email)
+
+        val updateData = JsonObject()
+        updateData.addProperty("authToken", jw1003Data?.id)
+        updateData.addProperty("updated_at",LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
+
+        val snsProvider = JsonObject()
+        snsProvider.addProperty("id", jw1003Data?.id)
+        snsProvider.addProperty("email", jw1003Data?.email)
+        snsProvider.addProperty("name", jw1003Data?.name)
+        updateData.add("sns_provider",snsProvider)
+
+        jsonObject.add("update_data", updateData)
+
+        signInViewModel.updateAdminInfo(jsonObject)
+    }
+
+    /**
      * 포커스 체인지 리스너
      */
-    private inner class SignInFocusChangeListner : View.OnFocusChangeListener {
+    private inner class SignInFocusChangeListener : View.OnFocusChangeListener {
         override fun onFocusChange(v: View?, hasFocus: Boolean) {
             if (hasFocus) {
                 if (v == edtEmail) {
@@ -265,12 +301,9 @@ class SignInActivity : JWBaseActivity() {
     /**
      * 체크박스 체크 리스너
      */
-    private inner class SignInCheckChange : CompoundButton.OnCheckedChangeListener {
+    private inner class SignInCheckChangeListener : CompoundButton.OnCheckedChangeListener {
         override fun onCheckedChanged(view: CompoundButton?, isChecked: Boolean) {
             when (view) {
-                chkAutoSignIn -> {
-//                    if (isChecked) signInViewModel.getSignInState()
-                }
                 chkPwVisible -> {
                     edtPW.transformationMethod =
                             if (isChecked) HideReturnsTransformationMethod.getInstance()
@@ -278,6 +311,20 @@ class SignInActivity : JWBaseActivity() {
                     edtPW.setSelection(edtPW.text.length)
                 }
             }
+        }
+    }
+
+    /**
+     * 키패드 액션리스너
+     */
+    private inner class SignInEditActionListener : TextView.OnEditorActionListener {
+        override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent?): Boolean {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                signInViewModel.signInFormState.value?.isDataValid.let { if (it == true) signIn() }
+                return false
+            }
+            return true
+
         }
     }
 }

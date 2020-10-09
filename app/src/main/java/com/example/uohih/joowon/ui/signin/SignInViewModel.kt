@@ -10,6 +10,7 @@ import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.model.*
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
+import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.json.JSONObject
@@ -17,15 +18,17 @@ import java.util.regex.Pattern
 
 class SignInViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : AndroidViewModel(application) {
 
-    private val _isLoding = MutableLiveData<Boolean>()
-    private val _jw0000Data = MutableLiveData<JW0000>()
+    private val _isLoading = MutableLiveData<Boolean>()
+    private val _jw1003Data = MutableLiveData<JW1003>()
+    private val _jw1005Data = MutableLiveData<JW1005>()
     private val _jw1006Data = MutableLiveData<JW1006>()
     private val _jw1002Data = MutableLiveData<JW1002>()
     private val _jw2001Data = MutableLiveData<JW2001>()
     private val _signInForm = MutableLiveData<SignInFormState>()
 
-    val isLoading: LiveData<Boolean> = _isLoding
-    val jw0000Data: LiveData<JW0000> = _jw0000Data
+    val isLoading: LiveData<Boolean> = _isLoading
+    val jw1003Data: LiveData<JW1003> = _jw1003Data
+    val jw1005Data: LiveData<JW1005> = _jw1005Data
     val jw1006Data: LiveData<JW1006> = _jw1006Data
     val jw1002Data: LiveData<JW1002> = _jw1002Data
     val jw2001Data: LiveData<JW2001> = _jw2001Data
@@ -82,10 +85,14 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
      * jw1003
      */
     fun getSnsSignInInfo(accessToken: String) {
-        _isLoding.value = true
+        _isLoading.value = true
         jwBaseRepository.requestNaverService(accessToken, object : GetResbodyCallback {
             override fun onSuccess(code: Int, data: JSONObject) {
+                _isLoading.value = false
+
                 val jw1003Data = Gson().fromJson(data.toString(), JW1003::class.java)
+
+                _jw1003Data.value = jw1003Data
 
                 val jsonObject = JsonObject()
                 jsonObject.addProperty("methodid", Constants.JW1006)
@@ -101,17 +108,17 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
 
                 jsonObject.add("sns_provider", snsProvider)
                 getAdminInfo(jsonObject)
-                _isLoding.value = false
+
             }
 
             override fun onFailure(code: Int) {
                 LogUtil.e(code)
-                _isLoding.value = false
+                _isLoading.value = false
             }
 
             override fun onError(throwable: Throwable) {
                 LogUtil.e("err")
-                _isLoding.value = false
+                _isLoading.value = false
             }
 
         })
@@ -123,20 +130,26 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
      * jw1006
      */
     fun getAdminInfo(jsonObject: JsonObject) {
-        _isLoding.value = true
+        _isLoading.value = true
         jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
             override fun onSuccess(code: Int, data: JSONObject) {
-                _isLoding.value = false
+                _isLoading.value = false
 
                 val jw1006Data = Gson().fromJson(data.toString(), JW1006::class.java)
-                LogUtil.d(jw1006Data.resbody?.successYn.toString(), jw1006Data.result.toString())
+
                 if ("false" == jw1006Data.result) {
                     return
                 }
                 if ("N" == jw1006Data.resbody?.successYn) {
                     jsonObject.addProperty("methodid", Constants.JW1002)
+                    jsonObject.addProperty("provider", UICommonUtil.getPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID))
                     signUp(jsonObject)
                     return
+                } else {
+                    // 로그인
+                    jsonObject.addProperty("methodid", Constants.JW2001)
+                    jsonObject.addProperty("naverSignIn", "Y")
+                    signIn(jsonObject)
                 }
 
                 _jw1006Data.value = jw1006Data
@@ -144,11 +157,11 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
 
             override fun onFailure(code: Int) {
                 LogUtil.e(code)
-                _isLoding.value = false
+                _isLoading.value = false
             }
 
             override fun onError(throwable: Throwable) {
-                _isLoding.value = false
+                _isLoading.value = false
             }
 
         })
@@ -160,7 +173,7 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
      * jw1002
      */
     fun signUp(jsonObject: JsonObject) {
-        _isLoding.value = true
+        _isLoading.value = true
         jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
             override fun onSuccess(code: Int, data: JSONObject) {
                 val jw1002Data = Gson().fromJson(data.toString(), JW1002::class.java)
@@ -168,16 +181,16 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
                     return
                 }
                 _jw1002Data.value = jw1002Data
-                _isLoding.value = false
+                _isLoading.value = false
             }
 
             override fun onFailure(code: Int) {
                 LogUtil.e(code)
-                _isLoding.value = false
+                _isLoading.value = false
             }
 
             override fun onError(throwable: Throwable) {
-                _isLoding.value = false
+                _isLoading.value = false
             }
 
         })
@@ -188,7 +201,7 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
      * jw2001
      */
     fun signIn(jsonObject: JsonObject) {
-        _isLoding.value = true
+        _isLoading.value = true
         jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
             override fun onSuccess(code: Int, data: JSONObject) {
                 val jw2001Data = Gson().fromJson(data.toString(), JW2001::class.java)
@@ -196,47 +209,50 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
                     return
                 }
                 _jw2001Data.value = jw2001Data
-                _isLoding.value = false
+                _isLoading.value = false
             }
 
             override fun onFailure(code: Int) {
                 LogUtil.e(code)
-                _isLoding.value = false
+                _isLoading.value = false
             }
 
             override fun onError(throwable: Throwable) {
-                _isLoding.value = false
+                _isLoading.value = false
             }
 
         })
     }
+
 
     /**
-     * 로그인 여부 확인
+     * 회원정보 업데이트
+     * jw1005
      */
-    fun getSignInState() {
-        _isLoding.value = true
-        jwBaseRepository.requestSignInService(JsonObject(), object : GetResbodyCallback {
+    fun updateAdminInfo(jsonObject: JsonObject) {
+        _isLoading.value = true
+        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
             override fun onSuccess(code: Int, data: JSONObject) {
-                val jw0000Data = Gson().fromJson(data.toString(), JW0000::class.java)
-                if ("N" == jw0000Data.result) {
+                val jw1005Data = Gson().fromJson(data.toString(), JW1005::class.java)
+                if ("N" == jw1005Data.result) {
                     return
                 }
-                _jw0000Data.value = jw0000Data
-                _isLoding.value = false
+                _jw1005Data.value = jw1005Data
+                _isLoading.value = false
             }
 
             override fun onFailure(code: Int) {
                 LogUtil.e(code)
-                _isLoding.value = false
+                _isLoading.value = false
             }
 
             override fun onError(throwable: Throwable) {
-                _isLoding.value = false
+                _isLoading.value = false
             }
 
         })
     }
+
 
 
 }

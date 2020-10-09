@@ -11,7 +11,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:minHeight="@dimen/dp200"
+        android:minHeight="@dimen/dp150"
         android:padding="@dimen/dp16"
         android:textColor="@color/c_333333"
         android:textSize="@dimen/dp15" />
