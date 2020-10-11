@@ -70,10 +70,10 @@ class SignInActivity : JWBaseActivity() {
     }
 
     private fun initView() {
-        edtEmail = signin_edt_email
-        edtPW = signin_edt_pw
-        chkPwVisible = signin_chk_pw_visible
-        btnEmailDelete = signin_btn_delete
+        edtEmail = signin_edtEmail
+        edtPW = signin_edtPw
+        chkPwVisible = signin_chkPwVisible
+        btnEmailDelete = signin_btnDelete
         chkAutoSignIn = signin_chkAutoSignIn
 
         edtEmail.onFocusChangeListener = SignInFocusChangeListener()
@@ -122,7 +122,7 @@ class SignInActivity : JWBaseActivity() {
 //                goMain()
             } else {
                 if ("Y" == jw1006Data.resbody?.isEmailRegisted) {
-                    if(isNaverSignIn) {
+                    if (isNaverSignIn) {
                         // 중복임
                         customDialog.showDialog(
                                 thisActivity,
@@ -133,7 +133,7 @@ class SignInActivity : JWBaseActivity() {
                                 },
                                 getString(R.string.btnConfirm),
                                 DialogInterface.OnClickListener { dialog, which ->
-                                   adminUpdate()
+                                    adminUpdate()
                                 })
                     } else {
                         goMain()
@@ -151,7 +151,7 @@ class SignInActivity : JWBaseActivity() {
                 if (chkAutoSignIn.isChecked) {
                     jw2001Data.resbody.autoToken?.let { it1 -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, it1) }
                 }
-                if(signInViewModel.jw1006Data.value?.resbody?.isSnsIdRegisted == "Y" || !isNaverSignIn) goMain()
+                if (signInViewModel.jw1006Data.value?.resbody?.isSnsIdRegisted == "Y" || !isNaverSignIn) goMain()
             } else {
                 customDialog.showDialog(
                         thisActivity,
@@ -194,15 +194,15 @@ class SignInActivity : JWBaseActivity() {
 
     fun onClickSignIn(view: View) {
         when (view.id) {
-            R.id.signin_tv_signup -> {
+            R.id.signin_tvSignup -> {
                 // 회원가입화면으로 이동
                 val intent = Intent(this, SignUpActivity::class.java)
                 startActivity(intent)
             }
-            R.id.signin_tv_find_pw -> {
+            R.id.signin_tvFindPw -> {
 
             }
-            R.id.signin_btn_signin -> {
+            R.id.signin_btnSignin -> {
                 // 로그인
                 signIn()
             }
@@ -211,7 +211,7 @@ class SignInActivity : JWBaseActivity() {
                 showLoading()
                 mOAuthLoginInstance.startOauthLoginActivity(thisActivity, mOAuthLoginHandler)
             }
-            R.id.signin_btn_delete -> {
+            R.id.signin_btnDelete -> {
                 // 입력한 아이디 삭제
                 edtEmail.setText("")
             }
@@ -232,21 +232,21 @@ class SignInActivity : JWBaseActivity() {
         edtPW.clearFocus()
     }
 
-    private fun adminUpdate(){
-        val jw1003Data = signInViewModel.jw1003Data.value?. response
+    private fun adminUpdate() {
+        val jw1003Data = signInViewModel.jw1003Data.value?.response
         val jsonObject = JsonObject()
         jsonObject.addProperty("methodid", Constants.JW1005)
-        jsonObject.addProperty("email",jw1003Data?.email)
+        jsonObject.addProperty("email", jw1003Data?.email)
 
         val updateData = JsonObject()
         updateData.addProperty("authToken", jw1003Data?.id)
-        updateData.addProperty("updated_at",LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
+        updateData.addProperty("updated_at", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
 
         val snsProvider = JsonObject()
         snsProvider.addProperty("id", jw1003Data?.id)
         snsProvider.addProperty("email", jw1003Data?.email)
         snsProvider.addProperty("name", jw1003Data?.name)
-        updateData.add("sns_provider",snsProvider)
+        updateData.add("sns_provider", snsProvider)
 
         jsonObject.add("update_data", updateData)
 
