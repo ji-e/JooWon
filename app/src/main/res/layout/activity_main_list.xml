@@ -1,57 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/c_ffffff"
-    tools:context=".ui.main.MainListActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!--상단 타이틀 및 아이콘 바-->
-    <com.example.uohih.joowon.customview.TopTitleView
-        android:id="@+id/main_list_title_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp60"
-        android:gravity="center_vertical"
-        app:btnLogo="true"
-        app:btnWrite="true"
-        app:btnSetting="true" />
+    <data>
 
+        <variable
+            name="mainListVm"
+            type="com.example.uohih.joowon.ui.main.MainListViewModel" />
+    </data>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/main_list_recyclerView"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/main_list_title_view"
-        android:dividerHeight="@dimen/dp01"
-        android:divider="@color/c_ffffff"
-        tools:listitem="@layout/list_item_main_list"/>
+        android:background="@color/c_ffffff"
+        tools:context=".ui.main.MainListActivity">
+
+        <!--상단 타이틀 및 아이콘 바-->
+        <com.example.uohih.joowon.customview.TopTitleView
+            android:id="@+id/main_list_title_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp60"
+            android:gravity="center_vertical"
+            app:btnLogo="true"
+            app:btnSetting="true"
+            app:btnWrite="true"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-    <!--추가버튼-->
-    <ImageButton
-        android:id="@+id/main_list_btn_plus"
-        android:layout_width="@dimen/dp40"
-        android:layout_height="@dimen/dp40"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/dp16"
-        android:background="@drawable/btn_plus_selector"
-        android:onClick="onClickMainList" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/main_list_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/main_list_title_view"
+            android:divider="@color/c_ffffff"
+            android:dividerHeight="@dimen/dp01"
+            tools:listitem="@layout/list_item_main_list" />
 
-    <Button
-        android:id="@+id/main_list_btn_signout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="로그아웃"
-        android:onClick="onClickMainList" />
 
-    <Button
-        android:id="@+id/main_list_btn_session"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="세션확인"
-        android:layout_marginTop="@dimen/dp50"
-        android:onClick="onClickMainList" />
+        <!--추가버튼-->
+        <ImageButton
+            android:id="@+id/main_list_btn_plus"
+            android:layout_width="@dimen/dp40"
+            android:layout_height="@dimen/dp40"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/dp16"
+            android:background="@drawable/btn_plus_selector"
+            android:onClick="onClickMainList"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/main_list_btn_signout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickMainList"
+            android:text="로그아웃"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <Button
+            android:id="@+id/main_list_btn_session"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp50"
+            android:onClick="onClickMainList"
+            android:text="세션확인"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

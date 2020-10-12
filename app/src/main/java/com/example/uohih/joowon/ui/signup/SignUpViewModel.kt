@@ -1,10 +1,12 @@
 package com.example.uohih.joowon.ui.signup
 
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
+import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.model.JW1001
 import com.example.uohih.joowon.model.JW1002
 import com.example.uohih.joowon.model.SignUpFormState
@@ -16,7 +18,7 @@ import org.json.JSONObject
 import java.util.regex.Pattern
 
 
-class SignUpViewModel(private val jwBaseRepository: JWBaseRepository) : ViewModel() {
+class SignUpViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : AndroidViewModel(application) {
 
     private val _isLoding = MutableLiveData<Boolean>()
     private val _signUpForm = MutableLiveData<SignUpFormState>()

@@ -3,8 +3,11 @@ package com.example.uohih.joowon.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.beloo.widget.chipslayoutmanager.util.log.Log
+import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.ui.adapter.MainListAdapter
 import com.example.uohih.joowon.ui.adapter.StaffData
@@ -13,7 +16,9 @@ import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.database.DBHelper
+import com.example.uohih.joowon.databinding.ActivityMainListBinding
 import com.example.uohih.joowon.model.JW0000
+import com.example.uohih.joowon.model.JW3001
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.example.uohih.joowon.ui.setting.SettingActivity
@@ -23,8 +28,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_main_list.*
 import org.json.JSONObject
-import java.net.CookieManager
-import java.net.CookiePolicy
 
 //import sun.jvm.hotspot.utilities.IntArray
 //import javax.swing.UIManager.put
@@ -34,13 +37,16 @@ class MainListActivity : JWBaseActivity() {
     private val base = JWBaseApplication()
     private val dbHelper = DBHelper(this)
 
-    private lateinit var mAadapter: MainListAdapter
+    private lateinit var mainListViewModel: MainListViewModel
+    private lateinit var mAdapter: MainListAdapter
 
     // back key exit
     private lateinit var backPressCloseHandler: BackPressCloseHandler
 
     // 리스트 뷰
     private var mainList = arrayListOf<StaffData>()
+
+    private var employeeList: MutableList<JW3001.resbodyLst>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,21 +63,55 @@ class MainListActivity : JWBaseActivity() {
 
         if ("setting" == boardId) {
             val intent = Intent(this, SettingActivity::class.java)
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
-//            finish()
-
         }
+
+
+        val binding = DataBindingUtil.setContentView<ActivityMainListBinding>(this, R.layout.activity_main_list)
+
+        mainListViewModel = ViewModelProviders.of(this, MainListViewModelFactory()).get(MainListViewModel::class.java)
+
+        binding.mainListVm = mainListViewModel
+        binding.lifecycleOwner = this
+
+        initView()
     }
 
 
     override fun onResume() {
         super.onResume()
-        hideLoading()
-        setData()
 
+        val jsonObject = JsonObject()
+        jsonObject.addProperty("methodid", Constants.JW3001)
+        mainListViewModel.getEmployeeList(jsonObject)
+
+        setData()
+    }
+
+    private fun initView() {
+
+        setObserve()
+    }
+
+    private fun setObserve() {
+        mainListViewModel.isLoading.observe(this@MainListActivity, Observer {
+            val isLoading = it ?: return@Observer
+
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+
+        mainListViewModel.jw3001Data.observe(this@MainListActivity, Observer {
+            val jw3001Data = it ?: return@Observer
+            employeeList = jw3001Data.resbody?.employeeList
+
+        })
 
     }
+
 
     override fun onBackPressed() {
         backPressCloseHandler.onBackPressed()
@@ -93,28 +133,30 @@ class MainListActivity : JWBaseActivity() {
      * db에서 데이터 가져온 후 set
      */
     private fun setData() {
-        val cursor = dbHelper.selectAll(dbHelper.tableNameWorkerJW)
-
-        mainList.clear()
-
-        while (cursor.moveToNext()) {
-            mainList.add(StaffData(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6)))
-        }
+//        val cursor = dbHelper.selectAll(dbHelper.tableNameWorkerJW)
+//
+//        mainList.clear()
+//
+//        while (cursor.moveToNext()) {
+//            mainList.add(StaffData(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6)))
+//        }
 
         main_list_recyclerView.setHasFixedSize(true)
         main_list_recyclerView.layoutManager = LinearLayoutManager(this)
 
-        mAadapter = MainListAdapter(mainList)
-        main_list_recyclerView.adapter = mAadapter
-        mAadapter.setClickListener(object : MainListAdapter.ClickListener {
-            override fun onmClickEvent(bundle: Bundle) {
-                showLoading()
-                val intent = Intent(mContext, WorkerMainActivity::class.java)
-                intent.putExtra("worker", bundle)
-                startActivity(intent)
-            }
+        if (employeeList != null) {
+            mAdapter = MainListAdapter(employeeList!!)
+            main_list_recyclerView.adapter = mAdapter
+            mAdapter.setClickListener(object : MainListAdapter.ClickListener {
+                override fun onmClickEvent(bundle: Bundle) {
+                    showLoading()
+                    val intent = Intent(mContext, WorkerMainActivity::class.java)
+                    intent.putExtra("worker", bundle)
+                    startActivity(intent)
+                }
 
-        })
+            })
+        }
 
 //        main_list_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }

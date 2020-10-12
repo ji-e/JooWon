@@ -19,6 +19,7 @@ import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.ui.main.PictureActivity
 import com.example.uohih.joowon.customview.CustomDialog
+import com.example.uohih.joowon.model.JW3001
 import kotlinx.android.synthetic.main.list_item_main_list.view.*
 import java.io.IOException
 import java.util.*
@@ -26,7 +27,7 @@ import java.util.*
 /**
  * MainListActivity 아답터(직원 리스트)
  */
-class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
+class MainListAdapter(private val workerList: MutableList<JW3001.resbodyLst>) : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
 
     /*private var base = JWBaseApplication()
     // 체크 된 항목
@@ -110,20 +111,23 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
         val mImgPeople = view.main_list_img_people          //프로필 사진
 
 
-        fun bind(listener: View.OnClickListener, item: StaffData, mContext:Context) {
+        fun bind(listener: View.OnClickListener, item: JW3001.resbodyLst, mContext: Context) {
             mTvName.text = item.name
-            mTvJoin.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(item.joinDate.toString(), "$1-$2-$3")
-            mTvPhone.text = (Constants.PHONE_NUM_PATTERN).toRegex().replace(item.phone, "$1-$2-$3")
-            mTvVacation.append(item.use.toString())
+            mTvJoin.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(item.entered_date.toString(), "$1-$2-$3")
+            mTvPhone.text = (Constants.PHONE_NUM_PATTERN).toRegex().replace(item.phone_number.toString(), "$1-$2-$3")
+            val total_vacation_cnt = if (item.total_vacation_cnt != null) item.total_vacation_cnt.toInt() else 0
+            val remain_vacation_cnt = if (item.remain_vacation_cnt != null) item.remain_vacation_cnt.toInt() else 0
+            val use_vacation_cnt = (total_vacation_cnt - remain_vacation_cnt)
+            mTvVacation.append(use_vacation_cnt.toString())
             mTvVacation.append(" / ")
-            mTvVacation.append(item.total.toString())
+            mTvVacation.append(total_vacation_cnt.toString())
 
-            if (!item.picture.isNullOrEmpty()) {
-                val bitmap = BitmapFactory.decodeFile(item.picture)
+            if (!item.profile_image.isNullOrEmpty()) {
+                val bitmap = BitmapFactory.decodeFile(item.profile_image)
                 lateinit var exif: ExifInterface
 
                 try {
-                    exif = ExifInterface(item.picture)
+                    exif = ExifInterface(item.profile_image)
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -161,7 +165,7 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
             when (it.id) {
                 R.id.main_list_img_people -> { //프로필사진
                     val intent = Intent(mContext, PictureActivity::class.java)
-                    intent.putExtra("picture", workerList[position].picture)
+                    intent.putExtra("picture", workerList[position].profile_image)
                     mContext.startActivity(intent)
                 }
                 R.id.main_list_item -> { //리스트 아이템
@@ -186,7 +190,7 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
                             holder.mTvName.text.toString()),
                             mContext.resources.getString(R.string.btnCancel), null,
                             mContext.resources.getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
-                        dbHelper.delete(dbHelper.tableNameWorkerJW, workerList[position].no.toString())
+                        dbHelper.delete(dbHelper.tableNameWorkerJW, workerList[position]._id.toString())
 
 
                         val intent = Intent(mContext, MainListActivity::class.java)
@@ -201,7 +205,7 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
 
 
         holder.apply {
-            bind(listener, item, mContext)
+            item.let { bind(listener, it, mContext) }
             itemView.tag = item
         }
 
