@@ -205,9 +205,9 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
         jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
             override fun onSuccess(code: Int, data: JSONObject) {
                 val jw2001Data = Gson().fromJson(data.toString(), JW2001::class.java)
-                if ("N" == jw2001Data.result) {
-                    return
-                }
+//                if ("N" == jw2001Data.result) {
+//                    return
+//                }
                 _jw2001Data.value = jw2001Data
                 _isLoading.value = false
             }

@@ -7,10 +7,10 @@
     android:background="@color/c_ffffff"
     android:orientation="vertical"
     tools:ignore="MissingPrefix"
-    android:id="@+id/main_list_swipe_layout">
+    android:id="@+id/mainList_swipeLayout">
 
     <LinearLayout
-        android:id="@+id/main_list_item"
+        android:id="@+id/mainList_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
@@ -75,7 +75,7 @@
 
     <!--RIGHT-->
     <FrameLayout
-        android:id="@+id/main_list_right_view"
+        android:id="@+id/mainList_rightView"
         android:layout_width="@dimen/dp50"
         android:layout_height="@dimen/dp50"
         android:background="@color/c_e6e6e6"
@@ -94,7 +94,7 @@
 
     <!--LEFT-->
     <FrameLayout
-        android:id="@+id/main_list_left_view"
+        android:id="@+id/mainList_leftView"
         android:layout_width="@dimen/dp50"
         android:layout_height="@dimen/dp50"
         android:background="@color/c_004680"

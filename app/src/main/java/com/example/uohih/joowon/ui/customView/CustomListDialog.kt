@@ -1,4 +1,4 @@
-package com.example.uohih.joowon.customview
+package com.example.uohih.joowon.ui.customView
 
 import android.app.Activity
 import android.app.Dialog
@@ -129,7 +129,7 @@ class CustomListDialog(context: Activity, theme: Int) : Dialog(context, theme) {
         }
 
 
-        val builder = CustomListDialog.Builder(context)
+        val builder = Builder(context)
         builder.setListAdater(listAdapter)
         builder.setmCloseBtnClickListener(title, closeBtnListener)
         builder.setmItemClickListener(itemClickListener)

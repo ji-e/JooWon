@@ -1,4 +1,4 @@
-package com.example.uohih.joowon.customview
+package com.example.uohih.joowon.ui.customView
 
 import java.text.SimpleDateFormat
 import java.time.LocalDate

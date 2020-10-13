@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.example.uohih.joowon.customview.CalendarDayInfo
+import com.example.uohih.joowon.ui.customView.CalendarDayInfo
 import com.example.uohih.joowon.database.VacationData
 import kotlinx.android.synthetic.main.grid_item_worker_main.view.*
 import java.time.LocalDate

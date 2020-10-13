@@ -9,7 +9,7 @@
     tools:context=".ui.vacation.VacationActivity">
 
     <!--상단 타이틀 및 아이콘 바-->
-    <com.example.uohih.joowon.customview.TopTitleView
+    <com.example.uohih.joowon.ui.customView.TopTitleView
         android:id="@+id/vacation_title_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp60"

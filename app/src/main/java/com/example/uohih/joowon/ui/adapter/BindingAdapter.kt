@@ -1,8 +1,9 @@
-package com.example.uohih.joowon.model
+package com.example.uohih.joowon.ui.adapter
 
-import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
+import org.apache.poi.ss.formula.functions.T
 
 object BindingAdapter {
     @JvmStatic
@@ -16,4 +17,14 @@ object BindingAdapter {
             textView.text = String.format(format, textView.resources.getString(argId))
         }
     }
+
+    @JvmStatic
+    @BindingAdapter("listData", "index")
+    fun bindRecyclerView(recyclerView: RecyclerView, data: List<T>?, index: String) {
+        if ("mainList" == index) {
+            val adapter = recyclerView.adapter as MainListAdapter
+            adapter.submitList(data)
+        }
+    }
+
 }

@@ -18,8 +18,8 @@
         tools:context=".ui.main.MainListActivity">
 
         <!--상단 타이틀 및 아이콘 바-->
-        <com.example.uohih.joowon.customview.TopTitleView
-            android:id="@+id/main_list_title_view"
+        <com.example.uohih.joowon.ui.customView.TopTitleView
+            android:id="@+id/mainList_titleView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp60"
             android:gravity="center_vertical"
@@ -30,27 +30,37 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/main_list_recyclerView"
+            android:id="@+id/mainList_recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/main_list_title_view"
+            android:layout_height="0dp"
             android:divider="@color/c_ffffff"
             android:dividerHeight="@dimen/dp01"
+            app:listData="@{mainListVm.jw3001Data.resbody.employeeList}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mainList_titleView"
             tools:listitem="@layout/list_item_main_list" />
 
 
         <!--추가버튼-->
-        <ImageButton
-            android:id="@+id/main_list_btn_plus"
-            android:layout_width="@dimen/dp40"
-            android:layout_height="@dimen/dp40"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="@dimen/dp16"
-            android:background="@drawable/btn_plus_selector"
-            android:onClick="onClickMainList"
+        <!--        <com.example.uohih.joowon.ui.customView.DraggableFloatingButton-->
+        <!--            android:id="@+id/mainList_btnPlus"-->
+        <!--            android:layout_width="@dimen/dp40"-->
+        <!--            android:layout_height="@dimen/dp40"-->
+        <!--            android:layout_alignParentEnd="true"-->
+        <!--            android:layout_alignParentBottom="true"-->
+        <!--            android:layout_margin="@dimen/dp16"-->
+        <!--            android:background="@drawable/btn_plus_selector"-->
+        <!--            android:onClick="onClickMainList"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintRight_toRightOf="parent" />-->
+
+        <com.example.uohih.joowon.ui.customView.DraggableFloatingButton
+            android:id="@+id/mainList_btnPlus"
+            android:layout_width="@dimen/dp90"
+            android:layout_height="@dimen/dp90"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintRight_toRightOf="parent" />
+
 
         <Button
             android:id="@+id/main_list_btn_signout"
@@ -59,17 +69,16 @@
             android:onClick="onClickMainList"
             android:text="로그아웃"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintLeft_toLeftOf="parent" />
 
         <Button
             android:id="@+id/main_list_btn_session"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp50"
             android:onClick="onClickMainList"
             android:text="세션확인"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintLeft_toRightOf="@id/main_list_btn_signout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

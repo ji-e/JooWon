@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.ui.adapter.MainListAdapter
@@ -21,6 +22,7 @@ import com.example.uohih.joowon.model.JW0000
 import com.example.uohih.joowon.model.JW3001
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
+import com.example.uohih.joowon.ui.customView.DraggableFloatingButton
 import com.example.uohih.joowon.ui.setting.SettingActivity
 import com.example.uohih.joowon.ui.worker.WorkerInsertActivity
 import com.example.uohih.joowon.ui.worker.WorkerMainActivity
@@ -37,7 +39,10 @@ class MainListActivity : JWBaseActivity() {
     private val base = JWBaseApplication()
     private val dbHelper = DBHelper(this)
 
+    private val thisActivity by lazy { this }
+
     private lateinit var mainListViewModel: MainListViewModel
+    private lateinit var binding: ActivityMainListBinding
     private lateinit var mAdapter: MainListAdapter
 
     // back key exit
@@ -47,6 +52,8 @@ class MainListActivity : JWBaseActivity() {
     private var mainList = arrayListOf<StaffData>()
 
     private var employeeList: MutableList<JW3001.resbodyLst>? = null
+
+    private lateinit var recyclerView: RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,13 +74,25 @@ class MainListActivity : JWBaseActivity() {
         }
 
 
-        val binding = DataBindingUtil.setContentView<ActivityMainListBinding>(this, R.layout.activity_main_list)
+        binding = DataBindingUtil.setContentView<ActivityMainListBinding>(this, R.layout.activity_main_list)
 
         mainListViewModel = ViewModelProviders.of(this, MainListViewModelFactory()).get(MainListViewModel::class.java)
 
         binding.mainListVm = mainListViewModel
         binding.lifecycleOwner = this
 
+
+        binding.mainListBtnPlus.setDFBtnListener(object : DraggableFloatingButton.DFBtnListener {
+            override fun onDFBtnDrag() {
+
+            }
+
+            override fun onDFBBtnClick() {
+                val intent = Intent(thisActivity, WorkerInsertActivity::class.java)
+                startActivity(intent)
+            }
+
+        })
         initView()
     }
 
@@ -84,12 +103,10 @@ class MainListActivity : JWBaseActivity() {
         val jsonObject = JsonObject()
         jsonObject.addProperty("methodid", Constants.JW3001)
         mainListViewModel.getEmployeeList(jsonObject)
-
-        setData()
     }
 
     private fun initView() {
-
+        recyclerView = binding.mainListRecyclerView
         setObserve()
     }
 
@@ -108,6 +125,7 @@ class MainListActivity : JWBaseActivity() {
             val jw3001Data = it ?: return@Observer
             employeeList = jw3001Data.resbody?.employeeList
 
+            setData()
         })
 
     }
@@ -118,12 +136,13 @@ class MainListActivity : JWBaseActivity() {
     }
 
     fun onClickMainList(view: View) {
-        if (view.id == R.id.main_list_btn_plus) {
-            val intent = Intent(this, WorkerInsertActivity::class.java)
-            startActivity(intent)
-        } else if (view.id == R.id.main_list_btn_signout) {
+//        if (view==binding.mainListBtnPlus) {
+//            val intent = Intent(this, WorkerInsertActivity::class.java)
+//            startActivity(intent)
+//        } else
+        if (view == binding.mainListBtnSignout) {
             signOut(this)
-        } else if (view.id == R.id.main_list_btn_session) {
+        } else if (view == binding.mainListBtnSession) {
             ssss()
         }
     }
@@ -141,12 +160,12 @@ class MainListActivity : JWBaseActivity() {
 //            mainList.add(StaffData(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6)))
 //        }
 
-        main_list_recyclerView.setHasFixedSize(true)
-        main_list_recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
         if (employeeList != null) {
             mAdapter = MainListAdapter(employeeList!!)
-            main_list_recyclerView.adapter = mAdapter
+            recyclerView.adapter = mAdapter
             mAdapter.setClickListener(object : MainListAdapter.ClickListener {
                 override fun onmClickEvent(bundle: Bundle) {
                     showLoading()

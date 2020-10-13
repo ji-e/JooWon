@@ -1,7 +1,6 @@
 package com.example.uohih.joowon.repository
 
 import com.example.uohih.joowon.Constants
-import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
 
@@ -17,7 +16,7 @@ open class JWBaseRepository {
         val retroClient = JWBaseDataSource.instance.createBaseApi()
         val apiService = JWBaseDataSource.apiService
 
-        retroClient.requestDataRetrofit(apiService.NaverOpenApiService(ApiService.BASE_URL_NAVER_API, "Bearer $accessToken"), object : GetResbodyCallback {
+        retroClient.requestDataRetrofit(apiService.naverOpenApiService(ApiService.BASE_URL_NAVER_API, "Bearer $accessToken"), object : GetResbodyCallback {
 
             override fun onFailure(code: Int) {
                 callback.onFailure(code)
@@ -47,6 +46,34 @@ open class JWBaseRepository {
         LogUtil.d("requsetBody:  ", jsonObject)
 
         retroClient.requestDataRetrofit(apiService.signInProcessService(Constants.SERVICE_ADMIN, jsonObject), object : GetResbodyCallback {
+
+            override fun onFailure(code: Int) {
+                LogUtil.d(code)
+                callback.onFailure(code)
+            }
+
+            override fun onError(t: Throwable) {
+                LogUtil.d(t.toString())
+                callback.onError(t)
+            }
+
+            override fun onSuccess(code: Int, resbodyData: JSONObject) {
+                LogUtil.d(resbodyData.toString())
+                callback.onSuccess(code, resbodyData)
+            }
+        })
+    }
+
+    fun requestBaseService(jsonObject: JsonObject, callback: GetResbodyCallback) {
+        val retroClient = JWBaseDataSource.instance.createBaseApi()
+        val apiService = JWBaseDataSource.apiService
+
+        jsonObject.addProperty("timestamp", System.currentTimeMillis())
+        jsonObject.addProperty("txid", UUID.randomUUID().toString().replace("-", ""))
+
+        LogUtil.d("requsetBody:  ", jsonObject)
+
+        retroClient.requestDataRetrofit(apiService.baseProcessService(Constants.SERVICE_EMPLOYEE, jsonObject), object : GetResbodyCallback {
 
             override fun onFailure(code: Int) {
                 LogUtil.d(code)

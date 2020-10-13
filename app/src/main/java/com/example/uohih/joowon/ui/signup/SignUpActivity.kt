@@ -23,6 +23,8 @@ import kotlinx.android.synthetic.main.activity_signup.*
 class SignUpActivity : JWBaseActivity() {
     private lateinit var signUpViewModel: SignUpViewModel
 
+    private lateinit var binding: ActivitySignupBinding
+
     private lateinit var edtEmail: EditText
     private lateinit var edtPW: EditText
     private lateinit var edtPW2: EditText
@@ -34,7 +36,7 @@ class SignUpActivity : JWBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = DataBindingUtil.setContentView<ActivitySignupBinding>(this, R.layout.activity_signup)
+        binding = DataBindingUtil.setContentView<ActivitySignupBinding>(this, R.layout.activity_signup)
 
         signUpViewModel = ViewModelProviders.of(this, SignUpViewModelFactory()).get(SignUpViewModel::class.java)
         binding.signUpVm = signUpViewModel
@@ -44,13 +46,13 @@ class SignUpActivity : JWBaseActivity() {
     }
 
     private fun initView() {
-        edtEmail = signup_edtEmail
-        edtPW = signup_edtPw
-        edtPW2 = signup_edtPw2
-        btnEmailConfirm = signup_btnEmailConfirm
-        btnEmailDelete = signup_btnEmailDelete
-        chkPwVisible = signup_chkPwVisible
-        chkPw2Visible = signup_chkPw2Visible
+        edtEmail = binding.signupEdtEmail
+        edtPW = binding.signupEdtPw
+        edtPW2 = binding.signupEdtPw2
+        btnEmailConfirm = binding.signupBtnEmailConfirm
+        btnEmailDelete = binding.signupBtnEmailDelete
+        chkPwVisible = binding.signupChkPwVisible
+        chkPw2Visible = binding.signupChkPw2Visible
 
         edtEmail.addTextChangedListener(SignUpTextWatcher(edtEmail))
         edtPW.addTextChangedListener(SignUpTextWatcher(edtPW))
@@ -88,19 +90,19 @@ class SignUpActivity : JWBaseActivity() {
     }
 
     fun onClickSignUp(view: View) {
-        when (view.id) {
-            R.id.signup_btnSignup -> {
+        when (view) {
+            binding.signupBtnSignup -> {
                 // 회원가입
                 signUp()
             }
-            R.id.signup_btnEmailConfirm -> {
+            binding.signupBtnEmailConfirm -> {
                 // 이메일 중복확인
                 val jsonObject = JsonObject()
                 jsonObject.addProperty("methodid", Constants.JW1001)
                 jsonObject.addProperty("email", edtEmail.text.toString())
                 signUpViewModel.isEmailOverlapConfirm(jsonObject)
             }
-            R.id.signup_btnEmailDelete -> {
+            binding.signupBtnEmailDelete -> {
                 // 입력한 아이디 삭제
                 edtEmail.setText("")
             }

@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.database.VacationData
-import kotlinx.android.synthetic.main.list_item_main_list.view.main_list_item
-import kotlinx.android.synthetic.main.list_item_main_list.view.main_list_left_view
-import kotlinx.android.synthetic.main.list_item_main_list.view.main_list_right_view
-import kotlinx.android.synthetic.main.list_item_main_list.view.main_list_swipe_layout
+import kotlinx.android.synthetic.main.list_item_main_list.view.mainList_item
+import kotlinx.android.synthetic.main.list_item_main_list.view.mainList_leftView
+import kotlinx.android.synthetic.main.list_item_main_list.view.mainList_rightView
+import kotlinx.android.synthetic.main.list_item_main_list.view.mainList_swipeLayout
 import kotlinx.android.synthetic.main.list_item_worker_main.view.*
 import java.util.*
 
@@ -46,9 +46,9 @@ class WorkerVacationListAdapter(private val vacationDataList: ArrayList<Vacation
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private var view: View = v
-        val mSwipeLayout = view.main_list_swipe_layout
-        val mLayoutLeft = itemView.main_list_left_view      //왼쪽 스와이프
-        val mLayoutRight = itemView.main_list_right_view    //오른쪽 스와이프
+        val mSwipeLayout = view.mainList_swipeLayout
+        val mLayoutLeft = itemView.mainList_leftView      //왼쪽 스와이프
+        val mLayoutRight = itemView.mainList_rightView    //오른쪽 스와이프
 
         val mTvNo = view.worker_vacation_list_no               //
         val mTvDate = view.worker_vacation_list_date           //휴가사용날
@@ -62,7 +62,7 @@ class WorkerVacationListAdapter(private val vacationDataList: ArrayList<Vacation
             mTvContent.text = (item.content)
             mTvUse.text = (item.use).toString()
 
-            view.main_list_item.setOnClickListener(listener)
+            view.mainList_item.setOnClickListener(listener)
 
             mLayoutLeft.isClickable = true
             mLayoutLeft.setOnClickListener(listener)

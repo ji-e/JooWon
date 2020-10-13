@@ -25,7 +25,7 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
      */
     fun getEmployeeList(jsonObject: JsonObject) {
         _isLoading.value = true
-        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
+        jwBaseRepository.requestBaseService(jsonObject, object : GetResbodyCallback {
             override fun onSuccess(code: Int, data: JSONObject) {
                 _isLoading.value = false
 

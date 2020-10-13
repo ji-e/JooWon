@@ -4,6 +4,7 @@ class Constants {
     companion object {
 
         val SERVICE_ADMIN = "admin"
+        val SERVICE_EMPLOYEE = "employee"
         val JW1001 = "JW1001"   // 이메일 중복확인
         val JW1002 = "JW1002"   // 회원가입
         val JW1003 = "JW1003"

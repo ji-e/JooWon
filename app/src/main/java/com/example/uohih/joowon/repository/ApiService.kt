@@ -15,8 +15,8 @@ interface ApiService {
     @POST("sign_p/{method}")
     fun signInProcessService(@Path("method") method: String, @Body jsonBodyString: JsonObject): Call<ResponseBody?>
 
-    @POST("base")
-    fun BaseProcessService(@Body jsonBodyString: JsonObject?): Call<ResponseBody?>
+    @POST("base/{method}")
+    fun baseProcessService(@Path("method") method: String, @Body jsonBodyString: JsonObject?): Call<ResponseBody?>
 
     @POST("dairyprocess")
     fun EmployeeProcessService(@Body jsonBodyString: JsonObject?): Call<ResponseBody?>
@@ -28,7 +28,7 @@ interface ApiService {
     fun BoardProcessService(@Body jsonBodyString: JsonObject?): Call<ResponseBody?>
 
     @POST
-    fun NaverOpenApiService(@Url url: String?, @Header("Authorization") accT: String?): Call<ResponseBody?>
+    fun naverOpenApiService(@Url url: String?, @Header("Authorization") accT: String?): Call<ResponseBody?>
 
     companion object {
         const val Base_URL = "https://joowon12.herokuapp.com/process/"

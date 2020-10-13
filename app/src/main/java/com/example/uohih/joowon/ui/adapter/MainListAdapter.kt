@@ -1,8 +1,6 @@
 package com.example.uohih.joowon.ui.adapter
 
 import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.ExifInterface
 import android.os.Bundle
@@ -15,19 +13,18 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.database.DBHelper
-import com.example.uohih.joowon.ui.main.MainListActivity
-import com.example.uohih.joowon.ui.main.PictureActivity
-import com.example.uohih.joowon.customview.CustomDialog
+import com.example.uohih.joowon.databinding.ListItemMainListBinding
 import com.example.uohih.joowon.model.JW3001
+import com.example.uohih.joowon.ui.main.MainListItemViewModel
 import kotlinx.android.synthetic.main.list_item_main_list.view.*
+import ru.rambler.libs.swipe_layout.SwipeLayout
 import java.io.IOException
-import java.util.*
+
 
 /**
  * MainListActivity 아답터(직원 리스트)
  */
-class MainListAdapter(private val workerList: MutableList<JW3001.resbodyLst>) : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
+class MainListAdapter : RecyclerView.Adapter<BindingViewHolder<ListItemMainListBinding>>() {
 
     /*private var base = JWBaseApplication()
     // 체크 된 항목
@@ -100,15 +97,15 @@ class MainListAdapter(private val workerList: MutableList<JW3001.resbodyLst>) : 
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private var view: View = v
-        val mSwipeLayout = view.main_list_swipe_layout
-        val mLayoutLeft = itemView.main_list_left_view      //왼쪽 스와이프
-        val mLayoutRight = itemView.main_list_right_view    //오른쪽 스와이프
+        val mSwipeLayout: SwipeLayout = view.mainList_swipeLayout
+        val mLayoutLeft = itemView.mainList_leftView      //왼쪽 스와이프
+        val mLayoutRight = itemView.mainList_rightView    //오른쪽 스와이프
 
-        val mTvName = view.main_list_tv_name                //이름
-        val mTvJoin = view.main_list_tv_join                //입사날짜
-        val mTvPhone = view.main_list_tv_phone              //핸드폰번호
-        val mTvVacation = view.main_list_tv_vacation        //휴가
-        val mImgPeople = view.main_list_img_people          //프로필 사진
+        val mTvName = view.mainList_tvName                //이름
+        val mTvJoin = view.mainList_tvJoin                //입사날짜
+        val mTvPhone = view.mainList_tvPhone              //핸드폰번호
+        val mTvVacation = view.mainList_tvVacation        //휴가
+        val mImgPeople = view.mainList_imgPeople          //프로필 사진
 
 
         fun bind(listener: View.OnClickListener, item: JW3001.resbodyLst, mContext: Context) {
@@ -142,7 +139,7 @@ class MainListAdapter(private val workerList: MutableList<JW3001.resbodyLst>) : 
                 Glide.with(mContext).load(JWBaseActivity().rotate(bitmap, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(mImgPeople)
             }
             mImgPeople.setOnClickListener(listener)
-            view.main_list_item.setOnClickListener(listener)
+            view.mainList_item.setOnClickListener(listener)
 
             mLayoutLeft.isClickable = true
             mLayoutLeft.setOnClickListener(listener)
@@ -153,91 +150,86 @@ class MainListAdapter(private val workerList: MutableList<JW3001.resbodyLst>) : 
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        mContext = parent.context
-        val itemView = LayoutInflater.from(mContext).inflate(R.layout.list_item_main_list, parent, false)
-        return ViewHolder(itemView)
-    }
+//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+//        mContext = parent.context
+//        val itemView = LayoutInflater.from(mContext).inflate(R.layout.list_item_main_list, parent, false)
+//        return ViewHolder(itemView)
+//    }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = workerList[position]
-        val listener = View.OnClickListener {
-            when (it.id) {
-                R.id.main_list_img_people -> { //프로필사진
-                    val intent = Intent(mContext, PictureActivity::class.java)
-                    intent.putExtra("picture", workerList[position].profile_image)
-                    mContext.startActivity(intent)
-                }
-                R.id.main_list_item -> { //리스트 아이템
-
-                    val bundle = Bundle()
-                    bundle.putString("name", holder.mTvName.text.toString())          //이름
-                    bundle.putString("phone", holder.mTvPhone.text.toString())        //핸드폰번호
-
-                    mListener?.onmClickEvent(bundle)
-//                    val intent = Intent(mContext, WorkerMainActivity::class.java)
-//                    intent.putExtra("worker", bundle)
+//    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+//        val item = workerList[position]
+//        val listener = View.OnClickListener {
+//            when (it.id) {
+//                R.id.mainList_imgPeople -> { //프로필사진
+//                    val intent = Intent(mContext, PictureActivity::class.java)
+//                    intent.putExtra("picture", workerList[position].profile_image)
 //                    mContext.startActivity(intent)
-                }
-                R.id.main_list_left_view -> { //왼쪽 스와이프 (즐겨찾기)
-                    holder.mSwipeLayout.animateReset()
-                }
-                R.id.main_list_right_view -> { //오른쪽 스와이프 (삭제)
-                    holder.mSwipeLayout.animateReset()
-                    val dbHelper = DBHelper(mContext)
-                    val customDialog = CustomDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
-                    customDialog.showDialog(mContext, String.format(mContext.resources.getString(R.string.workerUpdate_delete_msg),
-                            holder.mTvName.text.toString()),
-                            mContext.resources.getString(R.string.btnCancel), null,
-                            mContext.resources.getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
-                        dbHelper.delete(dbHelper.tableNameWorkerJW, workerList[position]._id.toString())
-
-
-                        val intent = Intent(mContext, MainListActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        mContext.startActivity(intent)
-
-                    })
-
-                }
-            }
-        }
-
-
-        holder.apply {
-            item.let { bind(listener, it, mContext) }
-            itemView.tag = item
-        }
-
-    }
+//                }
+//                R.id.mainList_item -> { //리스트 아이템
+//
+//                    val bundle = Bundle()
+//                    bundle.putString("name", holder.mTvName.text.toString())          //이름
+//                    bundle.putString("phone", holder.mTvPhone.text.toString())        //핸드폰번호
+//
+//                    mListener?.onmClickEvent(bundle)
+////                    val intent = Intent(mContext, WorkerMainActivity::class.java)
+////                    intent.putExtra("worker", bundle)
+////                    mContext.startActivity(intent)
+//                }
+//                R.id.mainList_leftView -> { //왼쪽 스와이프 (즐겨찾기)
+//                    holder.mSwipeLayout.animateReset()
+//                }
+//                R.id.mainList_rightView -> { //오른쪽 스와이프 (삭제)
+//                    holder.mSwipeLayout.animateReset()
+//                    val dbHelper = DBHelper(mContext)
+//                    val customDialog = CustomDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
+//                    customDialog.showDialog(mContext, String.format(mContext.resources.getString(R.string.workerUpdate_delete_msg),
+//                            holder.mTvName.text.toString()),
+//                            mContext.resources.getString(R.string.btnCancel), null,
+//                            mContext.resources.getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
+//                        dbHelper.delete(dbHelper.tableNameWorkerJW, workerList[position]._id.toString())
+//
+//
+//                        val intent = Intent(mContext, MainListActivity::class.java)
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                        mContext.startActivity(intent)
+//
+//                    })
+//
+//                }
+//            }
+//        }
+//
+//
+//        holder.apply {
+//            item.let { bind(listener, it, mContext) }
+//            itemView.tag = item
+//        }
+//
+//    }
 
     override fun getItemCount(): Int {
         return workerList.size
     }
 
-    override fun onViewDetachedFromWindow(holder: ViewHolder) {
-        if (holder.adapterPosition != RecyclerView.NO_POSITION) {
-            itemsOffset[holder.adapterPosition] = holder.mSwipeLayout.offset
-        }
-        holder.mSwipeLayout.animateReset()
-    }
-}
+//    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+//        if (holder.adapterPosition != RecyclerView.NO_POSITION) {
+//            itemsOffset[holder.adapterPosition] = holder.mSwipeLayout.offset
+//        }
+//        holder.mSwipeLayout.animateReset()
+//    }
 
-/**
- * 직원 정보 데이타
- * val no: Int: 고유번호
- * val name: String: 이름
- * val joinDate: Int: 입사 날짜
- * val phone: String: 핸드폰 번호
- * val use: Int: 사용 휴가 일수
- * val total: Int: 전체 휴가 일수
- * val picture: String: 사진
- */
-class StaffData(
-        val no: Int?,
-        val name: String,
-        val joinDate: Int,
-        val phone: String,
-        val use: String,
-        val total: String,
-        val picture: String?)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<ListItemMainListBinding> {
+        val inflater = LayoutInflater.from(parent.context)
+        return BindingViewHolder<ListItemMainListBinding>(inflater.inflate(R.layout.list_item_main_list, parent, false))
+    }
+
+    private var listItemMainViewModel: MutableList<MainListItemViewModel>? = null
+
+    override fun onBindViewHolder(holder: BindingViewHolder<ListItemMainListBinding>, position: Int) {
+        var c = listItemMainViewModel?.get(position)
+        holder.binding.
+    }
+
+
+}

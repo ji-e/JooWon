@@ -6,7 +6,7 @@
     android:background="@color/c_ffffff">
 
     <LinearLayout
-        android:id="@+id/main_list_item"
+        android:id="@+id/mainList_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -14,7 +14,7 @@
 
         <!--Image-->
         <ImageView
-            android:id="@+id/worker_main_img_people"
+            android:id="@+id/workerMain_imgPeople"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -77,7 +77,7 @@
 
             <!--Name-->
             <TextView
-                android:id="@+id/main_list_tv_name"
+                android:id="@+id/mainList_tvName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/mainList_name"
@@ -86,7 +86,7 @@
 
             <!--Join-->
             <TextView
-                android:id="@+id/main_list_tv_join"
+                android:id="@+id/mainList_tvJoin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/mainList_join"
@@ -95,7 +95,7 @@
 
             <!--Phone-->
             <TextView
-                android:id="@+id/main_list_tv_phone"
+                android:id="@+id/mainList_tvPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/mainList_phone"
@@ -104,7 +104,7 @@
 
             <!--Vacation-->
             <TextView
-                android:id="@+id/main_list_tv_vacation"
+                android:id="@+id/mainList_tvVacation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/mainList_vacation"
@@ -114,7 +114,7 @@
 
         <!--Next-->
         <ImageView
-            android:id="@+id/main_list_btn_next"
+            android:id="@+id/mainList_btnNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -123,7 +123,7 @@
 
         <!--CheckBox-->
         <CheckBox
-            android:id="@+id/main_list_check"
+            android:id="@+id/mainList_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

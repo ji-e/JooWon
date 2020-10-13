@@ -14,7 +14,7 @@ import com.example.uohih.joowon.ui.adapter.StaffData
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.database.DBHelper
-import com.example.uohih.joowon.customview.CustomDialog
+import com.example.uohih.joowon.ui.customView.CustomDialog
 import kotlinx.android.synthetic.main.activity_vacation.*
 
 

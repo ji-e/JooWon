@@ -21,8 +21,8 @@ import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.database.DBHelper
-import com.example.uohih.joowon.customview.CalendarDialog
-import com.example.uohih.joowon.customview.CustomDialog
+import com.example.uohih.joowon.ui.customView.CalendarDialog
+import com.example.uohih.joowon.ui.customView.CustomDialog
 import kotlinx.android.synthetic.main.fragment_vacation.*
 import java.io.IOException
 import java.text.ParseException

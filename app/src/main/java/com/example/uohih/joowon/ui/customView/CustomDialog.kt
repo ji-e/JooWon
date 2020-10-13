@@ -1,4 +1,4 @@
-package com.example.uohih.joowon.customview
+package com.example.uohih.joowon.ui.customView
 
 import android.app.Activity
 import android.app.Dialog

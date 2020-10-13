@@ -1,4 +1,4 @@
-package com.example.uohih.joowon.customview
+package com.example.uohih.joowon.ui.customView
 
 import android.app.Activity
 import android.app.Dialog
@@ -255,7 +255,7 @@ class CalendarDialog(mContext: Context, theme: Int) : Dialog(mContext, theme) {
         }
 
 
-        val builder = CalendarDialog.Builder(mContext, future)
+        val builder = Builder(mContext, future)
         if (date != null)
             builder.setDate(date)
         return builder.create()

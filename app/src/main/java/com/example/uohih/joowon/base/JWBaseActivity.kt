@@ -1,6 +1,5 @@
 package com.example.uohih.joowon.base
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -14,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.customview.CalendarDayInfo
-import com.example.uohih.joowon.customview.CustomLoadingBar
+import com.example.uohih.joowon.ui.customView.CalendarDayInfo
+import com.example.uohih.joowon.ui.customView.CustomLoadingBar
 import com.example.uohih.joowon.database.AsyncCallback
 import com.example.uohih.joowon.model.JW2002
 import com.example.uohih.joowon.repository.GoogleIdAsyncTask

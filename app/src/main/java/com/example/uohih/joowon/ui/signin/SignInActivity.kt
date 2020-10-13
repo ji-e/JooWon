@@ -18,7 +18,7 @@ import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.LogUtil
-import com.example.uohih.joowon.customview.CustomDialog
+import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.databinding.ActivitySigninBinding
 import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.ui.signup.SignUpActivity
@@ -27,13 +27,12 @@ import com.google.gson.JsonObject
 import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.OAuthLoginHandler
 import com.nhn.android.naverlogin.data.OAuthLoginState
-import kotlinx.android.synthetic.main.activity_signin.*
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class SignInActivity : JWBaseActivity() {
     private lateinit var signInViewModel: SignInViewModel
+    private lateinit var binding: ActivitySigninBinding
 
     private val thisActivity by lazy { this }
 
@@ -55,7 +54,7 @@ class SignInActivity : JWBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = DataBindingUtil.setContentView<ActivitySigninBinding>(this, R.layout.activity_signin)
+        binding = DataBindingUtil.setContentView<ActivitySigninBinding>(this, R.layout.activity_signin)
 
         signInViewModel = ViewModelProviders.of(this, SignInViewModelFactory()).get(SignInViewModel::class.java)
 
@@ -70,11 +69,11 @@ class SignInActivity : JWBaseActivity() {
     }
 
     private fun initView() {
-        edtEmail = signin_edtEmail
-        edtPW = signin_edtPw
-        chkPwVisible = signin_chkPwVisible
-        btnEmailDelete = signin_btnDelete
-        chkAutoSignIn = signin_chkAutoSignIn
+        edtEmail = binding.signinEdtEmail
+        edtPW = binding.signinEdtPw
+        chkPwVisible = binding.signinChkPwVisible
+        btnEmailDelete = binding.signinBtnDelete
+        chkAutoSignIn = binding.signinChkAutoSignIn
 
         edtEmail.onFocusChangeListener = SignInFocusChangeListener()
         edtPW.onFocusChangeListener = SignInFocusChangeListener()
@@ -180,9 +179,11 @@ class SignInActivity : JWBaseActivity() {
         mOAuthLoginInstance.showDevelopersLog(true)
         mOAuthLoginInstance.init(this, Constants.OAUTH_CLIENT_ID, Constants.OAUTH_CLIENT_SECRET, Constants.OAUTH_CLIENT_NAME)
 
-        if (OAuthLoginState.NEED_LOGIN != OAuthLogin.getInstance().getState(this)
-                && OAuthLoginState.NEED_INIT != mOAuthLoginInstance.getState(this)) {
-            signInViewModel.getSnsSignInInfo(mOAuthLoginInstance.getAccessToken(thisActivity))
+        if (mOAuthLoginInstance.getAccessToken(this) != null) {
+            if (OAuthLoginState.NEED_LOGIN != mOAuthLoginInstance.getState(this)
+                    && OAuthLoginState.NEED_INIT != mOAuthLoginInstance.getState(this)) {
+                signInViewModel.getSnsSignInInfo(mOAuthLoginInstance.getAccessToken(this))
+            }
         }
     }
 
@@ -193,25 +194,26 @@ class SignInActivity : JWBaseActivity() {
     }
 
     fun onClickSignIn(view: View) {
-        when (view.id) {
-            R.id.signin_tvSignup -> {
+        when (view) {
+            binding.signinTvSignup -> {
                 // 회원가입화면으로 이동
                 val intent = Intent(this, SignUpActivity::class.java)
                 startActivity(intent)
             }
-            R.id.signin_tvFindPw -> {
+            binding.signinTvFindPw -> {
+                // 비밀번호 찾기
 
             }
-            R.id.signin_btnSignin -> {
+            binding.signinBtnSignin -> {
                 // 로그인
                 signIn()
             }
-            R.id.signin_btn_OAuthLoginImg -> {
+            binding.signinBtnOAuthLoginImg -> {
                 // 네이버아이디로 로그인
-                showLoading()
+//                showLoading()
                 mOAuthLoginInstance.startOauthLoginActivity(thisActivity, mOAuthLoginHandler)
             }
-            R.id.signin_btnDelete -> {
+            binding.signinBtnDelete -> {
                 // 입력한 아이디 삭제
                 edtEmail.setText("")
             }
@@ -226,6 +228,7 @@ class SignInActivity : JWBaseActivity() {
         jsonObject.addProperty("methodid", Constants.JW2001)
         jsonObject.addProperty("email", edtEmail.text.toString())
         jsonObject.addProperty("password", edtPW.text.toString())
+        jsonObject.addProperty("provider", UICommonUtil.getPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID))
         signInViewModel.signIn(jsonObject)
 
         edtEmail.clearFocus()
