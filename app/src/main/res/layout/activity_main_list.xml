@@ -31,28 +31,14 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mainList_recyclerView"
+            replaceAll="@{mainListVm.liveEmployeeList}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:divider="@color/c_ffffff"
             android:dividerHeight="@dimen/dp01"
-            app:listData="@{mainListVm.jw3001Data.resbody.employeeList}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mainList_titleView"
             tools:listitem="@layout/list_item_main_list" />
-
-
-        <!--추가버튼-->
-        <!--        <com.example.uohih.joowon.ui.customView.DraggableFloatingButton-->
-        <!--            android:id="@+id/mainList_btnPlus"-->
-        <!--            android:layout_width="@dimen/dp40"-->
-        <!--            android:layout_height="@dimen/dp40"-->
-        <!--            android:layout_alignParentEnd="true"-->
-        <!--            android:layout_alignParentBottom="true"-->
-        <!--            android:layout_margin="@dimen/dp16"-->
-        <!--            android:background="@drawable/btn_plus_selector"-->
-        <!--            android:onClick="onClickMainList"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintRight_toRightOf="parent" />-->
 
         <com.example.uohih.joowon.ui.customView.DraggableFloatingButton
             android:id="@+id/mainList_btnPlus"

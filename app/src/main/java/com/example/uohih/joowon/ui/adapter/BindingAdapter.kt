@@ -19,12 +19,13 @@ object BindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("listData", "index")
-    fun bindRecyclerView(recyclerView: RecyclerView, data: List<T>?, index: String) {
-        if ("mainList" == index) {
-            val adapter = recyclerView.adapter as MainListAdapter
-            adapter.submitList(data)
+    @BindingAdapter("replaceAll")
+    fun RecyclerView.replaceAll(list: List<Nothing>?) {
+        (this.adapter as? BaseRecyclerView.Adapter<*, *>)?.run {
+            this.replaceAll(list)
+            notifyDataSetChanged()
         }
     }
+
 
 }
