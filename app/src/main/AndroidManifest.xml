@@ -16,11 +16,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.signin.SignInActivity"></activity>
+        <activity
+            android:name=".ui.signin.SignInActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.signup.SignUpActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.signin.LoginActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -40,7 +41,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.main.MainListActivity" />
-        <activity android:name=".ui.worker.WorkerInsertActivity" />
+        <activity
+            android:name=".ui.worker.WorkerInsertActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.main.PictureActivity" />
         <activity android:name=".ui.worker.WorkerMainActivity" />
         <activity android:name=".ui.setting.SettingActivity" />

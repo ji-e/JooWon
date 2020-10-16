@@ -18,7 +18,6 @@ import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.databinding.ActivitySignupBinding
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
-import kotlinx.android.synthetic.main.activity_signup.*
 
 class SignUpActivity : JWBaseActivity() {
     private lateinit var signUpViewModel: SignUpViewModel
@@ -28,7 +27,6 @@ class SignUpActivity : JWBaseActivity() {
     private lateinit var edtEmail: EditText
     private lateinit var edtPW: EditText
     private lateinit var edtPW2: EditText
-    private lateinit var btnEmailConfirm: Button
     private lateinit var btnEmailDelete: ImageButton
     private lateinit var chkPwVisible: CheckBox
     private lateinit var chkPw2Visible: CheckBox
@@ -36,11 +34,12 @@ class SignUpActivity : JWBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView<ActivitySignupBinding>(this, R.layout.activity_signup)
-
-        signUpViewModel = ViewModelProviders.of(this, SignUpViewModelFactory()).get(SignUpViewModel::class.java)
-        binding.signUpVm = signUpViewModel
-        binding.lifecycleOwner = this
+        binding = DataBindingUtil.setContentView<ActivitySignupBinding>(this@SignUpActivity, R.layout.activity_signin)
+        binding.run {
+            signUpViewModel = ViewModelProviders.of(this@SignUpActivity, SignUpViewModelFactory()).get(SignUpViewModel::class.java)
+            lifecycleOwner = this@SignUpActivity
+            signUpVm = signUpViewModel
+        }
 
         initView()
     }
@@ -49,7 +48,6 @@ class SignUpActivity : JWBaseActivity() {
         edtEmail = binding.signupEdtEmail
         edtPW = binding.signupEdtPw
         edtPW2 = binding.signupEdtPw2
-        btnEmailConfirm = binding.signupBtnEmailConfirm
         btnEmailDelete = binding.signupBtnEmailDelete
         chkPwVisible = binding.signupChkPwVisible
         chkPw2Visible = binding.signupChkPw2Visible
@@ -102,7 +100,7 @@ class SignUpActivity : JWBaseActivity() {
                 jsonObject.addProperty("email", edtEmail.text.toString())
                 signUpViewModel.isEmailOverlapConfirm(jsonObject)
             }
-            binding.signupBtnEmailDelete -> {
+            btnEmailDelete -> {
                 // 입력한 아이디 삭제
                 edtEmail.setText("")
             }

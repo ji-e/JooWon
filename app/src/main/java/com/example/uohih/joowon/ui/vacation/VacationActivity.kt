@@ -15,6 +15,7 @@ import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.ui.customView.CustomDialog
+import com.example.uohih.joowon.util.DateCommonUtil
 import kotlinx.android.synthetic.main.activity_vacation.*
 
 
@@ -29,7 +30,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
     private val vacationList = arrayListOf<String>()
     private var checkBoxList = arrayListOf<Boolean>(false)
 
-    private val todayJson = getToday().get("yyyymmdd").toString()
+    private val todayJson = DateCommonUtil().getToday().get("yyyymmdd").toString()
 
     private lateinit var mVacationSearchAdapter: VacationSearchAdapter
 

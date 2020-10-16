@@ -1,6 +1,5 @@
 package com.example.uohih.joowon.repository
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.AsyncTask
 import com.example.uohih.joowon.base.LogUtil

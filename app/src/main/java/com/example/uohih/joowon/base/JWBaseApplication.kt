@@ -1,6 +1,7 @@
 package com.example.uohih.joowon.base
 
 import android.app.Application
+import com.example.uohih.joowon.util.DateCommonUtil
 
 import com.example.uohih.joowon.util.UseSharedPreferences
 import java.net.CookieManager
@@ -45,7 +46,7 @@ class JWBaseApplication : Application() {
 
 
     companion object {
-        private var selectDate = JWBaseActivity().getToday().get("yyyymmdd").toString()
+        private var selectDate = DateCommonUtil().getToday().get("yyyymmdd").toString()
         private var deleteItem = ArrayList<String>()//삭제 항목
         lateinit var useSharedPreference: UseSharedPreferences
 

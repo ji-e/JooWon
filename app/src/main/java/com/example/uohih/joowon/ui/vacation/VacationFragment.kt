@@ -23,6 +23,7 @@ import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CustomDialog
+import com.example.uohih.joowon.util.DateCommonUtil
 import kotlinx.android.synthetic.main.fragment_vacation.*
 import java.io.IOException
 import java.text.ParseException
@@ -38,7 +39,7 @@ class VacationFragment : Fragment(), View.OnClickListener {
     private val baseApplication = JWBaseApplication()
     private lateinit var thisFragment: VacationFragment
 
-    private val todayJson = baseActivity.getToday().get("yyyymmdd").toString()
+    private val todayJson = DateCommonUtil().getToday().get("yyyymmdd").toString()
 
     private val vacationList = arrayListOf<String>()
     private var checkBoxList = arrayListOf<Boolean>(false)
@@ -243,7 +244,7 @@ class VacationFragment : Fragment(), View.OnClickListener {
      */
     private fun showCalendarDialog(date: String, mTv: TextView) {
         var calendarDialog = CalendarDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
-        calendarDialog = calendarDialog.showDialogCalendar(mContext, date, true)!!
+        calendarDialog = calendarDialog.createDialogCalendar(mContext, date, true)!!
         calendarDialog.show()
         calendarDialog.setOnDismissListener {
             if (mTv.id == R.id.vacation_tv_endD) {

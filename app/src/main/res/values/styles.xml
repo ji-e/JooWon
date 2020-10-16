@@ -77,6 +77,13 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="Font_15_000000">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_000000</item>
+        <item name="android:textSize">@dimen/dp15</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <style name="Font_16_ffffff">
         <!--<item name="fontFamily">@font/roboto_r</item>-->
         <item name="android:textColor">@color/c_ffffff</item>

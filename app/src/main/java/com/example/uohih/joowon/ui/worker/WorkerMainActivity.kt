@@ -22,6 +22,7 @@ import com.example.uohih.joowon.base.SizeConverter
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.database.VacationData
 import com.example.uohih.joowon.ui.main.PictureActivity
+import com.example.uohih.joowon.util.DateCommonUtil
 import kotlinx.android.synthetic.main.activity_worker_main.*
 import java.io.IOException
 import java.time.LocalDate
@@ -42,7 +43,7 @@ class WorkerMainActivity : JWBaseActivity() {
     private var getBundle = Bundle()
     private val dbHelper = DBHelper(this)
 
-    private val todayJson = JWBaseActivity().getToday()
+    private val todayJson = DateCommonUtil().getToday()
 
     private val workerMainAdapter by lazy { WorkerMainAdapter(supportFragmentManager, vacationList) }
     private val mIvDot by lazy { arrayOfNulls<ImageView>(workerMainAdapter.count) }

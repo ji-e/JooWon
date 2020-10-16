@@ -9,54 +9,39 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.ui.adapter.MainListAdapter
-import com.example.uohih.joowon.ui.adapter.StaffData
 import com.example.uohih.joowon.base.BackPressCloseHandler
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.base.LogUtil
-import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.databinding.ActivityMainListBinding
 import com.example.uohih.joowon.databinding.ListItemMainListBinding
 import com.example.uohih.joowon.model.JW0000
-import com.example.uohih.joowon.model.JW3001
 import com.example.uohih.joowon.model.JW3001ResBodyList
+import com.example.uohih.joowon.repository.ApiService
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.customView.DraggableFloatingButton
+import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.ui.setting.SettingActivity
 import com.example.uohih.joowon.ui.worker.WorkerInsertActivity
-import com.example.uohih.joowon.ui.worker.WorkerMainActivity
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import kotlinx.android.synthetic.main.activity_main_list.*
 import kotlinx.android.synthetic.main.list_item_main_list.view.*
 import org.json.JSONObject
 
-//import sun.jvm.hotspot.utilities.IntArray
-//import javax.swing.UIManager.put
-
 
 class MainListActivity : JWBaseActivity() {
-    private val base = JWBaseApplication()
-    private val dbHelper = DBHelper(this)
-
     private val thisActivity by lazy { this }
 
     private lateinit var mainListViewModel: MainListViewModel
     private lateinit var binding: ActivityMainListBinding
-    private lateinit var mAdapter: MainListAdapter
 
     // back key exit
     private lateinit var backPressCloseHandler: BackPressCloseHandler
-
-    // 리스트 뷰
-    private var mainList = arrayListOf<StaffData>()
-
-    private var employeeList: MutableList<JW3001ResBodyList>? = null
 
     private lateinit var recyclerView: RecyclerView
 
@@ -85,8 +70,6 @@ class MainListActivity : JWBaseActivity() {
             lifecycleOwner = this@MainListActivity
             mainListVm = mainListViewModel
         }
-
-
 
         initView()
     }
@@ -145,10 +128,6 @@ class MainListActivity : JWBaseActivity() {
     }
 
     fun onClickMainList(view: View) {
-//        if (view==binding.mainListBtnPlus) {
-//            val intent = Intent(this, WorkerInsertActivity::class.java)
-//            startActivity(intent)
-//        } else
         if (view == binding.mainListBtnSignout) {
             signOut(this)
         } else if (view == binding.mainListBtnSession) {
@@ -161,22 +140,8 @@ class MainListActivity : JWBaseActivity() {
      * db에서 데이터 가져온 후 set
      */
     private fun setData() {
-//        val cursor = dbHelper.selectAll(dbHelper.tableNameWorkerJW)
-//
-//        mainList.clear()
-//
-//        while (cursor.moveToNext()) {
-//            mainList.add(StaffData(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6)))
-//        }
-
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-//        if (employeeList != null) {
-//            mAdapter = MainListAdapter(employeeList!!)
-//            recyclerView.adapter = mAdapter
-
-
         recyclerView.adapter = object : BaseRecyclerView.Adapter<JW3001ResBodyList, ListItemMainListBinding>(
                 layoutResId = R.layout.list_item_main_list,
                 bindingVariableId = BR.mainListItem
@@ -188,8 +153,16 @@ class MainListActivity : JWBaseActivity() {
                     val intent = Intent(thisActivity, PictureActivity::class.java)
                     thisActivity.startActivity(intent)
                 }
-
+               val imageBasicPath =  mainListViewModel.jw3001Data.value?.resbody?.employeeList?.get(position)?.profile_image
+                if (!imageBasicPath.isNullOrEmpty()) {
+                    val imagePath = ApiService.Base_URL_ORIGIN + mainListViewModel.jw3001Data.value?.resbody?.employeeList?.get(position)?.profile_image
+                    Glide.with(mContext)
+                            .asBitmap()
+                            .load(imagePath)
+                            .apply(RequestOptions().circleCrop())
+                            .into(holder.itemView.mainList_imgPeople)
                 }
+            }
         }
 
 
@@ -230,6 +203,4 @@ class MainListActivity : JWBaseActivity() {
 
         })
     }
-
-
 }

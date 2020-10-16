@@ -16,6 +16,7 @@ import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.ui.adapter.CalendarAdapter
 import com.example.uohih.joowon.base.LogUtil
+import com.example.uohih.joowon.util.DateCommonUtil
 import kotlinx.android.synthetic.main.dialog_calendar.view.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -41,7 +42,7 @@ class CalendarDialog(mContext: Context, theme: Int) : Dialog(mContext, theme) {
         private lateinit var calendarAdapter: CalendarAdapter
         private lateinit var gridView: GridView
 
-        private val todayJson = JWBaseActivity().getToday()
+        private val todayJson = DateCommonUtil().getToday()
         private var date = ""
         private var calendar = LocalDate.now()
         private var selectedDate = LocalDate.now()
@@ -241,11 +242,11 @@ class CalendarDialog(mContext: Context, theme: Int) : Dialog(mContext, theme) {
      * 캘린더 다이얼로그
      */
 
-    fun showDialogCalendar(mContext: Context, date: String?): CalendarDialog? {
-        return showDialogCalendar(mContext, date, false)
+    fun createDialogCalendar(mContext: Context, date: String?): CalendarDialog? {
+        return createDialogCalendar(mContext, date, false)
     }
 
-    fun showDialogCalendar(mContext: Context, date: String?, future: Boolean): CalendarDialog? {
+    fun createDialogCalendar(mContext: Context, date: String?, future: Boolean): CalendarDialog? {
         if (mContext is Activity) {
             val activity = mContext as Activity?
 

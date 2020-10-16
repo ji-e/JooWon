@@ -8,16 +8,13 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.os.Handler
-import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.ui.customView.CalendarDayInfo
 import com.example.uohih.joowon.ui.customView.CustomLoadingBar
-import com.example.uohih.joowon.database.AsyncCallback
 import com.example.uohih.joowon.model.JW2002
-import com.example.uohih.joowon.repository.GoogleIdAsyncTask
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.example.uohih.joowon.ui.signin.SignInActivity
@@ -28,7 +25,6 @@ import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.data.OAuthLoginState
 import org.json.JSONObject
 import java.time.LocalDate
-import java.time.format.TextStyle
 import java.time.temporal.ChronoField
 import java.util.*
 import kotlin.collections.ArrayList
@@ -115,36 +111,7 @@ open class JWBaseActivity : AppCompatActivity() {
         }, 200)
     }
 
-    /**
-     * 현재 날짜 구하기
-     * return JSONObject
-     */
-    fun getToday(): JSONObject {
-        return getToday(null)
-    }
 
-    /**
-     * 현재 날짜 구하기
-     * date: String?: date값에 따른 JSONObject 생성
-     * return JSONObject
-     */
-    fun getToday(date: String?): JSONObject {
-        val jsonCalendar = JSONObject()
-        val instance = if (date != null) LocalDate.parse(date) else LocalDate.now()
-
-        val year = instance.year.toString()                                             //현재 년도
-        val month = String.format("%02d", (instance.monthValue))                        //현재 월
-        val date = String.format("%02d", instance.dayOfMonth)                           //현재 날짜
-        val day = instance.dayOfWeek.getDisplayName(TextStyle.NARROW, Locale.KOREAN)    //현재 요일
-
-        jsonCalendar.put("year", year)
-        jsonCalendar.put("month", month)
-        jsonCalendar.put("date", date)
-        jsonCalendar.put("day", day)
-        jsonCalendar.put("yyyymmdd", "$year$month$date")
-
-        return jsonCalendar
-    }
 
     /**
      * 사진 각도
@@ -281,8 +248,8 @@ open class JWBaseActivity : AppCompatActivity() {
         jsonObject.addProperty("methodid", Constants.JW2002)
 
         JWBaseRepository().requestSignInService(jsonObject, object : GetResbodyCallback {
-            override fun onSuccess(code: Int, data: JSONObject) {
-                val jw2002Data = Gson().fromJson(data.toString(), JW2002::class.java)
+            override fun onSuccess(code: Int, resbodyData: JSONObject) {
+                val jw2002Data = Gson().fromJson(resbodyData.toString(), JW2002::class.java)
                 if ("false" == jw2002Data.result) {
                     return
                 }
@@ -311,32 +278,5 @@ open class JWBaseActivity : AppCompatActivity() {
         })
 
     }
-
-
-    /**
-     * 앱 인스턴스 ID 설정
-     */
-    fun setInstanceID() {
-        val androidId = Settings.Secure.getString(applicationContext.contentResolver, Settings.Secure.ANDROID_ID)
-
-        val v = GoogleIdAsyncTask(this).apply {
-            setGoogleAsyncCallback(object : AsyncCallback {
-                override fun onPostExecute(adid: Any?) {
-                    adid?.let {
-                        val appInstanceID = UUID(androidId.hashCode().toLong(), adid.hashCode().toLong()).toString()
-                        if (appInstanceID != UICommonUtil.getPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID)) {
-                            UICommonUtil.setPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID, appInstanceID)
-                        }
-                    }
-                }
-
-                override fun doInBackground() {
-                }
-
-            })
-        }
-        v.executeSync()
-    }
-
 
 }

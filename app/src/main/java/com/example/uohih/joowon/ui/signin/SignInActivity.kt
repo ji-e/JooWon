@@ -18,8 +18,8 @@ import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.LogUtil
-import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.databinding.ActivitySigninBinding
+import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.ui.signup.SignUpActivity
 import com.example.uohih.joowon.util.UICommonUtil
@@ -54,12 +54,13 @@ class SignInActivity : JWBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView<ActivitySigninBinding>(this, R.layout.activity_signin)
+        binding = DataBindingUtil.setContentView<ActivitySigninBinding>(this@SignInActivity, R.layout.activity_signin)
+        binding.run {
+            signInViewModel = ViewModelProviders.of(this@SignInActivity, SignInViewModelFactory()).get(SignInViewModel::class.java)
+            lifecycleOwner = this@SignInActivity
+            signInVm = signInViewModel
+        }
 
-        signInViewModel = ViewModelProviders.of(this, SignInViewModelFactory()).get(SignInViewModel::class.java)
-
-        binding.signInVm = signInViewModel
-        binding.lifecycleOwner = this
 
         initView()
         initNaverLoginData()

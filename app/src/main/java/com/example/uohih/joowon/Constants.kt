@@ -5,6 +5,7 @@ class Constants {
 
         val SERVICE_ADMIN = "admin"
         val SERVICE_EMPLOYEE = "employee"
+        val SERVICE_EMPLOYEE_UPLOAD = "employee/upload"
         val JW1001 = "JW1001"   // 이메일 중복확인
         val JW1002 = "JW1002"   // 회원가입
         val JW1003 = "JW1003"
@@ -15,6 +16,8 @@ class Constants {
         val JW2002 = "JW2002"   // 로그아웃
         val JW2003 = "JW2003"   // 자동로그인
         val JW3001 = "JW3001"   // 직원리스트 가져오기
+        val JW3002 = "JW3002"   // 직원정보 추가하기
+
 
         // PasswordCheckActivity requestCode
         val passwordCheck = 1000

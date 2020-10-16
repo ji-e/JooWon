@@ -29,10 +29,7 @@ class JWBaseDataSource private constructor() {
         return this
     }
 
-    /**
-     * create you ApiService
-     * Create an implementation of the API endpoints defined by the `service` interface.
-     */
+
     fun <T> create(service: Class<T>?): T {
         if (service == null) {
             throw RuntimeException("Api service is null!")

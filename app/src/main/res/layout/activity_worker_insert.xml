@@ -1,329 +1,364 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/c_ffffff"
-    android:orientation="vertical"
-    tools:context=".ui.worker.WorkerInsertActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!--상단 타이틀 및 아이콘 바-->
-    <com.example.uohih.joowon.ui.customView.TopTitleView
-        android:id="@+id/worker_insert_title_view"
+    <data>
+
+        <variable
+            name="workerInsertVm"
+            type="com.example.uohih.joowon.ui.worker.WorkerViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp60"
-        android:gravity="center_vertical"
-        app:btnClose="true"
-        app:tvTitle="@string/workerInsert_title" />
+        android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
+        tools:context=".ui.worker.WorkerInsertActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
-
-        <LinearLayout
+        <!--상단 타이틀 및 아이콘 바-->
+        <com.example.uohih.joowon.ui.customView.TopTitleView
+            android:id="@+id/workerInsert_titleView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/dp16"
-            android:paddingTop="@dimen/dp16"
-            android:paddingRight="@dimen/dp16"
-            android:paddingBottom="@dimen/dp10">
+            android:layout_height="@dimen/dp60"
+            android:gravity="center_vertical"
+            app:btnClose="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tvTitle="@string/workerInsert_title" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            app:layout_constraintTop_toBottomOf="@id/workerInsert_titleView"
+            app:layout_constraintBottom_toTopOf="@id/workerInsert_btnConfirm">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp20"
+                android:paddingTop="@dimen/dp16"
+                android:paddingRight="@dimen/dp20"
+                android:paddingBottom="@dimen/dp10">
 
 
-            <!--사진등록 버튼-->
-            <RelativeLayout
-                android:id="@+id/worker_insert_plus"
-                android:layout_width="@dimen/dp80"
-                android:layout_height="@dimen/dp80"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/dp04"
-                android:onClick="onClickWorkerInsert">
-
-
-                <ImageView
-                    android:id="@+id/worker_img"
+                <!--사진등록 버튼-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/workerInsert_layProfileImg"
                     android:layout_width="@dimen/dp80"
                     android:layout_height="@dimen/dp80"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:background="@drawable/people" />
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/dp04"
+                    android:onClick="onClickWorkerInsert"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/worker_img_plus"
+                    <ImageView
+                        android:id="@+id/workerInsert_ImgProfileImg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/people" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/plus"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <!--이름-->
+                <TextView
+                    android:id="@+id/workerInsert_tvNameLabel"
+                    style="@style/Font_15_000000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:src="@drawable/plus" />
-
-            </RelativeLayout>
-
-
-            <!--이름-->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp10"
-                android:text="@string/workerInsert_name"
-                android:textColor="@color/c_333333"
-                android:textSize="@dimen/dp15"
-                android:textStyle="bold" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    android:layout_marginTop="@dimen/dp10"
+                    android:text="@string/workerInsert_name"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_layProfileImg" />
 
                 <EditText
-                    android:id="@+id/worker_insert_edt_name"
+                    android:id="@+id/workerInsert_edtName"
+                    style="@style/Font_12_000000"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp40"
+                    android:layout_marginTop="@dimen/dp05"
                     android:background="@drawable/input_selector"
                     android:hint="@string/workerInsert_name2"
-                    android:imeOptions="actionNext"
                     android:inputType="text"
                     android:maxLength="15"
                     android:paddingLeft="@dimen/dp10"
+                    android:paddingRight="@dimen/dp120"
                     android:singleLine="true"
-                    android:textSize="@dimen/dp15" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvNameLabel" />
 
                 <ImageButton
-                    android:id="@+id/worker_insert_btn_delete1"
+                    android:id="@+id/workerInsert_btnNameDelete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:layout_gravity="center"
                     android:layout_marginRight="@dimen/dp10"
                     android:background="@drawable/btn_delete_selector"
+                    android:onClick="onClickWorkerInsert"
                     android:visibility="gone"
-                    android:onClick="onClickWorkerInsert" />
-            </RelativeLayout>
-
-
-            <!--입사 날짜-->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp16"
-                android:layout_marginBottom="@dimen/dp10"
-                android:text="@string/workerInsert_join"
-                android:textColor="@color/c_333333"
-                android:textSize="@dimen/dp15"
-                android:textStyle="bold" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    app:layout_constraintBottom_toBottomOf="@id/workerInsert_edtName"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/workerInsert_edtName"
+                    tools:visibility="visible" />
 
                 <TextView
-                    android:id="@+id/worker_insert_edt_join"
+                    android:id="@+id/workerInsert_tvNameErr"
+                    style="@style/Font_10_f13e51"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp16"
+                    app:argId="@{workerInsertVm.workerInsertForm.nameMsg}"
+                    app:format="@{@string/string_format}"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_edtName" />
+
+                <!--핸드폰 번호-->
+                <TextView
+                    android:id="@+id/workerInsert_tvPhoneLabel"
+                    style="@style/Font_15_000000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp05"
+                    android:text="@string/workerInsert_phone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvNameErr" />
+
+                <EditText
+                    android:id="@+id/workerInsert_edtPhone"
+                    style="@style/Font_12_000000"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp40"
+                    android:layout_marginTop="@dimen/dp05"
                     android:background="@drawable/input_selector"
-                    android:gravity="center_vertical"
-                    android:imeOptions="actionNext"
+                    android:hint="@string/workerInsert_phone2"
+                    android:inputType="phone"
+                    android:maxLength="15"
                     android:paddingLeft="@dimen/dp10"
-                    android:textColor="@color/c_333333"
-                    android:textSize="@dimen/dp15"
-                    android:onClick="onClickWorkerInsert"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true" />
+                    android:paddingRight="@dimen/dp120"
+                    android:singleLine="true"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvPhoneLabel" />
 
-                <ImageView
-                    android:id="@+id/worker_insert_btn_calendar"
+                <ImageButton
+                    android:id="@+id/workerInsert_btnPhoneDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/dp10"
+                    android:background="@drawable/btn_delete_selector"
+                    android:onClick="onClickWorkerInsert"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@id/workerInsert_edtPhone"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/workerInsert_edtPhone"
+                    tools:visibility="visible" />
+
+                <!--생년 월일-->
+                <TextView
+                    android:id="@+id/workerInsert_tvBirthLabel"
+                    style="@style/Font_15_000000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp18"
+                    android:text="@string/workerInsert_birth"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_edtPhone" />
+
+                <TextView
+                    android:id="@+id/workerInsert_tvBirthDate"
+                    style="@style/Font_12_000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_marginTop="@dimen/dp05"
+                    android:background="@drawable/input_selector"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center_vertical"
+                    android:onClick="onClickWorkerInsert"
+                    android:paddingLeft="@dimen/dp10"
+                    android:text="@{workerInsertVm.today}"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvBirthLabel"
+                    tools:text="2020-10-10" />
+
+                <ImageButton
+                    android:id="@+id/workerInsert_btnBirthCalendar"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp40"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/btn_calendar_selector" />
-            </RelativeLayout>
+                    android:background="@drawable/btn_calendar_selector"
+                    android:onClick="onClickWorkerInsert"
+                    app:layout_constraintBottom_toBottomOf="@id/workerInsert_tvBirthDate"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/workerInsert_tvBirthDate" />
 
-
-            <!--핸드폰 번호-->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp16"
-                android:layout_marginBottom="@dimen/dp10"
-                android:text="@string/workerInsert_phone"
-                android:textColor="@color/c_333333"
-                android:textSize="@dimen/dp15"
-                android:textStyle="bold" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/worker_insert_edt_phone"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp40"
-                    android:background="@drawable/input_selector"
-                    android:hint="@string/workerInsert_phone2"
-                    android:imeOptions="actionNext"
-                    android:inputType="phone"
-                    android:maxLength="13"
-                    android:paddingLeft="@dimen/dp10"
-                    android:singleLine="true"
-                    android:textSize="@dimen/dp15" />
-
-                <ImageButton
-                    android:id="@+id/worker_insert_btn_delete2"
+                <!--입사 날짜-->
+                <TextView
+                    android:id="@+id/workerInsert_tvEnjoyDateLabel"
+                    style="@style/Font_15_000000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/dp10"
-                    android:background="@drawable/btn_delete_selector"
-                    android:visibility="gone"
-                    android:onClick="onClickWorkerInsert" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dp07"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <!--총 휴가-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp16"
-                        android:layout_marginBottom="@dimen/dp10"
-                        android:text="@string/workerInsert_vacation"
-                        android:textColor="@color/c_333333"
-                        android:textSize="@dimen/dp15"
-                        android:textStyle="bold" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <EditText
-                            android:id="@+id/worker_insert_edt_vacation"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dp40"
-                            android:background="@drawable/input_selector"
-                            android:hint="15"
-                            android:imeOptions="actionNext"
-                            android:inputType="text"
-                            android:maxLength="3"
-                            android:paddingLeft="@dimen/dp10"
-                            android:singleLine="true"
-                            android:textSize="@dimen/dp15" />
-
-                        <ImageButton
-                            android:id="@+id/worker_insert_btn_delete3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="@dimen/dp10"
-                            android:background="@drawable/btn_delete_selector"
-                            android:visibility="gone"
-                            android:onClick="onClickWorkerInsert" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/worker_insert_layout_use"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp07"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:visibility="invisible">
-
-                    <!--사용한 휴가-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp16"
-                        android:layout_marginBottom="@dimen/dp10"
-                        android:text="@string/workerInsert_use"
-                        android:textColor="@color/c_333333"
-                        android:textSize="@dimen/dp15"
-                        android:textStyle="bold" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <EditText
-                            android:id="@+id/worker_insert_edt_use"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dp40"
-                            android:background="@drawable/input_selector"
-                            android:hint="0"
-                            android:imeOptions="actionNext"
-                            android:inputType="text"
-                            android:maxLength="4"
-                            android:paddingLeft="@dimen/dp10"
-                            android:singleLine="true"
-                            android:textSize="@dimen/dp15" />
-
-                        <ImageButton
-                            android:id="@+id/worker_insert_btn_delete4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="@dimen/dp10"
-                            android:background="@drawable/btn_delete_selector"
-                            android:visibility="gone"
-                            android:onClick="onClickWorkerInsert" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-
-            </LinearLayout>
-            <!--삭제-->
-            <LinearLayout
-                android:id="@+id/worker_layout_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginTop="@dimen/dp16"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                android:onClick="onClickWorkerInsert">
-
-                <ImageButton
-                    android:layout_width="@dimen/dp25"
-                    android:layout_height="@dimen/dp25"
-                    android:background="@drawable/btn_trash_selector" />
+                    android:layout_marginTop="@dimen/dp18"
+                    android:text="@string/workerInsert_join"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvBirthDate" />
 
                 <TextView
+                    android:id="@+id/workerInsert_tvEnjoyDate"
+                    style="@style/Font_12_000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_marginTop="@dimen/dp05"
+                    android:background="@drawable/input_selector"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center_vertical"
+                    android:onClick="onClickWorkerInsert"
+                    android:paddingLeft="@dimen/dp10"
+                    android:text="@{workerInsertVm.today}"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvEnjoyDateLabel"
+                    tools:text="2020-10-10" />
+
+                <ImageButton
+                    android:id="@+id/workerInsert_btnEnjoyCalendar"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/btn_calendar_selector"
+                    android:onClick="onClickWorkerInsert"
+                    app:layout_constraintBottom_toBottomOf="@id/workerInsert_tvEnjoyDate"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/workerInsert_tvEnjoyDate" />
+
+                <!--총 휴가-->
+                <TextView
+                    android:id="@+id/workerInsert_tvTotalCntLabel"
+                    style="@style/Font_15_000000"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp18"
+                    android:layout_marginRight="@dimen/dp15"
+                    android:text="@string/workerInsert_vacation"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/workerInsert_tvUseCntLabel"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvEnjoyDate" />
+
+                <EditText
+                    android:id="@+id/workerInsert_edtTotalCnt"
+                    style="@style/Font_12_000000"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_marginTop="@dimen/dp05"
+                    android:layout_marginRight="@dimen/dp15"
+                    android:background="@drawable/input_selector"
+                    android:hint="15"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLength="3"
+                    android:paddingLeft="@dimen/dp10"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/workerInsert_edtUseCnt"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvTotalCntLabel" />
+
+
+                <!--사용한 휴가-->
+                <TextView
+                    android:id="@+id/workerInsert_tvUseCntLabel"
+                    style="@style/Font_15_000000"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp15"
+                    android:layout_marginTop="@dimen/dp18"
+                    android:text="@string/workerInsert_use"
+                    android:visibility="invisible"
+                    app:layout_constraintLeft_toRightOf="@id/workerInsert_tvTotalCntLabel"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvEnjoyDate"
+                    tools:visibility="visible" />
+
+                <EditText
+                    android:id="@+id/workerInsert_edtUseCnt"
+                    style="@style/Font_12_000000"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_marginLeft="@dimen/dp15"
+                    android:layout_marginTop="@dimen/dp05"
+                    android:background="@drawable/input_selector"
+                    android:hint="0"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLength="3"
+                    android:paddingLeft="@dimen/dp10"
+                    android:visibility="invisible"
+                    app:layout_constraintLeft_toRightOf="@id/workerInsert_edtTotalCnt"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvUseCntLabel"
+                    tools:visibility="visible" />
+
+
+                <!--삭제-->
+                <LinearLayout
+                    android:id="@+id/workerInsert_layDelete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/workerUpdate_delete"
-                    android:textColor="@color/c_333333"
-                    android:textSize="@dimen/dp15" />
-            </LinearLayout>
+                    android:layout_gravity="right"
+                    android:layout_marginTop="@dimen/dp16"
+                    android:onClick="onClickWorkerInsert"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    app:layout_constraintRight_toRightOf="parent"
 
-        </LinearLayout>
-    </ScrollView>
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_edtUseCnt"
+                    tools:visibility="visible">
 
-    <!--확인버튼-->
-    <Button
-        android:id="@+id/worker_insert_btn_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp50"
-        android:background="@drawable/btn_bottom_selector"
-        android:text="@string/btnConfirm"
-        android:textColor="@color/c_ffffff"
-        android:textSize="@dimen/dp20"
-        android:onClick="onClickWorkerInsert" />
+                    <TextView
+                        style="@style/Font_15_000000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/workerUpdate_delete" />
+
+                    <ImageButton
+                        android:layout_width="@dimen/dp20"
+                        android:layout_height="@dimen/dp20"
+                        android:background="@drawable/btn_next_selector" />
 
 
-</LinearLayout>
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <!--확인버튼-->
+        <Button
+            android:id="@+id/workerInsert_btnConfirm"
+            style="@style/Font_16_ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp60"
+            android:background="@drawable/btn_bottom_selector"
+            android:enabled="@{workerInsertVm.workerInsertForm.dataValid}"
+            android:onClick="onClickWorkerInsert"
+            android:text="@string/workerInsert_btn_register"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

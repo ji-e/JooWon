@@ -3,7 +3,6 @@ package com.example.uohih.joowon.ui.signup
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseApplication
@@ -29,31 +28,6 @@ class SignUpViewModel(application: JWBaseApplication, private val jwBaseReposito
     val signUpFormState: LiveData<SignUpFormState> = _signUpForm
     val JW1001Data: LiveData<JW1001> = _jw1001Data
     val JW1002Data: LiveData<JW1002> = _jw1002Data
-
-
-    fun signUp(jsonObject: JsonObject) {
-        _isLoding.value = true
-        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
-
-            override fun onSuccess(code: Int, data: JSONObject) {
-
-                val jw1002Data = Gson().fromJson(data.toString(), JW1002::class.java)
-                _jw1002Data.value = jw1002Data
-                _isLoding.value = false
-            }
-
-            override fun onFailure(code: Int) {
-                _isLoding.value = false
-            }
-
-            override fun onError(throwable: Throwable) {
-                _isLoding.value = false
-            }
-
-
-        })
-    }
-
 
     fun isDataValidCheck() {
         if (_signUpForm.value?.emailMsg == R.string.signup_email_confirm
@@ -125,7 +99,6 @@ class SignUpViewModel(application: JWBaseApplication, private val jwBaseReposito
         return emailError
     }
 
-
     /**
      * 비밀번호 검증
      */
@@ -157,5 +130,32 @@ class SignUpViewModel(application: JWBaseApplication, private val jwBaseReposito
             return R.string.signup_password_err4
         }
         return null
+    }
+
+    /**
+     * 회원가입
+     * jw1002
+     */
+    fun signUp(jsonObject: JsonObject) {
+        _isLoding.value = true
+        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
+
+            override fun onSuccess(code: Int, data: JSONObject) {
+
+                val jw1002Data = Gson().fromJson(data.toString(), JW1002::class.java)
+                _jw1002Data.value = jw1002Data
+                _isLoding.value = false
+            }
+
+            override fun onFailure(code: Int) {
+                _isLoding.value = false
+            }
+
+            override fun onError(throwable: Throwable) {
+                _isLoding.value = false
+            }
+
+
+        })
     }
 }

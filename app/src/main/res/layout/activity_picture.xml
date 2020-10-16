@@ -9,7 +9,7 @@
     android:background="@color/c_ffffff">
     <!--상단 타이틀 및 아이콘 바-->
     <com.example.uohih.joowon.ui.customView.TopTitleView
-        android:id="@+id/worker_insert_title_view"
+        android:id="@+id/workerInsert_titleView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp60"
         android:gravity="center_vertical"

@@ -9,7 +9,7 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class UICommonUtil : Serializable {
+class UICommonUtil{
     companion object {
         private val uiCommonHandler = Handler()
 
