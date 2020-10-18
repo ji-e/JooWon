@@ -187,13 +187,31 @@ class WorkerInsertActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
-        workerViewModel.isLoading.observe(this@WorkerInsertActivity, Observer {
+        workerViewModel.isLoading.observe(thisActivity, Observer {
             val isLoading = it ?: return@Observer
 
             if (isLoading) {
                 showLoading()
             } else {
                 hideLoading()
+            }
+        })
+
+        workerViewModel.jw3002Data.observe(thisActivity, Observer {
+            val jw3002Data = it ?: return@Observer
+
+            if ("failure" == jw3002Data.result) {
+
+            } else {
+                if ("Y" == jw3002Data.resbody?.addEmployeeValid) {
+                    customDialog.showDialog(
+                            thisActivity,
+                            getString(R.string.workerInsert_dialog_msg),
+                            getString(R.string.btnConfirm),
+                            DialogInterface.OnClickListener { dialog, which ->
+                                thisActivity.finish()
+                            })
+                }
             }
         })
     }

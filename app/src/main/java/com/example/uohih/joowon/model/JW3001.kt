@@ -1,7 +1,5 @@
 package com.example.uohih.joowon.model
 
-import androidx.lifecycle.MutableLiveData
-
 data class JW3001(
         val resbody: resbodyInfo? = null
 

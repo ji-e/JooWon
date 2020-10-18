@@ -38,6 +38,7 @@
     <string name="workerInsert_use">사용 휴가일</string>
     <string name="workerInsert_use2">사용 휴가일을 입력해주세요.</string>
     <string name="workerInsert_btn_register">등록하기</string>
+    <string name="workerInsert_dialog_msg">직원등록을 완료했습니다.</string>
 
     <string name="workerUpdate_delete">삭제하기</string>
     <string name="workerUpdate_update">변경하기</string>
