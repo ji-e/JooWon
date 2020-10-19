@@ -18,7 +18,7 @@ import com.example.uohih.joowon.R
 import com.example.uohih.joowon.ui.adapter.WorkerMainAdapter
 import com.example.uohih.joowon.base.BlankActivity
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.SizeConverter
+import com.example.uohih.joowon.util.SizeConverterUtil
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.database.VacationData
 import com.example.uohih.joowon.ui.main.PictureActivity
@@ -246,7 +246,7 @@ class WorkerMainActivity : JWBaseActivity() {
         layout_indicator.removeAllViews()
 
         val layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                SizeConverter(this).dp(20F), SizeConverter(this).dp(20F))
+                SizeConverterUtil(this).dp(20F), SizeConverterUtil(this).dp(20F))
 
         for (index in mIvDot.indices) {
             val ivDot = ImageView(mContext)

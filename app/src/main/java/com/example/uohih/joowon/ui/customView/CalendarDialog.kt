@@ -1,9 +1,9 @@
 package com.example.uohih.joowon.ui.customView
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +11,15 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.GridView
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.adapters.CalendarViewBindingAdapter
+import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
-import com.example.uohih.joowon.R
 import com.example.uohih.joowon.ui.adapter.CalendarAdapter
-import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.util.DateCommonUtil
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.android.synthetic.main.dialog_calendar.*
 import kotlinx.android.synthetic.main.dialog_calendar.view.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -27,7 +30,20 @@ import java.util.*
  * context: Context
  * theme: Int
  */
-class CalendarDialog(mContext: Context, theme: Int) : Dialog(mContext, theme) {
+class CalendarDialog(mContext: Context, theme: Int) : BaseBottomDialog(mContext, theme) {
+
+    private lateinit var calendarAdapter: CalendarAdapter
+    private lateinit var gridView: GridView
+
+
+    //
+//    init {
+//        setContentView(R.layout.dialog_calendar)
+//        val bind = DataBindingUtil.setContentView<CalendarViewBindingAdapter>(mContext, R.layout.dialog_calendar)
+//        gridView = calendar_gridview
+//        tvDate = calendar_tvDate
+//
+//    }
 
     class Builder(private val mContext: Context, mFuture: Boolean) : View.OnClickListener {
 
@@ -49,9 +65,12 @@ class CalendarDialog(mContext: Context, theme: Int) : Dialog(mContext, theme) {
 
         private lateinit var arrayListDayInfo: ArrayList<CalendarDayInfo>
 
-        private lateinit var tvYear: TextView
-        private lateinit var tvMonth: TextView
+//        private lateinit var tvYear: TextView
+//        private lateinit var tvMonth: TextView
 
+        val mThisMonthCalendar = LocalDate.now()
+
+        private lateinit var tvDate: TextView
 
         /**
          * 날짜 세팅
@@ -114,73 +133,70 @@ class CalendarDialog(mContext: Context, theme: Int) : Dialog(mContext, theme) {
                 requestWindowFeature(Window.FEATURE_NO_TITLE)
                 addContentView(contentView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             }
-//            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
-
-//            dialog.addContentView(contentView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             arrayListDayInfo = ArrayList<CalendarDayInfo>()
-            val mThisMonthCalendar = LocalDate.now()
 
-            tvYear = contentView.calendar_tv_year
-            tvMonth = contentView.calendar_tv_month
-
-            // 현재 날짜 세팅
-            tvYear.text = todayJson.getString("year")
-            tvMonth.text = todayJson.getString("month")
+//            tvYear = contentView.calendar_tv_year
+//            tvMonth = contentView.calendar_tv_month
+//            // 현재 날짜 세팅
+//            tvYear.text = todayJson.getString("year")
+//            tvMonth.text = todayJson.getString("month")
 
 
-            // 닫기 버튼
-            contentView.calendar_btn_close.setOnClickListener(this)
+            gridView = contentView.calendar_gridview
+            tvDate = contentView.calendar_tvDate
 
-            // 년 이전버튼
-            contentView.calendar_btn_backy.setOnClickListener(this)
 
-            // 년 다음버튼
-            contentView.calendar_btn_nexty.setOnClickListener(this)
 
-            // 월 이전버튼
-            contentView.calendar_btn_backm.setOnClickListener(this)
+            contentView.calendar_btnClose.setOnClickListener(this)
+            contentView.calendar_tvDate.setOnClickListener(this)
+            contentView.calendar_btnConfirm.setOnClickListener(this)
 
-            // 월 다음버튼
-            contentView.calendar_btn_nextm.setOnClickListener(this)
 
-            /**
-             * 날짜 클릭
-             */
-            contentView.calendar_gridview.setOnItemClickListener { parent, view, position, id ->
+//            // 년 이전버튼
+//            contentView.calendar_btn_backy.setOnClickListener(this)
+//
+//            // 년 다음버튼
+//            contentView.calendar_btn_nexty.setOnClickListener(this)
+//
+//            // 월 이전버튼
+//            contentView.calendar_btn_backm.setOnClickListener(this)
+//
+//            // 월 다음버튼
+//            contentView.calendar_btn_nextm.setOnClickListener(this)
+
+
+            // 그리드뷰 세팅
+
+            setGridCalendar()
+//            contentView.calendar_tv_month.text = String.format("%02d", calendar.monthValue)
+//            contentView.calendar_tv_year.text = calendar.year.toString()
+
+            return dialog
+        }
+
+        private fun setGridCalendar() {
+//            getCalendar(mThisMonthCalendar)
+            calendar = LocalDate.parse(date)
+            getCalendar(calendar)
+            setSelectedDate(calendar)
+
+            tvDate.text = calendar.year.toString() + "." + calendar.monthValue.toString()
+
+            gridView.setOnItemClickListener { parent, view, position, id ->
 
                 val selectedDate = (view.tag as CalendarDayInfo).getDate()
-//                LogUtil.e(selectedDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString())
-                if (selectedDate?.format(DateTimeFormatter.ofPattern("yyyyMMdd"))!!.toInt() <= todayJson.get("yyyymmdd").toString().toInt()
+                if (selectedDate?.format(DateTimeFormatter.ofPattern("yyyyMMdd"))?.toInt() ?: 0
+                        <= todayJson.get("yyyymmdd").toString().toInt()
                         || future) {
 
-                    setSelectedDate(selectedDate)
+                    selectedDate?.let { setSelectedDate(it) }
+
                     calendarAdapter.notifyDataSetChanged()
                 }
 
             }
 
-            // 확인버튼 클릭
-            contentView.calendar_btn_confirm.setOnClickListener(this)
-
-            // 그리드뷰 세팅
-            gridView = contentView.calendar_gridview
-            getCalendar(mThisMonthCalendar)
-            if (date != null) {
-//                val df = SimpleDateFormat("yyyy-MM-dd")
-                LogUtil.d(date)
-//                val d = df.parse(date)
-//                val localDate = LocalDate.of((date?.substring(0,4))!!.toInt(), (date?.substring(5,7))!!.toInt(), (date?.substring(8,10))!!.toInt())
-                calendar = LocalDate.parse(date)
-                setSelectedDate(calendar)
-                getCalendar(calendar)
-                contentView.calendar_tv_month.text = String.format("%02d", calendar.monthValue)
-                contentView.calendar_tv_year.text = calendar.year.toString()
-            } else {
-                setSelectedDate(LocalDate.now())
-            }
-
-            return dialog
         }
 
 
@@ -191,39 +207,42 @@ class CalendarDialog(mContext: Context, theme: Int) : Dialog(mContext, theme) {
 
         override fun onClick(view: View) {
             when (view.id) {
-                R.id.calendar_btn_close -> {
+                R.id.calendar_btnClose -> {
                     dialog.dismiss()
                 }
-                R.id.calendar_btn_backy -> {
-                    calendar = calendar.minusYears(1)
-                    getCalendar(calendar)
-                    tvYear.text = calendar.year.toString()
+                R.id.calendar_tvDate -> {
+
                 }
-                R.id.calendar_btn_nexty -> {
-                    if (tvYear.text.toString().toInt() < todayJson.getString("year").toInt()
-                            || future) {
-                        calendar = calendar.plusYears(1)
-                        getCalendar(calendar)
-                        tvYear.text = calendar.year.toString()
-                    }
-                }
-                R.id.calendar_btn_backm -> {
-                    calendar = calendar.minusMonths(1)
-                    getCalendar(calendar)
-                    tvMonth.text = String.format("%02d", calendar.monthValue)
-                    tvYear.text = calendar.year.toString()
-                }
-                R.id.calendar_btn_nextm -> {
-                    if (tvYear.text.toString().toInt() < todayJson.getString("year").toInt()
-                            || tvMonth.text.toString().toInt() < todayJson.getString("month").toInt()
-                            || future) {
-                        calendar = calendar.plusMonths(1)
-                        getCalendar(calendar)
-                        tvMonth.text = String.format("%02d", calendar.monthValue)
-                        tvYear.text = calendar.year.toString()
-                    }
-                }
-                R.id.calendar_btn_confirm -> {
+//                R.id.calendar_btn_backy -> {
+//                    calendar = calendar.minusYears(1)
+//                    getCalendar(calendar)
+//                    tvYear.text = calendar.year.toString()
+//                }
+//                R.id.calendar_btn_nexty -> {
+//                    if (tvYear.text.toString().toInt() < todayJson.getString("year").toInt()
+//                            || future) {
+//                        calendar = calendar.plusYears(1)
+//                        getCalendar(calendar)
+//                        tvYear.text = calendar.year.toString()
+//                    }
+//                }
+//                R.id.calendar_btn_backm -> {
+//                    calendar = calendar.minusMonths(1)
+//                    getCalendar(calendar)
+//                    tvMonth.text = String.format("%02d", calendar.monthValue)
+//                    tvYear.text = calendar.year.toString()
+//                }
+//                R.id.calendar_btn_nextm -> {
+//                    if (tvYear.text.toString().toInt() < todayJson.getString("year").toInt()
+//                            || tvMonth.text.toString().toInt() < todayJson.getString("month").toInt()
+//                            || future) {
+//                        calendar = calendar.plusMonths(1)
+//                        getCalendar(calendar)
+//                        tvMonth.text = String.format("%02d", calendar.monthValue)
+//                        tvYear.text = calendar.year.toString()
+//                    }
+//                }
+                R.id.calendar_btnConfirm -> {
                     val base = JWBaseApplication()
 //                base.setSelectDate(selectedDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                     base.setSelectDate(selectedDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
@@ -234,8 +253,6 @@ class CalendarDialog(mContext: Context, theme: Int) : Dialog(mContext, theme) {
 
 
     }
-
-
 
 
     /**

@@ -2,8 +2,7 @@ package com.example.uohih.joowon.database
 
 import android.content.Context
 import android.widget.Toast
-import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.LogUtil
+import com.example.uohih.joowon.util.LogUtil
 import org.apache.poi.ss.usermodel.Font
 import org.apache.poi.ss.usermodel.IndexedColors
 import org.apache.poi.xssf.usermodel.XSSFWorkbook

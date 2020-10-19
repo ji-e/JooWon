@@ -19,7 +19,7 @@ import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
-import com.example.uohih.joowon.base.LogUtil
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CustomDialog

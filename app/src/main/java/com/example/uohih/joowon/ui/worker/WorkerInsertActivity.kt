@@ -15,7 +15,6 @@ import android.telephony.PhoneNumberFormattingTextWatcher
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
-import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -37,7 +36,6 @@ import com.example.uohih.joowon.ui.adapter.DialogListAdapter
 import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.ui.customView.CustomListDialog
-import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.util.DateCommonUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_worker_insert.*
@@ -324,6 +322,45 @@ class WorkerInsertActivity : JWBaseActivity() {
 
     }
 
+
+
+    /**
+     * 직원 추가하기
+     */
+    private fun addEmployee() {
+        val photo = File(imageFilePath)
+        val photoBody = RequestBody.create(MediaType.parse("image/jpg"), photo)
+        var body = MultipartBody.Part.createFormData("photo", photo.name, photoBody)
+
+        if (imageFilePath.isEmpty()) {
+            body = MultipartBody.Part.createFormData("photo", "")
+        }
+
+        val jsonObject = JsonObject()
+        jsonObject.addProperty("methodid", Constants.JW3002)
+        jsonObject.addProperty("name", edtName.text.toString())
+        jsonObject.addProperty("phone_number", edtPhone.text.toString().replace("-", ""))
+        jsonObject.addProperty("birth", tvBirthDate.text.toString().replace("-", ""))
+        jsonObject.addProperty("entered_date", tvEnjoyDate.text.toString().replace("-", ""))
+        jsonObject.addProperty("total_vacation_cnt", edtTotalCnt.text.toString())
+        jsonObject.addProperty("remain_vacation_cnt", edtTotalCnt.text.toString())
+
+        workerViewModel.addEmployee(body, jsonObject)
+    }
+
+    /**
+     * 키보드 숨기기
+     * edt: EditText
+     */
+    private fun hideKeypad(edt: EditText) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(edt.windowToken, 0)
+        workerInsert_btnConfirm.requestFocus()
+    }
+
+    /**
+     * 리스트 다이얼로그
+     */
     private fun showListDialog() {
         val listViewAdapter = DialogListAdapter(thisActivity, ArrayList()).apply {
             setContent(getString(R.string.menu01))
@@ -345,38 +382,6 @@ class WorkerInsertActivity : JWBaseActivity() {
                 })?.show()
 
     }
-
-    /**
-     * 직원 추가하기
-     */
-    private fun addEmployee() {
-        val photo = File(imageFilePath)
-        val photoBody = RequestBody.create(MediaType.parse("image/jpg"), photo)
-        val body = MultipartBody.Part.createFormData("photo", photo.name, photoBody)
-
-        val jsonObject = JsonObject()
-        jsonObject.addProperty("methodid", Constants.JW3002)
-        jsonObject.addProperty("name", edtName.text.toString())
-        jsonObject.addProperty("phone_number", edtPhone.text.toString())
-        jsonObject.addProperty("birth", tvBirthDate.toString())
-        jsonObject.addProperty("entered_date", tvEnjoyDate.toString())
-        jsonObject.addProperty("total_vacation_cnt", edtTotalCnt.text.toString())
-        jsonObject.addProperty("remain_vacation_cnt", edtTotalCnt.text.toString())
-
-        workerViewModel.addEmployee(body, jsonObject)
-    }
-
-
-    /**
-     * 키보드 숨기기
-     * edt: EditText
-     */
-    private fun hideKeypad(edt: EditText) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(edt.windowToken, 0)
-        workerInsert_btnConfirm.requestFocus()
-    }
-
 
     /**
      * 캘린더 다이얼로그

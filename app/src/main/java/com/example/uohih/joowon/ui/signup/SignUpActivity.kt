@@ -22,6 +22,8 @@ import com.google.gson.JsonObject
 class SignUpActivity : JWBaseActivity() {
     private lateinit var signUpViewModel: SignUpViewModel
 
+    private val thisActivity by lazy { this }
+
     private lateinit var binding: ActivitySignupBinding
 
     private lateinit var edtEmail: EditText
@@ -34,10 +36,10 @@ class SignUpActivity : JWBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView<ActivitySignupBinding>(this@SignUpActivity, R.layout.activity_signin)
+        binding = DataBindingUtil.setContentView<ActivitySignupBinding>(thisActivity, R.layout.activity_signup)
         binding.run {
-            signUpViewModel = ViewModelProviders.of(this@SignUpActivity, SignUpViewModelFactory()).get(SignUpViewModel::class.java)
-            lifecycleOwner = this@SignUpActivity
+            signUpViewModel = ViewModelProviders.of(thisActivity, SignUpViewModelFactory()).get(SignUpViewModel::class.java)
+            lifecycleOwner = thisActivity
             signUpVm = signUpViewModel
         }
 

@@ -18,6 +18,7 @@ import com.example.uohih.joowon.model.JW2002
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.example.uohih.joowon.ui.signin.SignInActivity
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.Gson
 import com.google.gson.JsonObject

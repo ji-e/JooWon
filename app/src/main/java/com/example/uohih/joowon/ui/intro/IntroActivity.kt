@@ -235,6 +235,7 @@ class IntroActivity : JWBaseActivity() {
                         thisActivity,
                         getString(R.string.signin_err2),
                         getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
+                    UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, "")
                     val intent = Intent(this, SignInActivity::class.java)
                     startActivity(intent)
                     finish()

@@ -4,8 +4,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.example.uohih.joowon.base.LogUtil
-import java.lang.Exception
+import com.example.uohih.joowon.util.LogUtil
 
 /**
  * DB

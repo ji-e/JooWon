@@ -2,6 +2,7 @@ package com.example.uohih.joowon.base
 
 import android.app.Application
 import com.example.uohih.joowon.util.DateCommonUtil
+import com.example.uohih.joowon.util.LogUtil
 
 import com.example.uohih.joowon.util.UseSharedPreferences
 import java.net.CookieManager

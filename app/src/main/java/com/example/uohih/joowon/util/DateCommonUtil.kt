@@ -39,11 +39,19 @@ class DateCommonUtil {
         return jsonCalendar
     }
 
-    fun setFormatDate(date: String): String {
+    fun setFormatHpDate(date: String): String {
         return try {
             if (date.length == 8) {
                 (Constants.YYYYMMDD_PATTERN).toRegex().replace(date, "$1-$2-$3")
             } else ""
+        } catch (e: Exception) {
+            ""
+        }
+    }
+
+    fun setFormatDate(date: String): String {
+        return try {
+            date.replace("-", "")
         } catch (e: Exception) {
             ""
         }

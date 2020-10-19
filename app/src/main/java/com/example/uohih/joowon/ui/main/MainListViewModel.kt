@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.base.JWBaseApplication
-import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.model.JW3001
 import com.example.uohih.joowon.model.JW3001ResBodyList
 import com.example.uohih.joowon.repository.JWBaseRepository

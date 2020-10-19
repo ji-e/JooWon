@@ -3,10 +3,8 @@ package com.example.uohih.joowon.ui.worker
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseApplication
-import com.example.uohih.joowon.base.LogUtil
 import com.example.uohih.joowon.model.*
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
@@ -15,7 +13,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import org.json.JSONObject
-import java.util.regex.Pattern
 
 class WorkerViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : AndroidViewModel(application) {
     private val _isLoading = MutableLiveData<Boolean>()
@@ -26,7 +23,7 @@ class WorkerViewModel(application: JWBaseApplication, private val jwBaseReposito
     val workerInsertForm: LiveData<WorkerInsrtFormState> = _workerInsertForm
     val jw3002Data: LiveData<JW3002> = _jw3002Data
 
-    val today = DateCommonUtil().setFormatDate(DateCommonUtil().getToday().get("yyyymmdd").toString())
+    val today = DateCommonUtil().setFormatHpDate(DateCommonUtil().getToday().get("yyyymmdd").toString())
 
     fun isDataValidCheck() {
         if (_workerInsertForm.value?.nameMsg == null) {

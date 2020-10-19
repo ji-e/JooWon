@@ -19,6 +19,20 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="DefaultBottomDialog" parent="Animation.AppCompat.Dialog">
+        <item name="android:windowEnterAnimation">@anim/design_bottom_sheet_slide_in</item>
+        <item name="android:windowExitAnimation">@anim/design_bottom_sheet_slide_out</item>
+    </style>
+
+    <!--    <style name="CustomBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">-->
+    <!--        <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>-->
+    <!--    </style>-->
+    <!---->
+    <!--    <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">-->
+    <!--        <item name="android:background">@android:color/transparent</item>-->
+    <!--    </style>-->
+
+
     <style name="Loading" parent="@android:style/Theme.DeviceDefault.Dialog">
         <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:windowLightStatusBar">true</item>
@@ -84,6 +98,20 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="Font_15_f13e51">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_f13e51</item>
+        <item name="android:textSize">@dimen/dp15</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Font_15_3571d6">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_3571d6</item>
+        <item name="android:textSize">@dimen/dp15</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <style name="Font_16_ffffff">
         <!--<item name="fontFamily">@font/roboto_r</item>-->
         <item name="android:textColor">@color/c_ffffff</item>
@@ -95,6 +123,13 @@
         <!--<item name="fontFamily">@font/roboto_r</item>-->
         <item name="android:textColor">@color/c_000000</item>
         <item name="android:textSize">@dimen/dp16</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Font_20_000000">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_000000</item>
+        <item name="android:textSize">@dimen/dp20</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 

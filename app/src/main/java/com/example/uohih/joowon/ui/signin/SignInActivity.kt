@@ -17,11 +17,14 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.LogUtil
+import com.example.uohih.joowon.base.JWBaseApplication
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.databinding.ActivitySigninBinding
+import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.ui.signup.SignUpActivity
+import com.example.uohih.joowon.util.DateCommonUtil
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import com.nhn.android.naverlogin.OAuthLogin
@@ -54,10 +57,10 @@ class SignInActivity : JWBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView<ActivitySigninBinding>(this@SignInActivity, R.layout.activity_signin)
+        binding = DataBindingUtil.setContentView<ActivitySigninBinding>(thisActivity, R.layout.activity_signin)
         binding.run {
-            signInViewModel = ViewModelProviders.of(this@SignInActivity, SignInViewModelFactory()).get(SignInViewModel::class.java)
-            lifecycleOwner = this@SignInActivity
+            signInViewModel = ViewModelProviders.of(thisActivity, SignInViewModelFactory()).get(SignInViewModel::class.java)
+            lifecycleOwner = thisActivity
             signInVm = signInViewModel
         }
 
@@ -203,7 +206,7 @@ class SignInActivity : JWBaseActivity() {
             }
             binding.signinTvFindPw -> {
                 // 비밀번호 찾기
-
+                showCalendarDialog()
             }
             binding.signinBtnSignin -> {
                 // 로그인
@@ -331,4 +334,22 @@ class SignInActivity : JWBaseActivity() {
 
         }
     }
+
+    /**
+     * 캘린더 다이얼로그
+     */
+    private fun showCalendarDialog() {
+        val date = "2020-10-01"
+        val calendarDialog = CalendarDialog(thisActivity, android.R.style.Theme_Material_Dialog_MinWidth)
+
+        calendarDialog.createDialogCalendar(thisActivity, date)?.apply {
+            setOnDismissListener {
+                LogUtil.e(DateCommonUtil().setFormatHpDate(JWBaseApplication().getSelectDate()))
+
+
+//                        (Constants.YYYYMMDD_PATTERN).toRegex().replace(JWBaseApplication().getSelectDate(), "$1-$2-$3"))
+            }
+        }?.show()
+    }
+
 }

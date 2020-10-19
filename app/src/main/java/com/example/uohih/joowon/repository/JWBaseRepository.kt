@@ -1,7 +1,7 @@
 package com.example.uohih.joowon.repository
 
 import com.example.uohih.joowon.Constants
-import com.example.uohih.joowon.base.LogUtil
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
 
 import com.google.gson.JsonObject
@@ -100,7 +100,7 @@ open class JWBaseRepository {
         jsonObject.addProperty("timestamp", System.currentTimeMillis())
         jsonObject.addProperty("txid", UUID.randomUUID().toString().replace("-", ""))
 
-        LogUtil.d("requsetBody:  ", jsonObject)
+        LogUtil.d(part.body(), "requsetBody:  ", jsonObject)
 
         retroClient.requestDataRetrofit(apiService.baseUploadProcessService(part, jsonObject), object : GetResbodyCallback {
 

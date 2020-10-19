@@ -1,10 +1,10 @@
-package com.example.uohih.joowon.base
+package com.example.uohih.joowon.util
 
 import android.content.Context
 import android.util.DisplayMetrics
 import android.util.TypedValue
 
-class SizeConverter(mContext:Context) {
+class SizeConverterUtil(mContext: Context) {
 
     val DISPLAY_METRICS = mContext.resources.displayMetrics
 

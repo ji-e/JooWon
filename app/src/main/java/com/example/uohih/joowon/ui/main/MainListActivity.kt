@@ -9,23 +9,19 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.BackPressCloseHandler
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.LogUtil
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.databinding.ActivityMainListBinding
 import com.example.uohih.joowon.databinding.ListItemMainListBinding
 import com.example.uohih.joowon.model.JW0000
 import com.example.uohih.joowon.model.JW3001ResBodyList
-import com.example.uohih.joowon.repository.ApiService
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.customView.DraggableFloatingButton
-import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.ui.setting.SettingActivity
 import com.example.uohih.joowon.ui.worker.WorkerInsertActivity
 import com.google.gson.Gson
@@ -66,8 +62,8 @@ class MainListActivity : JWBaseActivity() {
 
         binding = DataBindingUtil.setContentView<ActivityMainListBinding>(this, R.layout.activity_main_list)
         binding.run {
-            mainListViewModel = ViewModelProviders.of(this@MainListActivity, MainListViewModelFactory()).get(MainListViewModel::class.java)
-            lifecycleOwner = this@MainListActivity
+            mainListViewModel = ViewModelProviders.of(thisActivity, MainListViewModelFactory()).get(MainListViewModel::class.java)
+            lifecycleOwner = thisActivity
             mainListVm = mainListViewModel
         }
 
@@ -153,15 +149,16 @@ class MainListActivity : JWBaseActivity() {
                     val intent = Intent(thisActivity, PictureActivity::class.java)
                     thisActivity.startActivity(intent)
                 }
-               val imageBasicPath =  mainListViewModel.jw3001Data.value?.resbody?.employeeList?.get(position)?.profile_image
-                if (!imageBasicPath.isNullOrEmpty()) {
-                    val imagePath = ApiService.Base_URL_ORIGIN + mainListViewModel.jw3001Data.value?.resbody?.employeeList?.get(position)?.profile_image
-                    Glide.with(mContext)
-                            .asBitmap()
-                            .load(imagePath)
-                            .apply(RequestOptions().circleCrop())
-                            .into(holder.itemView.mainList_imgPeople)
-                }
+//               val imageBasicPath =  mainListViewModel.jw3001Data.value?.resbody?.employeeList?.get(position)?.profile_image
+//                if (!imageBasicPath.isNullOrEmpty()) {
+//                    val imagePath = ApiService.Base_URL_ORIGIN + mainListViewModel.jw3001Data.value?.resbody?.employeeList?.get(position)?.profile_image
+//                    Glide.with(mContext)
+//                            .asBitmap()
+//                            .load(imagePath).error(R.drawable.people)
+//                            .apply(RequestOptions().circleCrop())
+//                            .into(holder.itemView.mainList_imgPeople)
+//
+//                }
             }
         }
 

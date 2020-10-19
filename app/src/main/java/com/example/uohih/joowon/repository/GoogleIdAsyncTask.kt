@@ -2,7 +2,7 @@ package com.example.uohih.joowon.repository
 
 import android.content.Context
 import android.os.AsyncTask
-import com.example.uohih.joowon.base.LogUtil
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.database.AsyncCallback
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
