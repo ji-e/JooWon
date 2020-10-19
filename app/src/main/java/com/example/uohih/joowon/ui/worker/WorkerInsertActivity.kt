@@ -388,13 +388,13 @@ class WorkerInsertActivity : JWBaseActivity() {
      */
     private fun showCalendarDialog(textView: TextView) {
         val date = textView.text.toString()
-        val calendarDialog = CalendarDialog(thisActivity, android.R.style.Theme_Material_Dialog_MinWidth)
-
-        calendarDialog.createDialogCalendar(thisActivity, date)?.apply {
-            setOnDismissListener {
-                textView.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(base.getSelectDate(), "$1-$2-$3")
-            }
-        }?.show()
+//        val calendarDialog = CalendarDialog(thisActivity, android.R.style.Theme_Material_Dialog_MinWidth)
+//
+//        calendarDialog.createDialogCalendar(thisActivity, date)?.apply {
+//            setOnDismissListener {
+//                textView.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(base.getSelectDate(), "$1-$2-$3")
+//            }
+//        }?.show()
     }
 
 

@@ -243,21 +243,21 @@ class VacationFragment : Fragment(), View.OnClickListener {
      * 캘린더 다이얼로그
      */
     private fun showCalendarDialog(date: String, mTv: TextView) {
-        var calendarDialog = CalendarDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
-        calendarDialog = calendarDialog.createDialogCalendar(mContext, date, true)!!
-        calendarDialog.show()
-        calendarDialog.setOnDismissListener {
-            if (mTv.id == R.id.vacation_tv_endD) {
-                val startD = vacation_tv_startD.text.toString().replace("-", "").toInt()
-                if (startD > baseApplication.getSelectDate().toInt()) {
-                    customDialog.showDialog(mContext, resources.getString(R.string.vacation_dialog_msg3), resources.getString(R.string.btnConfirm), null)
-                    return@setOnDismissListener
-                }
-            }
-            mTv.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(baseApplication.getSelectDate(), "$1-$2-$3")
-            cntSchedule = calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString())
-            vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cntSchedule)
-        }
+//        var calendarDialog = CalendarDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
+//        calendarDialog = calendarDialog.createDialogCalendar(mContext, date, true)!!
+//        calendarDialog.show()
+//        calendarDialog.setOnDismissListener {
+//            if (mTv.id == R.id.vacation_tv_endD) {
+//                val startD = vacation_tv_startD.text.toString().replace("-", "").toInt()
+//                if (startD > baseApplication.getSelectDate().toInt()) {
+//                    customDialog.showDialog(mContext, resources.getString(R.string.vacation_dialog_msg3), resources.getString(R.string.btnConfirm), null)
+//                    return@setOnDismissListener
+//                }
+//            }
+//            mTv.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(baseApplication.getSelectDate(), "$1-$2-$3")
+//            cntSchedule = calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString())
+//            vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cntSchedule)
+//        }
     }
 
     private fun setVacationRegister() {

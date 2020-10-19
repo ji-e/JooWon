@@ -16,12 +16,20 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
-open class BaseBottomDialog(mContext: Context, theme: Int) : BottomSheetDialog(mContext, theme) {
-    val mContext = mContext
+open class BaseBottomDialog : BottomSheetDialog {
+    var mContext:Context
     val mWindow = this.window
     private var mAnimation = -1
     private var mResId = -1
     private var mPeekHeight = 0
+
+    constructor(mContext: Context) : super(mContext) {
+        this.mContext = mContext
+    }
+
+    constructor(mContext: Context, theme: Int) : super(mContext, theme) {
+       this.mContext = mContext
+    }
 
     /**
      * BottomSheetBehavior.STATE_COLLAPSED : height 만큼 보임.
@@ -81,7 +89,7 @@ open class BaseBottomDialog(mContext: Context, theme: Int) : BottomSheetDialog(m
         })
 
 //        val root = findViewById<ViewGroup>(android.R.id.content)
-        setCancelable(false)
+//        setCancelable(false)
 
     }
 

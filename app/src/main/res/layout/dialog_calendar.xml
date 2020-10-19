@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<!--<layout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools">-->
 
-    <data>
+<!--    <data>-->
 
-        <variable
-            name="calendarDate"
-            type="String" />
-    </data>
+<!--        <variable-->
+<!--            name="calendarDate"-->
+<!--            type="String" />-->
+<!--    </data>-->
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/calendar_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/rectangle_r4_ffffff">
+        android:background="@drawable/rectangle_r4_ffffff"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
 
         <ImageButton
@@ -208,5 +211,5 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+<!--</layout>-->

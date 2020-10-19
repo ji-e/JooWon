@@ -340,16 +340,17 @@ class SignInActivity : JWBaseActivity() {
      */
     private fun showCalendarDialog() {
         val date = "2020-10-01"
-        val calendarDialog = CalendarDialog(thisActivity, android.R.style.Theme_Material_Dialog_MinWidth)
-
-        calendarDialog.createDialogCalendar(thisActivity, date)?.apply {
-            setOnDismissListener {
-                LogUtil.e(DateCommonUtil().setFormatHpDate(JWBaseApplication().getSelectDate()))
-
-
-//                        (Constants.YYYYMMDD_PATTERN).toRegex().replace(JWBaseApplication().getSelectDate(), "$1-$2-$3"))
-            }
-        }?.show()
+//        val calendarDialog = CalendarDialog(thisActivity, android.R.style.Theme_Material_Dialog_MinWidth)
+        val calendarDialog = CalendarDialog(this).apply {  setBottomDialog("Ffffff","Fdfdf")}
+        calendarDialog.show()
+//        calendarDialog.createDialogCalendar(thisActivity, date)?.apply {
+//            setOnDismissListener {
+//                LogUtil.e(DateCommonUtil().setFormatHpDate(JWBaseApplication().getSelectDate()))
+//
+//
+////                        (Constants.YYYYMMDD_PATTERN).toRegex().replace(JWBaseApplication().getSelectDate(), "$1-$2-$3"))
+//            }
+//        }?.show()
     }
 
 }
