@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlHighlight">@color/c_efefef</item>
+        <item name="colorControlHighlight">@color/c_22004680</item>
         <item name="colorControlNormal">@color/c_cccccc</item>
     </style>
 
@@ -24,13 +24,9 @@
         <item name="android:windowExitAnimation">@anim/design_bottom_sheet_slide_out</item>
     </style>
 
-    <!--    <style name="CustomBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">-->
-    <!--        <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>-->
-    <!--    </style>-->
-    <!---->
-    <!--    <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">-->
-    <!--        <item name="android:background">@android:color/transparent</item>-->
-    <!--    </style>-->
+    <style name="AppTheme.NumberPicker" parent="AppTheme">
+        <item name="colorControlNormal">@color/colorAccent</item>
+    </style>
 
 
     <style name="Loading" parent="@android:style/Theme.DeviceDefault.Dialog">
@@ -140,5 +136,11 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="Font_50_000000">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_000000</item>
+        <item name="android:textSize">@dimen/dp50</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
 
 </resources>

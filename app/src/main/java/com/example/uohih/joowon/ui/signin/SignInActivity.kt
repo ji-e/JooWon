@@ -21,6 +21,7 @@ import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.databinding.ActivitySigninBinding
 import com.example.uohih.joowon.ui.customView.CalendarDialog
+import com.example.uohih.joowon.ui.customView.CalendarDialog.ConfirmBtnClickListener
 import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.ui.signup.SignUpActivity
@@ -30,6 +31,7 @@ import com.google.gson.JsonObject
 import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.OAuthLoginHandler
 import com.nhn.android.naverlogin.data.OAuthLoginState
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -340,17 +342,18 @@ class SignInActivity : JWBaseActivity() {
      */
     private fun showCalendarDialog() {
         val date = "2020-10-01"
-//        val calendarDialog = CalendarDialog(thisActivity, android.R.style.Theme_Material_Dialog_MinWidth)
-        val calendarDialog = CalendarDialog(this).apply {  setBottomDialog("Ffffff","Fdfdf")}
+        val calendarDialog = CalendarDialog(thisActivity).apply {
+            setBottomDialog(
+                    date,
+                    null,
+                    object : ConfirmBtnClickListener {
+                        override fun onConfirmClick(date: LocalDate) {
+                            LogUtil.e(date.month)
+                        }
+                    })
+        }
         calendarDialog.show()
-//        calendarDialog.createDialogCalendar(thisActivity, date)?.apply {
-//            setOnDismissListener {
-//                LogUtil.e(DateCommonUtil().setFormatHpDate(JWBaseApplication().getSelectDate()))
-//
-//
-////                        (Constants.YYYYMMDD_PATTERN).toRegex().replace(JWBaseApplication().getSelectDate(), "$1-$2-$3"))
-//            }
-//        }?.show()
+
     }
 
 }

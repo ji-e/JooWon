@@ -1,3 +1,5 @@
 package com.example.uohih.joowon.ui.main
 
-class MainListItemViewModel
+import androidx.lifecycle.ViewModel
+
+class MainListItemViewModel : ViewModel()
