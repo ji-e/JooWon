@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="calendarDialogVm"
+            name="calendarDialogVar"
             type="com.example.uohih.joowon.ui.customView.CalendarDialog" />
+
+        <variable
+            name="calendarDialogVm"
+            type="com.example.uohih.joowon.ui.customView.CalendarDialogViewModel" />
     </data>
 
 
@@ -64,101 +68,37 @@
                 android:background="@color/c_004680"
                 app:layout_constraintTop_toBottomOf="@id/calendar_tvDate" />
 
-            <LinearLayout
-                android:id="@+id/calendar_layDay"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp35"
-                android:layout_marginStart="@dimen/dp10"
-                android:layout_marginTop="@dimen/dp15"
-                android:layout_marginEnd="@dimen/dp10"
-                android:gravity="center"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/calendar_line">
-
-                <TextView
-                    android:id="@+id/sun"
-                    style="@style/Font_15_f13e51"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="일" />
-
-                <TextView
-                    android:id="@+id/mon"
-                    style="@style/Font_15_000000"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="월" />
-
-                <TextView
-                    android:id="@+id/the"
-                    style="@style/Font_15_000000"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="화" />
-
-                <TextView
-                    android:id="@+id/wed"
-                    style="@style/Font_15_000000"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="수" />
-
-                <TextView
-                    android:id="@+id/thu"
-                    style="@style/Font_15_000000"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="목" />
-
-                <TextView
-                    android:id="@+id/fri"
-                    style="@style/Font_15_000000"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="금" />
-
-                <TextView
-                    android:id="@+id/sat"
-                    style="@style/Font_15_3571d6"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="토" />
-            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp01"
                 android:background="@color/c_004680"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/calendar_layDay" />
+                app:layout_constraintTop_toBottomOf="@id/calendar_line" />
 
-            <GridView
-                android:id="@+id/calendar_gridview"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/calendar_viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp10"
-                android:layout_marginEnd="@dimen/dp10"
-                android:gravity="center"
-                android:numColumns="7"
-                android:stretchMode="columnWidth"
-                android:visibility="visible"
+                android:layout_height="@dimen/dp290"
+                android:orientation="horizontal"
+                replaceAll="@{calendarDialogVm.liveCalendarList}"
                 app:layout_constraintBottom_toTopOf="@+id/calendar_btnConfirm"
-                app:layout_constraintTop_toBottomOf="@id/calendar_layDay"
-                tools:listitem="@layout/dialog_calendar_cell" />
+                app:layout_constraintTop_toBottomOf="@id/calendar_line" />
+
+
+            <!--            <GridView-->
+            <!--                android:id="@+id/calendar_gridview"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="@dimen/dp10"-->
+            <!--                android:layout_marginEnd="@dimen/dp10"-->
+            <!--                android:gravity="center"-->
+            <!--                android:numColumns="7"-->
+            <!--                android:stretchMode="columnWidth"-->
+            <!--                android:visibility="invisible"-->
+            <!--                app:layout_constraintBottom_toTopOf="@+id/calendar_btnConfirm"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/calendar_layDay"-->
+            <!--                tools:listitem="@layout/dialog_calendar_cell" />-->
 
             <NumberPicker
                 android:id="@+id/calendar_pickerY"
@@ -170,7 +110,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/calendar_pickerM"
                 app:layout_constraintTop_toBottomOf="@id/calendar_line"
-                style="@style/Font_12_000000" />
+                style="@style/Font_12_000000"
+                android:visibility="gone" />
 
             <NumberPicker
                 android:id="@+id/calendar_pickerM"
@@ -182,7 +123,8 @@
                 app:layout_constraintStart_toEndOf="@id/calendar_pickerY"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/calendar_line"
-                style="@style/Font_12_000000" />
+                style="@style/Font_12_000000"
+                android:visibility="gone" />
 
             <!--버튼-->
             <Button

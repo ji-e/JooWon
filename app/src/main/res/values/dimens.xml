@@ -54,6 +54,7 @@
     <dimen name="dp240">240dp</dimen>
     <dimen name="dp250">250dp</dimen>
     <dimen name="dp280">280dp</dimen>
+    <dimen name="dp290">290dp</dimen>
     <dimen name="dp360">360dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

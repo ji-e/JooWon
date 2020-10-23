@@ -52,9 +52,8 @@ open class BaseBottomDialog : BottomSheetDialog {
 
                 val coordinatorLayout = bottomSheet?.parent as CoordinatorLayout
                 val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-
+                coordinatorLayout.isFocusableInTouchMode = false
                 if (mPeekHeight == 0) {
-                    bottomSheetBehavior.isHideable = true
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN)
                 } else {
                     bottomSheet.layoutParams.height = mPeekHeight
@@ -72,10 +71,13 @@ open class BaseBottomDialog : BottomSheetDialog {
 
                     bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                         override fun onStateChanged(@NonNull view: View, i: Int) {
-
+                            if (i == BottomSheetBehavior.STATE_DRAGGING) {
+                                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                            }
                         }
 
                         override fun onSlide(@NonNull view: View, v: Float) {
+
                             if (v == -1.0f) {
                                 dismiss()
                             }

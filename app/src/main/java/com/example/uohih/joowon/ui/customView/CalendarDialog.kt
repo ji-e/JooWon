@@ -2,20 +2,27 @@ package com.example.uohih.joowon.ui.customView
 
 import android.content.Context
 import android.content.DialogInterface
-import android.view.LayoutInflater
-import android.view.View
+import android.graphics.Rect
+import android.view.*
 import android.widget.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
+import com.example.uohih.joowon.BR
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.databinding.DialogCalendarBinding
+import com.example.uohih.joowon.databinding.DialogCalendarGridBinding
+import com.example.uohih.joowon.model.CalendarDayInfo
+import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.adapter.CalendarAdapter
 import com.example.uohih.joowon.util.DateCommonUtil
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.SizeConverterUtil
+import kotlinx.android.synthetic.main.dialog_calendar_grid.view.*
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 /**
  * 캘린더 다이얼로그
@@ -25,47 +32,39 @@ import java.time.format.DateTimeFormatter
 class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnClickListener {
 
     private var bind: DialogCalendarBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.dialog_calendar, null, false)
-
-    private lateinit var calendarAdapter: CalendarAdapter
+    private var calendarDialogViewModel = CalendarDialogViewModel()
 
     private lateinit var layoutBottom: CoordinatorLayout
     private lateinit var btnClose: ImageButton
     private lateinit var tvDate: TextView
     private lateinit var imgTri: ImageView
-    private lateinit var layoutDay: LinearLayout
-    private lateinit var gridView: GridView
+
+    private lateinit var viewPager: ViewPager2
     private lateinit var pickerY: NumberPicker
     private lateinit var pickerM: NumberPicker
     private lateinit var btnConfirm: Button
 
-
     private var calendar = LocalDate.now()
-    private var selectedDate = LocalDate.now()
+    private var selectedDate = arrayListOf<LocalDate>()
     private val todayJson = DateCommonUtil().getToday()
 
     private var isFutureSelect = false
+    private var isSelectedDateArray = false
     private var isVisibleCalendar = true
+    private var previousPosition = 100
 
     private var mCloseBtnClickListener: View.OnClickListener? = null
     private var mConfirmBtnClickListener: ConfirmBtnClickListener? = null
-    private lateinit var mItemClickListener: AdapterView.OnItemClickListener
 
     interface ConfirmBtnClickListener {
-        fun onConfirmClick(date: LocalDate)
-    }
-
-    fun setCloseBtnClickListener(mCloseBtnClickListener: View.OnClickListener) {
-        this.mCloseBtnClickListener = mCloseBtnClickListener
-    }
-
-    fun setConfirmBtnClickListener(mConfirmBtnClickListener: ConfirmBtnClickListener) {
-        this.mConfirmBtnClickListener = mConfirmBtnClickListener
+        fun onConfirmClick(date: ArrayList<LocalDate>)
     }
 
     init {
         bind.run {
             lifecycleOwner = mContext as LifecycleOwner
             setContentView(bind.root)
+            calendarDialogVm = calendarDialogViewModel
         }
 
         initView()
@@ -76,33 +75,86 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
         btnClose = bind.calendarBtnClose
         tvDate = bind.calendarTvDate
         imgTri = bind.calendarImgTri
-        layoutDay = bind.calendarLayDay
-        gridView = bind.calendarGridview
+        viewPager = bind.calendarViewpager
         pickerY = bind.calendarPickerY
         pickerM = bind.calendarPickerM
         btnConfirm = bind.calendarBtnConfirm
 
         btnClose.setOnClickListener(this)
         tvDate.setOnClickListener(this)
+        imgTri.setOnClickListener(this)
         btnConfirm.setOnClickListener(this)
 
         setDatePicker()
+        setVisibleLayout()
 
-        gridView.setOnItemClickListener { parent, view, position, id ->
+    }
 
-            val selectedDate = (view.tag as CalendarDayInfo).getDate()
-            if (selectedDate?.format(DateTimeFormatter.ofPattern("yyyyMMdd"))?.toInt() ?: 0
-                    <= todayJson.get("yyyymmdd").toString().toInt()
-                    || isFutureSelect) {
+    /**
+     * calendar 설정
+     */
+    private fun setCalendar(date: LocalDate) {
+        var calendarAdapter: CalendarAdapter? = null
+        calendar = date
 
-                selectedDate?.let { setSelectedDate(it) }
+        calendarDialogViewModel.setCalendarList(calendar)
 
-                calendarAdapter.notifyDataSetChanged()
+        calendarDialogViewModel.liveCalendarList.observe(mContext as LifecycleOwner, Observer {
+            val liveCalendarList = it ?: return@Observer
+
+            viewPager.adapter = object : BaseRecyclerView.Adapter<ArrayList<CalendarDayInfo>, DialogCalendarGridBinding>(
+                    layoutResId = R.layout.dialog_calendar_grid,
+                    bindingVariableId = BR.calendarInfo
+            ) {
+
+                override fun onBindViewHolder(holder: BaseRecyclerView.ViewHolder<DialogCalendarGridBinding>, position: Int) {
+                    super.onBindViewHolder(holder, position)
+
+
+                    calendarAdapter = CalendarAdapter(mContext, liveCalendarList[position], selectedDate, R.layout.dialog_calendar_cell).apply {
+                        setSelectedDateArray(isSelectedDateArray)
+                        setFutureSelect(isFutureSelect)
+                    }
+                    holder.itemView.calendar_gridview.adapter = calendarAdapter
+
+                    // 날짜 선택 리스너
+                    calendarAdapter?.selectedDateClickListener = object : CalendarAdapter.SelectedDateClickListener {
+                        override fun onSelectedDateClick(date: ArrayList<LocalDate>) {
+                            selectedDate = date
+                            notifyDataSetChanged()
+                        }
+                    }
+
+                }
+
             }
 
-        }
+            // 뷰페이저 가운데로 인덱스변경
+            viewPager.visibility = View.INVISIBLE
+            viewPager.post {
+                viewPager.setCurrentItem(100, false)
+                viewPager.visibility = View.VISIBLE
+            }
+//            viewPager.remove
 
-//        setObserve()
+            // 뷰페이저 페이징변환 리스너
+            viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageScrollStateChanged(state: Int) {
+                    if (state == ViewPager.SCROLL_STATE_DRAGGING) {
+                        previousPosition = viewPager.currentItem
+                    }
+                }
+
+                override fun onPageSelected(position: Int) {
+                    if (position == 0) return
+                    calendar = (liveCalendarList[position])[20].getDate()
+                    previousPosition = position
+                    calendarAdapter?.setSelectedDate(selectedDate)
+                    tvDate.text = calendar.year.toString() + "." + String.format("%02d", calendar.monthValue)
+
+                }
+            })
+        })
     }
 
 
@@ -130,6 +182,13 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
 
         tvDate.text = year.toString() + "." + String.format("%02d", month)
 
+        pickerY.setOnValueChangedListener { picker, oldVal, newVal ->
+            tvDate.text = newVal.toString() + "." + String.format("%02d", pickerM.value)
+        }
+
+        pickerM.setOnValueChangedListener { picker, oldVal, newVal ->
+            tvDate.text = pickerY.value.toString() + "." + String.format("%02d", newVal)
+        }
 //        year.setDisplayedValues(arrayOf("2019년", "2020년"))
     }
 
@@ -139,16 +198,14 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
     private fun setVisibleLayout() {
         if (isVisibleCalendar) {
             // calendar
-            gridView.visibility = View.VISIBLE
-            layoutDay.visibility = View.VISIBLE
+            viewPager.visibility = View.VISIBLE
             pickerY.visibility = View.GONE
             pickerM.visibility = View.GONE
             btnConfirm.visibility = View.VISIBLE
             imgTri.setImageResource(R.drawable.btn_dropdown_tri)
         } else {
             // picker
-            gridView.visibility = View.INVISIBLE
-            layoutDay.visibility = View.GONE
+            viewPager.visibility = View.INVISIBLE
             pickerY.visibility = View.VISIBLE
             pickerM.visibility = View.VISIBLE
             btnConfirm.visibility = View.GONE
@@ -156,93 +213,76 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
         }
     }
 
-    /**
-     * 그리드 뷰 아이템 리스너
-     */
-    fun setmItemClickListener(mItemClickListener: AdapterView.OnItemClickListener) {
-        this.mItemClickListener = mItemClickListener
-    }
-
-    /**
-     * 그리드 뷰
-     */
-    fun setGridAdapter(calendarAdapter: CalendarAdapter) {
-        this.calendarAdapter = calendarAdapter
-    }
-
-
-    /**
-     * 선택 날짜
-     */
-    private fun setSelectedDate(date: LocalDate) {
-        selectedDate = date
-        calendarAdapter.selectedDate = date
-    }
-
-    private fun setGridCalendar(date: String) {
-        calendar = LocalDate.parse(date)
-        getCalendar(calendar)
-        setSelectedDate(calendar)
-    }
-
-    private fun getCalendar(dateForCurrentMonth: LocalDate) {
-        setVisibleLayout()
-
-        calendarAdapter = CalendarAdapter(mContext, JWBaseActivity().getCalendar(dateForCurrentMonth), selectedDate, R.layout.dialog_calendar_cell)
-        gridView.adapter = calendarAdapter
-    }
-
-
     fun setBottomDialog(date: String,
                         onCloseListener: View.OnClickListener?,
                         onConfirmListener: ConfirmBtnClickListener?) {
+        setBottomDialog(date, onCloseListener, onConfirmListener, isFutureSelect = false, isSelectedDateArray = false)
 
-        onCloseListener?.let { setCloseBtnClickListener(it) }
-        onConfirmListener?.let { setConfirmBtnClickListener(it) }
+    }
+
+    fun setBottomDialog(date: String,
+                        onCloseListener: View.OnClickListener?,
+                        onConfirmListener: ConfirmBtnClickListener?,
+                        isFutureSelect: Boolean,
+                        isSelectedDateArray: Boolean) {
+
+        onCloseListener?.let { mCloseBtnClickListener = it }
+        onConfirmListener?.let { mConfirmBtnClickListener = it }
+
+        this.isFutureSelect = isFutureSelect
+        this.isSelectedDateArray = isSelectedDateArray
 
 
         // 다이얼로그 높이 설정
         layoutBottom.viewTreeObserver.addOnGlobalLayoutListener {
-            var height = layoutBottom.height
-            height = SizeConverterUtil(mContext).px(height.toFloat())
-            setPeekHeight(height.toFloat())
+            var bottomHeight = layoutBottom.height
+            bottomHeight = SizeConverterUtil(mContext).px(bottomHeight.toFloat())
+            setPeekHeight(bottomHeight.toFloat())
         }
 
-        setGridCalendar(date)
+        setCalendar(LocalDate.parse(date))
 
-//        setCancelable(false)
     }
 
     override fun onClick(v: View) {
         when (v) {
             btnClose -> {
+                // 닫기버튼
                 mCloseBtnClickListener?.let {
                     btnClose.setOnClickListener(it)
                 }
                 dismiss()
             }
-            tvDate -> {
+            tvDate, imgTri -> {
+                // 년월선택
                 isVisibleCalendar = !isVisibleCalendar
-                setVisibleLayout()
+
 
                 if (isVisibleCalendar) {
                     val year = pickerY.value
                     val month = pickerM.value
                     calendar = calendar.withYear(year)
                     calendar = calendar.withMonth(month)
-                    getCalendar(calendar)
 
-                    tvDate.text = year.toString() + "." + String.format("%02d", month)
+                    setCalendar(calendar)
+
+                } else {
+                    pickerY.value = calendar.year
+                    pickerM.value = calendar.monthValue
                 }
+
+                setVisibleLayout()
             }
             btnConfirm -> {
+                // 확인버튼
                 mConfirmBtnClickListener?.run {
-                    onConfirmClick(calendar)
+                    onConfirmClick(selectedDate)
                 }
                 dismiss()
             }
         }
     }
+
 }
 
 

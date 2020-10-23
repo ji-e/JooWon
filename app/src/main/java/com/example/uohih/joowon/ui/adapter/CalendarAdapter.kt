@@ -5,73 +5,96 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import com.example.uohih.joowon.ui.customView.CalendarDayInfo
+import android.widget.BaseAdapter
+import com.example.uohih.joowon.R
 import com.example.uohih.joowon.database.VacationData
+import com.example.uohih.joowon.model.CalendarDayInfo
 import kotlinx.android.synthetic.main.grid_item_worker_main.view.*
 import java.time.LocalDate
-
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
  * 캘린더 아답터
  * mContext: Context
- * arrayListDayInfo: ArrayList<CalendarDayInfo>: 캘린더 날짜 정보 리스트
- * date: Date
+ * listCalendarDayInfo: ArrayList<CalendarDayInfo>: 캘린더 날짜 정보 리스트
+ * selectedDate: Date: 선택된 날짜
  */
-class CalendarAdapter(private val mContext: Context, listDayInfo: ArrayList<CalendarDayInfo>,
-                      val date: LocalDate, val layout: Int) : BaseAdapter() {
-    var selectedDate = date
-    var arrayListDayInfo = listDayInfo
+class CalendarAdapter(private val mContext: Context, private val listCalendarDayInfo: ArrayList<CalendarDayInfo>,
+                      selectedDate: ArrayList<LocalDate>?, val layout: Int) : BaseAdapter() {
 
-    // 리스트 뷰
     private var vacationList = arrayListOf<VacationData>()
 
+    private var selectedDateArray = arrayListOf<LocalDate>()
+
+    private var isFutureSelect = false
+    private var isSelectedDateArray = false
+
+    var selectedDateClickListener: SelectedDateClickListener? = null
+
+    interface SelectedDateClickListener {
+        fun onSelectedDateClick(date: ArrayList<LocalDate>)
+    }
+
     override fun getCount(): Int {
-        return arrayListDayInfo.size
+        return listCalendarDayInfo.size
     }
 
     override fun getItem(position: Int): Any? {
-        return if (position >= count) null else arrayListDayInfo[position]
+        return if (position >= count) null else listCalendarDayInfo[position]
     }
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
 
+    init {
+        selectedDate?.let { selectedDateArray = selectedDate }
+    }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val day = arrayListDayInfo[position]
-        var convertView = convertView
+    override fun getView(position: Int, view: View?, parent: ViewGroup): View {
+        val day = listCalendarDayInfo[position]
+        var convertView = view
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(layout, parent, false)
         }
 
-        // 캘린더 날짜
         val cell = convertView?.calendar_cell
-        // 오늘 동그라미 이미지
         val today = convertView?.calendar_today
 
         val halfV = convertView?.calendar_half_v
         val allV = convertView?.calendar_all_v
 
-
-        /**
-         * ------------- 날짜 그리기 start -------------
-         */
-
         cell?.text = day.getDay()
-        if (day.isSameDay(selectedDate)) {
-            today?.visibility = View.VISIBLE
-        } else {
-            today?.visibility = View.INVISIBLE
+        cell?.setOnClickListener {
+            val now = (LocalDate.now().toString().replace("-", "")).toInt()
+            val selected = (day.getDate().toString().replace("-", "")).toInt()
+            if (isFutureSelect || now >= selected) {
+                day.getDate()?.let {
+
+                    if (isSelectedDateArray) {
+                        if (selectedDateArray.contains(it)) {
+                            selectedDateArray.remove(it)
+                        } else {
+                            selectedDateArray.add(it)
+                        }
+                    } else {
+                        selectedDateArray.clear()
+                        selectedDateArray.add(it)
+                    }
+
+                }
+                selectedDateClickListener?.onSelectedDateClick(selectedDateArray)
+                notifyDataSetChanged()
+            }
         }
 
+        cell?.setTextColor(mContext.getColor(R.color.c_cee59a))
+        today?.visibility = if (day.isSameDay(selectedDateArray)) View.VISIBLE else View.INVISIBLE
         halfV?.visibility = View.INVISIBLE
         allV?.visibility = View.INVISIBLE
+
         for (i in vacationList.indices) {
             if (((vacationList[i].date).toString()) == (day.getDate()).toString().replace("-", "")) {
                 if ((vacationList[i].use).toString() == "0.5") {
@@ -84,40 +107,36 @@ class CalendarAdapter(private val mContext: Context, listDayInfo: ArrayList<Cale
             }
         }
 
-
-        if (day.isInMonth()) {
-            when {
-                position % 7 + 1 == Calendar.SUNDAY -> cell?.setTextColor(Color.RED)
-                position % 7 + 1 == Calendar.SATURDAY -> cell?.setTextColor(Color.BLUE)
-                else -> cell?.setTextColor(Color.BLACK)
-            }
+        if (day.isSameDay(LocalDate.now())) {
+            cell?.setTextColor(mContext.getColor(R.color.c_cee59a))
         } else {
-            cell?.setTextColor(Color.GRAY)
+            if (day.isInMonth()) {
+                when {
+                    position % 7 + 1 == Calendar.SUNDAY -> cell?.setTextColor(Color.RED)
+                    position % 7 + 1 == Calendar.SATURDAY -> cell?.setTextColor(Color.BLUE)
+                    else -> cell?.setTextColor(Color.BLACK)
+                }
+            } else {
+                cell?.setTextColor(Color.GRAY)
+            }
         }
-//        }
-        /**
-         * ------------- 날짜 그리기 end -------------
-         */
 
         convertView?.tag = day
-
-
 
         return convertView!!
 
     }
 
-    fun setVacationData(vacationList: ArrayList<VacationData>) {
-        this.vacationList = vacationList
-        notifyDataSetChanged()
-
+    fun setFutureSelect(isFutureSelect: Boolean) {
+        this.isFutureSelect = isFutureSelect
     }
 
-    fun setListDayInfo(arrayListDayInfo: ArrayList<CalendarDayInfo>) {
-        this.arrayListDayInfo = arrayListDayInfo
-        notifyDataSetChanged()
+    fun setSelectedDate(selectedDateArray: ArrayList<LocalDate>) {
+        this.selectedDateArray = selectedDateArray
     }
 
-
+    fun setSelectedDateArray(isSelectedDateArray: Boolean) {
+        this.isSelectedDateArray = isSelectedDateArray
+    }
 
 }

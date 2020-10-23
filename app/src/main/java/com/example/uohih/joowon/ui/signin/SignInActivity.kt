@@ -347,10 +347,12 @@ class SignInActivity : JWBaseActivity() {
                     date,
                     null,
                     object : ConfirmBtnClickListener {
-                        override fun onConfirmClick(date: LocalDate) {
-                            LogUtil.e(date.month)
+                        override fun onConfirmClick(date: ArrayList<LocalDate>) {
+                            LogUtil.e(date)
                         }
-                    })
+                    },
+                    isFutureSelect = true,
+                    isSelectedDateArray = true)
         }
         calendarDialog.show()
 

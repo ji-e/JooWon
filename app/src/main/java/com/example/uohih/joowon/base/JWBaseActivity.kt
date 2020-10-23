@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.ui.customView.CalendarDayInfo
+import com.example.uohih.joowon.model.CalendarDayInfo
 import com.example.uohih.joowon.ui.customView.CustomLoadingBar
 import com.example.uohih.joowon.model.JW2002
 import com.example.uohih.joowon.repository.JWBaseRepository
