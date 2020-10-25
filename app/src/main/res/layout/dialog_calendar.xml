@@ -80,7 +80,7 @@
                 android:id="@+id/calendar_viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp290"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 replaceAll="@{calendarDialogVm.liveCalendarList}"
                 app:layout_constraintBottom_toTopOf="@+id/calendar_btnConfirm"
                 app:layout_constraintTop_toBottomOf="@id/calendar_line" />

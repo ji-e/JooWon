@@ -22,6 +22,7 @@ import com.example.uohih.joowon.util.DateCommonUtil
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.SizeConverterUtil
 import kotlinx.android.synthetic.main.dialog_calendar_grid.view.*
+import org.w3c.dom.Text
 import java.time.LocalDate
 
 /**
@@ -109,13 +110,13 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
 
                 override fun onBindViewHolder(holder: BaseRecyclerView.ViewHolder<DialogCalendarGridBinding>, position: Int) {
                     super.onBindViewHolder(holder, position)
-
+                    val gridview = holder.itemView.calendar_gridview
 
                     calendarAdapter = CalendarAdapter(mContext, liveCalendarList[position], selectedDate, R.layout.dialog_calendar_cell).apply {
                         setSelectedDateArray(isSelectedDateArray)
                         setFutureSelect(isFutureSelect)
                     }
-                    holder.itemView.calendar_gridview.adapter = calendarAdapter
+                    gridview.adapter = calendarAdapter
 
                     // 날짜 선택 리스너
                     calendarAdapter?.selectedDateClickListener = object : CalendarAdapter.SelectedDateClickListener {
@@ -125,6 +126,43 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                         }
                     }
 
+
+                    var preP=-1
+
+                    gridview.setOnTouchListener { view, motionEvent ->
+
+                        var action = motionEvent.actionMasked
+                        var currentXPosition = motionEvent.x
+                        var currentYPosition = motionEvent.y
+                        var position = gridview.pointToPosition( currentXPosition.toInt(), currentYPosition.toInt())
+                        var s = gridview.getItemIdAtPosition(position)
+                        var aaaa = gridview.getChildAt(position) as RelativeLayout
+
+
+
+
+                        if(preP != position){
+                            LogUtil.e(position,"::::::::::")
+                            calendarAdapter?.setTouch(position)
+                        }
+
+                        LogUtil.e(position)
+
+
+                        true
+
+                    }
+
+
+//                        public boolean onTouch(View v, MotionEvent me)
+//                        {
+//                            int action = me.getActionMasked(); // MotionEvent types such as ACTION_UP,ACTION_DOWN
+//                            float currentXPosition = me.getX();
+//                            float currentYPosition = me.getY();
+//                            int position = gridView.pointToPosition((int) currentXPosition, (int) currentYPosition); // Access text in the cell, or the object itself
+//                            String s = (String) gridView.getItemAtPosition(position);
+//                            TextView tv = (TextView) gridView.getChildAt(position);
+//                        }
                 }
 
             }

@@ -29,6 +29,10 @@ class CalendarAdapter(private val mContext: Context, private val listCalendarDay
 
     private var isFutureSelect = false
     private var isSelectedDateArray = false
+    private var isSelectedRang = false
+
+    private var firstPosition = -1
+    private var lastPosition = -1
 
     var selectedDateClickListener: SelectedDateClickListener? = null
 
@@ -66,6 +70,9 @@ class CalendarAdapter(private val mContext: Context, private val listCalendarDay
         val halfV = convertView?.calendar_half_v
         val allV = convertView?.calendar_all_v
 
+
+
+
         cell?.text = day.getDay()
         cell?.setOnClickListener {
             val now = (LocalDate.now().toString().replace("-", "")).toInt()
@@ -89,9 +96,21 @@ class CalendarAdapter(private val mContext: Context, private val listCalendarDay
                 notifyDataSetChanged()
             }
         }
+        cell?.setOnLongClickListener {
+            firstPosition = position
+            true
+        }
 
         cell?.setTextColor(mContext.getColor(R.color.c_cee59a))
-        today?.visibility = if (day.isSameDay(selectedDateArray)) View.VISIBLE else View.INVISIBLE
+        if (isSelectedRang) {
+            if (position in firstPosition..lastPosition) {
+                today?.visibility = View.VISIBLE
+            } else {
+                today?.visibility = View.GONE
+            }
+        } else {
+            today?.visibility = if (day.isSameDay(selectedDateArray)) View.VISIBLE else View.INVISIBLE
+        }
         halfV?.visibility = View.INVISIBLE
         allV?.visibility = View.INVISIBLE
 
@@ -137,6 +156,15 @@ class CalendarAdapter(private val mContext: Context, private val listCalendarDay
 
     fun setSelectedDateArray(isSelectedDateArray: Boolean) {
         this.isSelectedDateArray = isSelectedDateArray
+    }
+
+    fun setSelectedRangs(isSelectedRang: Boolean) {
+        this.isSelectedRang = isSelectedRang
+    }
+
+    fun setTouch(lastPosition: Int) {
+        this.lastPosition = lastPosition
+        notifyDataSetChanged()
     }
 
 }
