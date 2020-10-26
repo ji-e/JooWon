@@ -13,19 +13,20 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
         tools:context=".ui.signup.SignUpInitActiviy">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp60"
+            android:layout_marginTop="@dimen/dp50"
             android:background="@drawable/rectangle_r50_0035" />
 
         <View
             android:id="@+id/signin_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp70"
+            android:layout_marginTop="@dimen/dp55"
             android:background="@drawable/rectangle_r50_ffff" />
 
         <!--상단 타이틀 및 아이콘 바-->
@@ -52,7 +53,7 @@
 
                 <TextView
                     android:id="@+id/signin_tvSignIn"
-                    style="@style/Font_20_000000"
+                    style="@style/Font_24_000000"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp10"
@@ -64,7 +65,7 @@
                     style="@style/Font_12_000000"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp40"
-                    android:layout_marginTop="@dimen/dp25"
+                    android:layout_marginTop="@dimen/dp32"
                     android:background="@drawable/input_selector"
                     android:hint="@string/signin_email_hint"
                     android:inputType="textEmailAddress"
@@ -79,6 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/dp01"
                     android:layout_marginEnd="@dimen/dp10"
                     android:background="@drawable/btn_delete_selector"
                     android:onClick="onClickSignIn"
@@ -105,7 +107,7 @@
                     style="@style/Font_12_000000"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp40"
-                    android:layout_marginTop="@dimen/dp07"
+                    android:layout_marginTop="@dimen/dp08"
                     android:background="@drawable/input_selector"
                     android:hint="@string/signin_pw_hint"
                     android:inputType="textPassword"
@@ -134,6 +136,7 @@
                     style="@style/Font_10_f13e51"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp01"
                     app:argId="@{signInVm.signInFormState.passwordError}"
                     app:format="@{@string/string_format}"
                     app:layout_constraintStart_toStartOf="parent"
@@ -143,11 +146,11 @@
 
                 <CheckBox
                     android:id="@+id/signin_chkAutoSignIn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginTop="@dimen/dp02"
-                    android:layout_marginEnd="@dimen/dp10"
+                    android:layout_width="@dimen/dp14"
+                    android:layout_height="@dimen/dp14"
+                    android:layout_marginTop="@dimen/dp08"
+                    android:background="@drawable/btn_ckb_selector"
+                    android:button="@null"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/signin_tvPwErr" />
 
@@ -156,6 +159,7 @@
                     style="@style/Font_12_4a4a4a"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp05"
                     android:text="@string/signin_auto_signin"
                     app:layout_constraintBottom_toBottomOf="@id/signin_chkAutoSignIn"
                     app:layout_constraintStart_toEndOf="@id/signin_chkAutoSignIn"
@@ -166,7 +170,7 @@
                     style="@style/Font_16_ffffff"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp50"
-                    android:layout_marginTop="@dimen/dp05"
+                    android:layout_marginTop="@dimen/dp15"
                     android:background="@drawable/btn_bottom_r4_selector"
                     android:enabled="@{signInVm.signInFormState.dataValid}"
                     android:onClick="onClickSignIn"
@@ -188,9 +192,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:onClick="onClickSignIn"
-                        android:paddingTop="@dimen/dp16"
-                        android:paddingEnd="@dimen/dp16"
-                        android:paddingBottom="@dimen/dp16"
+                        android:paddingTop="@dimen/dp15"
+                        android:paddingEnd="@dimen/dp15"
+                        android:paddingBottom="@dimen/dp15"
                         android:text="@string/signin_sign_up" />
 
                     <TextView
@@ -198,7 +202,7 @@
                         style="@style/Font_12_4a4a4a"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/dp16"
+                        android:paddingTop="@dimen/dp15"
                         android:text="|" />
 
                     <TextView
@@ -207,7 +211,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:onClick="onClickSignIn"
-                        android:padding="@dimen/dp16"
+                        android:padding="@dimen/dp15"
                         android:text="@string/signin_find_pw" />
                 </LinearLayout>
 

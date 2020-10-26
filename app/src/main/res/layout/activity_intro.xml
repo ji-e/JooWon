@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="signInVm"
             type="com.example.uohih.joowon.ui.signin.SignInViewModel" />
@@ -14,6 +15,7 @@
         android:id="@+id/intro_activity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
         android:gravity="center"
         tools:context=".ui.intro.IntroActivity">
 

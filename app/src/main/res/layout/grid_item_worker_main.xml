@@ -40,7 +40,8 @@
             android:layout_width="@dimen/dp14"
             android:layout_height="@dimen/dp14"
             android:layout_gravity="center"
-            android:background="@drawable/circle" />
+            android:background="@drawable/circle"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/calendar_cell"

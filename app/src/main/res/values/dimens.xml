@@ -33,6 +33,8 @@
     <dimen name="dp29">29dp</dimen>
     <dimen name="dp30">30dp</dimen>
 
+    <dimen name="dp31">31dp</dimen>
+    <dimen name="dp32">32dp</dimen>
     <dimen name="dp35">35dp</dimen>
     <dimen name="dp38">38dp</dimen>
     <dimen name="dp39">39dp</dimen>
@@ -41,6 +43,7 @@
     <dimen name="dp50">50dp</dimen>
     <dimen name="dp55">55dp</dimen>
     <dimen name="dp60">60dp</dimen>
+    <dimen name="dp65">65dp</dimen>
     <dimen name="dp70">70dp</dimen>
     <dimen name="dp75">75dp</dimen>
     <dimen name="dp80">80dp</dimen>

@@ -1,9 +1,10 @@
 package com.example.uohih.joowon.ui.customView
 
+
 import android.content.Context
-import android.content.DialogInterface
-import android.graphics.Rect
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
 import android.widget.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.databinding.DataBindingUtil
@@ -22,8 +23,10 @@ import com.example.uohih.joowon.util.DateCommonUtil
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.SizeConverterUtil
 import kotlinx.android.synthetic.main.dialog_calendar_grid.view.*
-import org.w3c.dom.Text
 import java.time.LocalDate
+import kotlin.math.max
+import kotlin.math.min
+
 
 /**
  * 캘린더 다이얼로그
@@ -50,7 +53,8 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
     private val todayJson = DateCommonUtil().getToday()
 
     private var isFutureSelect = false
-    private var isSelectedDateArray = false
+    private var isSelectedMulti = false
+    private var isSelectedRang = false
     private var isVisibleCalendar = true
     private var previousPosition = 100
 
@@ -103,7 +107,7 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
         calendarDialogViewModel.liveCalendarList.observe(mContext as LifecycleOwner, Observer {
             val liveCalendarList = it ?: return@Observer
 
-            viewPager.adapter = object : BaseRecyclerView.Adapter<ArrayList<CalendarDayInfo>, DialogCalendarGridBinding>(
+            val viewPagerAdapter = object : BaseRecyclerView.Adapter<ArrayList<CalendarDayInfo>, DialogCalendarGridBinding>(
                     layoutResId = R.layout.dialog_calendar_grid,
                     bindingVariableId = BR.calendarInfo
             ) {
@@ -112,10 +116,15 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                     super.onBindViewHolder(holder, position)
                     val gridview = holder.itemView.calendar_gridview
 
-                    calendarAdapter = CalendarAdapter(mContext, liveCalendarList[position], selectedDate, R.layout.dialog_calendar_cell).apply {
-                        setSelectedDateArray(isSelectedDateArray)
-                        setFutureSelect(isFutureSelect)
-                    }
+                    calendarAdapter = CalendarAdapter(
+                            mContext,
+                            R.layout.dialog_calendar_cell,
+                            liveCalendarList[position],
+                            selectedDate,
+                            isFutureSelect,
+                            isSelectedMulti,
+                            isSelectedRang
+                    )
                     gridview.adapter = calendarAdapter
 
                     // 날짜 선택 리스너
@@ -127,45 +136,58 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                     }
 
 
-                    var preP=-1
+                    var prePosition = -1
+                    if (isSelectedRang) {
+                        gridview.setOnItemLongClickListener { adapterView, view, firstPosition, l ->
+                            gridview.setOnTouchListener { view, motionEvent ->
 
-                    gridview.setOnTouchListener { view, motionEvent ->
+                                val action = motionEvent.actionMasked
+                                val currentXPosition = motionEvent.x
+                                val currentYPosition = motionEvent.y
+                                val lastPosition = gridview.pointToPosition(currentXPosition.toInt(), currentYPosition.toInt())
 
-                        var action = motionEvent.actionMasked
-                        var currentXPosition = motionEvent.x
-                        var currentYPosition = motionEvent.y
-                        var position = gridview.pointToPosition( currentXPosition.toInt(), currentYPosition.toInt())
-                        var s = gridview.getItemIdAtPosition(position)
-                        var aaaa = gridview.getChildAt(position) as RelativeLayout
+                                if (action == MotionEvent.ACTION_UP) {
+                                    calendarAdapter?.setRangesPosition(-1, -1)
+                                    gridview.setOnTouchListener(null)
+                                    val fP = min(firstPosition, lastPosition)
+                                    var lP = max(firstPosition, lastPosition)
 
+                                    val now = (LocalDate.now().toString().replace("-", "")).toInt()
+                                    val selected = (liveCalendarList[position][lP].getDate().toString().replace("-", "")).toInt()
+                                    if (!isFutureSelect && now < selected) {
+                                         calendarAdapter?.getCurrentDatePosition()?.let {  it1-> lP = it1 }
+                                    }
 
+                                    selectedDate.clear()
+                                    for (i in fP..lP) {
+                                        liveCalendarList[position][i].getDate()?.let { it1 -> selectedDate.add(it1) }
+                                    }
+                                    calendarAdapter?.setSelectedDate(selectedDate)
+                                }
 
+                                if (prePosition != lastPosition) {
+                                    prePosition = lastPosition
 
-                        if(preP != position){
-                            LogUtil.e(position,"::::::::::")
-                            calendarAdapter?.setTouch(position)
+                                    if (lastPosition != -1) {
+                                        calendarAdapter?.setRangesPosition(firstPosition, lastPosition)
+                                    }
+                                    calendarAdapter?.notifyDataSetChanged()
+
+                                }
+
+                                false
+                            }
+                            false
+
                         }
-
-                        LogUtil.e(position)
-
-
-                        true
-
                     }
 
 
-//                        public boolean onTouch(View v, MotionEvent me)
-//                        {
-//                            int action = me.getActionMasked(); // MotionEvent types such as ACTION_UP,ACTION_DOWN
-//                            float currentXPosition = me.getX();
-//                            float currentYPosition = me.getY();
-//                            int position = gridView.pointToPosition((int) currentXPosition, (int) currentYPosition); // Access text in the cell, or the object itself
-//                            String s = (String) gridView.getItemAtPosition(position);
-//                            TextView tv = (TextView) gridView.getChildAt(position);
-//                        }
                 }
 
             }
+
+            viewPager.adapter = viewPagerAdapter
 
             // 뷰페이저 가운데로 인덱스변경
             viewPager.visibility = View.INVISIBLE
@@ -173,13 +195,16 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                 viewPager.setCurrentItem(100, false)
                 viewPager.visibility = View.VISIBLE
             }
-//            viewPager.remove
+
 
             // 뷰페이저 페이징변환 리스너
             viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageScrollStateChanged(state: Int) {
                     if (state == ViewPager.SCROLL_STATE_DRAGGING) {
                         previousPosition = viewPager.currentItem
+                    }
+                    viewPager.post {
+                        viewPagerAdapter.notifyDataSetChanged()
                     }
                 }
 
@@ -254,7 +279,7 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
     fun setBottomDialog(date: String,
                         onCloseListener: View.OnClickListener?,
                         onConfirmListener: ConfirmBtnClickListener?) {
-        setBottomDialog(date, onCloseListener, onConfirmListener, isFutureSelect = false, isSelectedDateArray = false)
+        setBottomDialog(date, onCloseListener, onConfirmListener, isFutureSelect = false, isSelectedMulti = false, isSelectedRang = false)
 
     }
 
@@ -262,13 +287,15 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                         onCloseListener: View.OnClickListener?,
                         onConfirmListener: ConfirmBtnClickListener?,
                         isFutureSelect: Boolean,
-                        isSelectedDateArray: Boolean) {
+                        isSelectedMulti: Boolean,
+                        isSelectedRang: Boolean) {
 
         onCloseListener?.let { mCloseBtnClickListener = it }
         onConfirmListener?.let { mConfirmBtnClickListener = it }
 
         this.isFutureSelect = isFutureSelect
-        this.isSelectedDateArray = isSelectedDateArray
+        this.isSelectedMulti = isSelectedMulti
+        this.isSelectedRang = isSelectedRang
 
 
         // 다이얼로그 높이 설정

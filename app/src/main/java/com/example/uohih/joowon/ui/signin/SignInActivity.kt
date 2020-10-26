@@ -66,12 +66,16 @@ class SignInActivity : JWBaseActivity() {
             signInVm = signInViewModel
         }
 
-
         initView()
         initNaverLoginData()
 
 
 //        signInViewModel.getSignInState()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down)
     }
 
     private fun initView() {
@@ -351,8 +355,9 @@ class SignInActivity : JWBaseActivity() {
                             LogUtil.e(date)
                         }
                     },
-                    isFutureSelect = true,
-                    isSelectedDateArray = true)
+                    isFutureSelect = false,
+                    isSelectedMulti = false,
+                    isSelectedRang = true)
         }
         calendarDialog.show()
 

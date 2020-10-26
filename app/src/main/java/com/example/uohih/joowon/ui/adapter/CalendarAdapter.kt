@@ -9,6 +9,7 @@ import android.widget.BaseAdapter
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.database.VacationData
 import com.example.uohih.joowon.model.CalendarDayInfo
+import com.example.uohih.joowon.util.LogUtil
 import kotlinx.android.synthetic.main.grid_item_worker_main.view.*
 import java.time.LocalDate
 import java.util.*
@@ -20,19 +21,21 @@ import java.util.*
  * listCalendarDayInfo: ArrayList<CalendarDayInfo>: 캘린더 날짜 정보 리스트
  * selectedDate: Date: 선택된 날짜
  */
-class CalendarAdapter(private val mContext: Context, private val listCalendarDayInfo: ArrayList<CalendarDayInfo>,
-                      selectedDate: ArrayList<LocalDate>?, val layout: Int) : BaseAdapter() {
+class CalendarAdapter(private val mContext: Context, val layout: Int, private val listCalendarDayInfo: ArrayList<CalendarDayInfo>,
+                      selectedDate: ArrayList<LocalDate>?,
+                      val isFutureSelect: Boolean, val isSelectedMulti: Boolean, val isSelectedRanges: Boolean) : BaseAdapter() {
 
     private var vacationList = arrayListOf<VacationData>()
 
     private var selectedDateArray = arrayListOf<LocalDate>()
 
-    private var isFutureSelect = false
-    private var isSelectedDateArray = false
-    private var isSelectedRang = false
+//    private var isFutureSelect = false
+//    private var isSelectedDateArray = false
+//    private var isSelectedRanges = false
 
     private var firstPosition = -1
     private var lastPosition = -1
+    private var currentPosition = -1
 
     var selectedDateClickListener: SelectedDateClickListener? = null
 
@@ -71,44 +74,44 @@ class CalendarAdapter(private val mContext: Context, private val listCalendarDay
         val allV = convertView?.calendar_all_v
 
 
-
+        today?.visibility = View.GONE
 
         cell?.text = day.getDay()
-        cell?.setOnClickListener {
-            val now = (LocalDate.now().toString().replace("-", "")).toInt()
-            val selected = (day.getDate().toString().replace("-", "")).toInt()
-            if (isFutureSelect || now >= selected) {
-                day.getDate()?.let {
+        val now = (LocalDate.now().toString().replace("-", "")).toInt()
+        val selected = (day.getDate().toString().replace("-", "")).toInt()
+        if (isFutureSelect || now >= selected) {
+            if (isSelectedRanges) {
+                if (position in firstPosition..lastPosition || position in lastPosition..firstPosition) {
+                    if (firstPosition != -1 && lastPosition != -1) {
+                        today?.visibility = View.VISIBLE
+                    }
+                } else {
+                    today?.visibility = View.INVISIBLE
+                }
+            } else {
+                cell?.setOnClickListener {
 
-                    if (isSelectedDateArray) {
-                        if (selectedDateArray.contains(it)) {
-                            selectedDateArray.remove(it)
+                    day.getDate()?.let {
+
+                        if (isSelectedMulti) {
+                            if (selectedDateArray.contains(it)) {
+                                selectedDateArray.remove(it)
+                            } else {
+                                selectedDateArray.add(it)
+                            }
                         } else {
+                            selectedDateArray.clear()
                             selectedDateArray.add(it)
                         }
-                    } else {
-                        selectedDateArray.clear()
-                        selectedDateArray.add(it)
+
                     }
-
+                    selectedDateClickListener?.onSelectedDateClick(selectedDateArray)
+                    notifyDataSetChanged()
                 }
-                selectedDateClickListener?.onSelectedDateClick(selectedDateArray)
-                notifyDataSetChanged()
             }
-        }
-        cell?.setOnLongClickListener {
-            firstPosition = position
-            true
         }
 
-        cell?.setTextColor(mContext.getColor(R.color.c_cee59a))
-        if (isSelectedRang) {
-            if (position in firstPosition..lastPosition) {
-                today?.visibility = View.VISIBLE
-            } else {
-                today?.visibility = View.GONE
-            }
-        } else {
+        if (firstPosition == -1 && lastPosition == -1) {
             today?.visibility = if (day.isSameDay(selectedDateArray)) View.VISIBLE else View.INVISIBLE
         }
         halfV?.visibility = View.INVISIBLE
@@ -128,6 +131,7 @@ class CalendarAdapter(private val mContext: Context, private val listCalendarDay
 
         if (day.isSameDay(LocalDate.now())) {
             cell?.setTextColor(mContext.getColor(R.color.c_cee59a))
+            currentPosition = position
         } else {
             if (day.isInMonth()) {
                 when {
@@ -146,25 +150,33 @@ class CalendarAdapter(private val mContext: Context, private val listCalendarDay
 
     }
 
-    fun setFutureSelect(isFutureSelect: Boolean) {
-        this.isFutureSelect = isFutureSelect
-    }
 
     fun setSelectedDate(selectedDateArray: ArrayList<LocalDate>) {
         this.selectedDateArray = selectedDateArray
+        notifyDataSetChanged()
     }
 
-    fun setSelectedDateArray(isSelectedDateArray: Boolean) {
-        this.isSelectedDateArray = isSelectedDateArray
-    }
+//    fun setFutureSelect(isFutureSelect: Boolean) {
+//        this.isFutureSelect = isFutureSelect
+//        notifyDataSetChanged()
+//    }
+//    fun setSelectedDateArray(isSelectedDateArray: Boolean) {
+//        this.isSelectedDateArray = isSelectedDateArray
+//        notifyDataSetChanged()
+//    }
+//
+//    fun setSelectedRanges(isSelectedRanges: Boolean) {
+//        this.isSelectedRanges = isSelectedRanges
+//        notifyDataSetChanged()
+//    }
 
-    fun setSelectedRangs(isSelectedRang: Boolean) {
-        this.isSelectedRang = isSelectedRang
-    }
-
-    fun setTouch(lastPosition: Int) {
+    fun setRangesPosition(firstPosition: Int, lastPosition: Int) {
+        this.firstPosition = firstPosition
         this.lastPosition = lastPosition
         notifyDataSetChanged()
     }
 
+    fun getCurrentDatePosition():Int {
+        return currentPosition
+    }
 }

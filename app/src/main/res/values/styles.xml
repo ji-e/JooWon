@@ -8,6 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlHighlight">@color/c_22004680</item>
         <item name="colorControlNormal">@color/c_cccccc</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorPrimaryDark">@color/c_ffffff</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -126,6 +129,13 @@
         <!--<item name="fontFamily">@font/roboto_r</item>-->
         <item name="android:textColor">@color/c_000000</item>
         <item name="android:textSize">@dimen/dp20</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Font_24_000000">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_000000</item>
+        <item name="android:textSize">@dimen/dp24</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 

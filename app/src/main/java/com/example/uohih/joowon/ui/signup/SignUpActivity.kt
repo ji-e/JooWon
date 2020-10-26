@@ -16,6 +16,7 @@ import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.databinding.ActivitySignupBinding
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 
@@ -43,16 +44,11 @@ class SignUpActivity : JWBaseActivity() {
             signUpVm = signUpViewModel
         }
 
-//        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
         overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up)
 
         initView()
     }
 
-    override fun onDestroy() {
-        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down)
-        super.onDestroy()
-    }
 
     private fun initView() {
         edtEmail = binding.signupEdtEmail
