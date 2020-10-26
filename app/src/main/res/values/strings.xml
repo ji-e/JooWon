@@ -116,7 +116,7 @@
     <string name="signup_pw">비밀번호</string>
     <string name="signup_pw2">비밀번호 재입력</string>
     <string name="signup_email_hint">이메일을 입력해주세요.</string>
-    <string name="signup_pw_hint">비밀번호를 영문, 숫자, 특수문자 조합으로 입력해주세요.</string>
+    <string name="signup_pw_hint">영문, 숫자, 특수문자 조합으로 입력해주세요.</string>
     <string name="signup_pw2_hint">비밀번호를 다시 한번 입력해주세요.</string>
     <string name="signup_email_err">이메일 형식으로 입력해주세요.</string>
     <string name="signup_email_confirm">사용가능한 이메일입니다.</string>

@@ -43,7 +43,15 @@ class SignUpActivity : JWBaseActivity() {
             signUpVm = signUpViewModel
         }
 
+//        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
+        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up)
+
         initView()
+    }
+
+    override fun onDestroy() {
+        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down)
+        super.onDestroy()
     }
 
     private fun initView() {
