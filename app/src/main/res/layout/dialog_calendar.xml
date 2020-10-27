@@ -85,21 +85,6 @@
                 app:layout_constraintBottom_toTopOf="@+id/calendar_btnConfirm"
                 app:layout_constraintTop_toBottomOf="@id/calendar_line" />
 
-
-            <!--            <GridView-->
-            <!--                android:id="@+id/calendar_gridview"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginStart="@dimen/dp10"-->
-            <!--                android:layout_marginEnd="@dimen/dp10"-->
-            <!--                android:gravity="center"-->
-            <!--                android:numColumns="7"-->
-            <!--                android:stretchMode="columnWidth"-->
-            <!--                android:visibility="invisible"-->
-            <!--                app:layout_constraintBottom_toTopOf="@+id/calendar_btnConfirm"-->
-            <!--                app:layout_constraintTop_toBottomOf="@id/calendar_layDay"-->
-            <!--                tools:listitem="@layout/dialog_calendar_cell" />-->
-
             <NumberPicker
                 android:id="@+id/calendar_pickerY"
                 android:layout_width="0dp"

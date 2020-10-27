@@ -84,6 +84,12 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="Font_13_4a4a4a">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_4a4a4a</item>
+        <item name="android:textSize">@dimen/dp13</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
     <style name="Font_14_000000">
         <!--<item name="fontFamily">@font/roboto_r</item>-->
         <item name="android:textColor">@color/c_000000</item>
@@ -139,10 +145,24 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="Font_17_000000">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_000000</item>
+        <item name="android:textSize">@dimen/dp17</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <style name="Font_17_ffffff">
         <!--<item name="fontFamily">@font/roboto_r</item>-->
         <item name="android:textColor">@color/c_ffffff</item>
         <item name="android:textSize">@dimen/dp17</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Font_18_000000">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_000000</item>
+        <item name="android:textSize">@dimen/dp18</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 
@@ -157,6 +177,13 @@
         <!--<item name="fontFamily">@font/roboto_r</item>-->
         <item name="android:textColor">@color/c_000000</item>
         <item name="android:textSize">@dimen/dp20</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Font_22_000000">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_000000</item>
+        <item name="android:textSize">@dimen/dp22</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 

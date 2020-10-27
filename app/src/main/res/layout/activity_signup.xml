@@ -19,14 +19,14 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp45"
+            android:layout_marginTop="@dimen/dp35"
             android:background="@drawable/shadow" />
 
         <View
             android:id="@+id/signup_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp55"
+            android:layout_marginTop="@dimen/dp45"
             android:background="@drawable/rectangle_r50_ffff" />
 
         <ScrollView

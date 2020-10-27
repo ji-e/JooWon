@@ -22,6 +22,7 @@
     <string name="mainList_phone">Phone</string>
     <string name="mainList_balance">Balance</string>
     <string name="mainList_vacation">Vacation</string>
+    <string name="mainList_search_hint">이름 또는 전화번호를 입력해주세요.</string>
 
     <!--WorkerInsertActivity-->
     <string name="workerInsert_title">직원등록</string>

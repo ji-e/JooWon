@@ -16,10 +16,13 @@ import org.json.JSONObject
 class MainListViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : AndroidViewModel(application) {
     private val _isLoading = MutableLiveData<Boolean>()
     private var _jw3001Data = MutableLiveData<JW3001>()
+    private val _searchData = MutableLiveData<Boolean>()
 
     val isLoading: LiveData<Boolean> = _isLoading
     val jw3001Data: LiveData<JW3001> = _jw3001Data
+    val searchData: LiveData<Boolean> = _searchData
 
+    var initEmployeeList = mutableListOf<JW3001ResBodyList>()
     val liveEmployeeList = MutableLiveData<List<JW3001ResBodyList>>()
 
     /**
@@ -59,6 +62,7 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
                 }
 
                 liveEmployeeList.postValue(employeeList)
+                initEmployeeList = employeeList
 
                 _jw3001Data.value = jw3001Data
             }
@@ -71,6 +75,23 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
                 _isLoading.value = false
             }
         })
+    }
+
+
+    /**
+     * 검색결과리스트가져오기
+     */
+    fun getSearchResultList(edtText: String) {
+        val employeeList = mutableListOf<JW3001ResBodyList>()
+
+        for (i in 0 until initEmployeeList.size) {
+            val list = initEmployeeList[i]
+            if (list.name.toString().contains(edtText) || list.phone_number.toString().contains(edtText)) {
+                employeeList.add(list)
+            }
+        }
+        liveEmployeeList.postValue(employeeList)
+        _searchData.value = true
     }
 
 }

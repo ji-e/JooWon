@@ -159,6 +159,7 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                                     }
 
                                     selectedDate.clear()
+
                                     for (i in fP..lP) {
                                         liveCalendarList[position][i].getDate()?.let { it1 -> selectedDate.add(it1) }
                                     }
@@ -178,13 +179,9 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                                 false
                             }
                             false
-
                         }
                     }
-
-
                 }
-
             }
 
             viewPager.adapter = viewPagerAdapter

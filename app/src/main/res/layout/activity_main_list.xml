@@ -28,17 +28,71 @@
             app:btnWrite="true"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/mainList_recyclerView"
-            replaceAll="@{mainListVm.liveEmployeeList}"
+        <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:divider="@color/c_ffffff"
-            android:dividerHeight="@dimen/dp01"
+            android:layout_marginTop="@dimen/dp21"
+            android:background="@color/c_efefef"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/mainList_titleView"
-            tools:listitem="@layout/list_item_main_list" />
+            app:layout_constraintTop_toTopOf="@+id/mainList_edtSearch" />
+
+
+        <EditText
+            android:id="@+id/mainList_edtSearch"
+            style="@style/Font_15_000000"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp45"
+            android:layout_marginStart="@dimen/dp20"
+            android:layout_marginEnd="@dimen/dp20"
+            android:background="@drawable/input_selector"
+            android:hint="@string/mainList_search_hint"
+            android:inputType="textEmailAddress"
+            android:paddingStart="@dimen/dp40"
+            android:paddingEnd="@dimen/dp30"
+            android:singleLine="true"
+            app:layout_constraintTop_toBottomOf="@id/mainList_titleView" />
+
+        <ImageButton
+            android:id="@+id/mainList_btnSearchDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dp01"
+            android:layout_marginEnd="@dimen/dp10"
+            android:background="@drawable/btn_delete_selector"
+            android:onClick="onClickMainList"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/mainList_edtSearch"
+            app:layout_constraintEnd_toEndOf="@id/mainList_edtSearch"
+            app:layout_constraintTop_toTopOf="@id/mainList_edtSearch"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp05"
+            android:src="@drawable/btn_search_nor"
+            app:layout_constraintBottom_toBottomOf="@id/mainList_edtSearch"
+            app:layout_constraintStart_toStartOf="@id/mainList_edtSearch"
+            app:layout_constraintTop_toTopOf="@id/mainList_edtSearch" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/dp20"
+            android:background="@drawable/rectangle_r4_cccccc"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mainList_edtSearch">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mainList_recyclerView"
+                replaceAll="@{mainListVm.liveEmployeeList}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/list_item_main_list" />
+        </RelativeLayout>
 
         <com.example.uohih.joowon.ui.customView.DraggableFloatingButton
             android:id="@+id/mainList_btnPlus"
@@ -55,7 +109,7 @@
             android:onClick="onClickMainList"
             android:text="로그아웃"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/main_list_btn_session"
@@ -64,7 +118,7 @@
             android:onClick="onClickMainList"
             android:text="세션확인"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/main_list_btn_signout" />
+            app:layout_constraintStart_toEndOf="@id/main_list_btn_signout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

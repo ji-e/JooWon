@@ -107,7 +107,8 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
         val mLayoutRight = itemView.mainList_rightView    //오른쪽 스와이프
 
         val mTvName = view.mainList_tvName                //이름
-        val mTvJoin = view.mainList_tvJoin                //입사날짜
+
+        //        val mTvJoin = view.mainList_tvJoin                //입사날짜
         val mTvPhone = view.mainList_tvPhone              //핸드폰번호
         val mTvVacation = view.mainList_tvVacation        //휴가
         val mImgPeople = view.mainList_imgPeople          //프로필 사진

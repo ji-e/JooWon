@@ -2,8 +2,13 @@ package com.example.uohih.joowon.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.widget.EditText
+import android.widget.ImageButton
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.adapters.TextViewBindingAdapter
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -39,8 +44,9 @@ class MainListActivity : JWBaseActivity() {
     // back key exit
     private lateinit var backPressCloseHandler: BackPressCloseHandler
 
+    private lateinit var edtSearch: EditText
+    private lateinit var btnSearchDelete: ImageButton
     private lateinit var recyclerView: RecyclerView
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +79,7 @@ class MainListActivity : JWBaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        edtSearch.setText("")
 
         val jsonObject = JsonObject()
         jsonObject.addProperty("methodid", Constants.JW3001)
@@ -80,8 +87,29 @@ class MainListActivity : JWBaseActivity() {
     }
 
     private fun initView() {
+
+        edtSearch = binding.mainListEdtSearch
+        btnSearchDelete = binding.mainListBtnSearchDelete
         recyclerView = binding.mainListRecyclerView
 
+        edtSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                mainListViewModel.getSearchResultList(edtSearch.text.toString())
+            }
+
+            override fun beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {
+                btnSearchDelete.visibility =
+                        if (charSequence.isNotEmpty()) View.VISIBLE
+                        else View.GONE
+            }
+
+        })
+
+
+        // 직원추가하기
         binding.mainListBtnPlus.setDFBtnListener(object : DraggableFloatingButton.DFBtnListener {
             override fun onDFBtnDrag() {
 
@@ -99,7 +127,7 @@ class MainListActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
-        mainListViewModel.isLoading.observe(this@MainListActivity, Observer {
+        mainListViewModel.isLoading.observe(thisActivity, Observer {
             val isLoading = it ?: return@Observer
 
             if (isLoading) {
@@ -109,12 +137,19 @@ class MainListActivity : JWBaseActivity() {
             }
         })
 
-        mainListViewModel.jw3001Data.observe(this@MainListActivity, Observer {
+        mainListViewModel.jw3001Data.observe(thisActivity, Observer {
             val jw3001Data = it ?: return@Observer
-//            employeeList = jw3001Data.resbody?.employeeList
-
             setData()
         })
+
+        mainListViewModel.searchData.observe(thisActivity, Observer {
+            val searchData = it ?: return@Observer
+
+            if (searchData) {
+                setData()
+            }
+        })
+
 
     }
 
@@ -161,22 +196,6 @@ class MainListActivity : JWBaseActivity() {
 //                }
             }
         }
-
-
-//        recyclerView.mainList_imgPeople.visibility = View.GONE
-//            mAdapter.setClickListener(object : MainListAdapter.ClickListener {
-//                override fun onmClickEvent(bundle: Bundle) {
-//                    showLoading()
-//                    val intent = Intent(mContext, WorkerMainActivity::class.java)
-//                    intent.putExtra("worker", bundle)
-//                    startActivity(intent)
-//                }
-//
-//            })
-//        }
-
-//        main_list_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-
     }
 
 

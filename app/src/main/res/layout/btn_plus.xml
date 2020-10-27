@@ -3,10 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/btn_plus_selector"
-        android:layout_margin="@dimen/dp20" />
+    <RelativeLayout
+        android:layout_width="@dimen/dp55"
+        android:layout_height="@dimen/dp55"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/dp20"
+        android:background="@drawable/shape_ffff_oval"
+        android:clipToPadding="false"
+        android:elevation="@dimen/dp04">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/btn_plus_selector" />
+    </RelativeLayout>
+
 
 </RelativeLayout>
