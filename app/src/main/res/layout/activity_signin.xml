@@ -69,13 +69,12 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dp01"
                     android:layout_marginEnd="@dimen/dp10"
                     android:background="@drawable/btn_delete_selector"
                     android:onClick="onClickSignIn"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/signin_edtEmail"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/signin_edtEmail"
                     app:layout_constraintTop_toTopOf="@id/signin_edtEmail"
                     tools:visibility="visible" />
 
@@ -84,6 +83,7 @@
                     style="@style/Font_12_f13e51"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp01"
                     app:argId="@{signInVm.signInFormState.emailMsg}"
                     app:format="@{@string/string_format}"
                     app:layout_constraintStart_toStartOf="parent"
@@ -116,7 +116,7 @@
                     android:button="@null"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/signin_edtPw"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/signin_edtPw"
                     app:layout_constraintTop_toTopOf="@id/signin_edtPw"
                     tools:visibility="visible" />
 
