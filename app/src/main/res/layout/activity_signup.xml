@@ -19,8 +19,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp50"
-            android:background="@drawable/rectangle_r50_0035" />
+            android:layout_marginTop="@dimen/dp45"
+            android:background="@drawable/shadow" />
 
         <View
             android:id="@+id/signup_background"
@@ -28,17 +28,6 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/dp55"
             android:background="@drawable/rectangle_r50_ffff" />
-
-        <!--상단 타이틀 및 아이콘 바-->
-        <com.example.uohih.joowon.ui.customView.TopTitleView
-            android:id="@+id/signup_titleView"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp60"
-            android:gravity="center_vertical"
-            android:visibility="gone"
-            app:btnClose="true"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tvTitle="@string/signup_title" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -79,9 +68,9 @@
 
                 <EditText
                     android:id="@+id/signup_edtEmail"
-                    style="@style/Font_12_000000"
+                    style="@style/Font_15_000000"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp40"
+                    android:layout_height="@dimen/dp45"
                     android:layout_marginTop="@dimen/dp32"
                     android:background="@drawable/input_selector"
                     android:hint="@string/signup_email_hint"
@@ -110,7 +99,7 @@
                 <Button
                     android:id="@+id/signup_btnEmailConfirm"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp40"
+                    android:layout_height="@dimen/dp45"
                     android:layout_marginTop="@dimen/dp32"
                     android:background="@drawable/btn_confirm_selector"
                     android:enabled="@{signUpVm.signUpFormState.isEmailOverlapValid}"
@@ -127,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp01"
                     android:textColor="@{signUpVm.jW1001Data.resbody.emailValid.equals(&quot;N&quot;)?  @color/c_004680 : @color/c_f13e51}"
-                    android:textSize="@dimen/dp10"
+                    android:textSize="@dimen/dp12"
                     app:argId="@{signUpVm.signUpFormState.emailMsg}"
                     app:format="@{@string/string_format}"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -137,15 +126,17 @@
 
                 <EditText
                     android:id="@+id/signup_edtPw"
-                    style="@style/Font_12_000000"
+                    style="@style/Font_15_000000"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp40"
+                    android:layout_height="@dimen/dp45"
                     android:layout_marginTop="@dimen/dp08"
                     android:background="@drawable/input_selector"
+                    android:ellipsize="end"
                     android:hint="@string/signup_pw_hint"
                     android:inputType="textPassword"
                     android:maxLength="15"
                     android:paddingStart="@dimen/dp10"
+                    android:paddingEnd="@dimen/dp16"
                     android:singleLine="true"
                     app:layout_constraintTop_toBottomOf="@id/signup_tvEmailErr" />
 
@@ -166,7 +157,7 @@
 
                 <TextView
                     android:id="@+id/signup_tvPwErr"
-                    style="@style/Font_10_f13e51"
+                    style="@style/Font_12_f13e51"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp01"
@@ -178,15 +169,17 @@
 
                 <EditText
                     android:id="@+id/signup_edtPw2"
-                    style="@style/Font_12_000000"
+                    style="@style/Font_15_000000"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp40"
+                    android:layout_height="@dimen/dp45"
                     android:layout_marginTop="@dimen/dp08"
                     android:background="@drawable/input_selector"
+                    android:ellipsize="end"
                     android:hint="@string/signup_pw2_hint"
                     android:inputType="textPassword"
                     android:maxLength="15"
                     android:paddingStart="@dimen/dp10"
+                    android:paddingEnd="@dimen/dp16"
                     android:singleLine="true"
                     app:layout_constraintTop_toBottomOf="@id/signup_tvPwErr" />
 
@@ -206,7 +199,7 @@
                     tools:visibility="visible" />
 
                 <TextView
-                    style="@style/Font_10_f13e51"
+                    style="@style/Font_12_f13e51"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp01"
@@ -222,7 +215,7 @@
 
         <Button
             android:id="@+id/signup_btnSignup"
-            style="@style/Font_16_ffffff"
+            style="@style/Font_18_ffffff"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp60"
             android:background="@drawable/btn_bottom_selector"

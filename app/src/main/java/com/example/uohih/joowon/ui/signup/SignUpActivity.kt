@@ -95,6 +95,10 @@ class SignUpActivity : JWBaseActivity() {
 
     fun onClickSignUp(view: View) {
         when (view) {
+            binding.signupBtnClose -> {
+                // 닫기
+                finish()
+            }
             binding.signupBtnSignup -> {
                 // 회원가입
                 signUp()

@@ -56,6 +56,13 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="Font_12_f13e51">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_f13e51</item>
+        <item name="android:textSize">@dimen/dp12</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <style name="Font_12_cccccc">
         <!--<item name="fontFamily">@font/roboto_r</item>-->
         <item name="android:textColor">@color/c_cccccc</item>
@@ -97,6 +104,13 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="Font_15_4a4a4a">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_4a4a4a</item>
+        <item name="android:textSize">@dimen/dp15</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <style name="Font_15_f13e51">
         <!--<item name="fontFamily">@font/roboto_r</item>-->
         <item name="android:textColor">@color/c_f13e51</item>
@@ -122,6 +136,20 @@
         <!--<item name="fontFamily">@font/roboto_r</item>-->
         <item name="android:textColor">@color/c_000000</item>
         <item name="android:textSize">@dimen/dp16</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Font_17_ffffff">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_ffffff</item>
+        <item name="android:textSize">@dimen/dp17</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Font_18_ffffff">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_ffffff</item>
+        <item name="android:textSize">@dimen/dp18</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 
