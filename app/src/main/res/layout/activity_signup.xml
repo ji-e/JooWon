@@ -14,134 +14,58 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/c_ffffff"
-        tools:context=".ui.signup.SignUpActivity">
+        tools:context=".ui.signup.SignUpInitActiviy">
 
-        <View
+        <!--상단 타이틀 및 아이콘 바-->
+        <com.example.uohih.joowon.ui.customView.TopTitleView
+            android:id="@+id/signup_titleView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp35"
-            android:background="@drawable/shadow" />
+            android:layout_height="@dimen/dp60"
+            android:gravity="center_vertical"
+            app:btnBack="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tvTitle="@string/signup_title" />
 
-        <View
-            android:id="@+id/signup_background"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp45"
-            android:background="@drawable/rectangle_r50_ffff" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="1"
             android:fillViewport="true"
-            android:paddingStart="@dimen/dp40"
-            android:paddingTop="@dimen/dp30"
-            android:paddingEnd="@dimen/dp40"
-            android:scrollbars="none"
-            app:layout_constraintBottom_toTopOf="@id/signup_btnSignup"
-            app:layout_constraintTop_toTopOf="@id/signup_background">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signup_titleView">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:padding="@dimen/dp30">
 
                 <TextView
-                    android:id="@+id/signup_tvSignUp"
-                    style="@style/Font_24_000000"
+                    android:id="@+id/signup_tvPw"
+                    style="@style/Font_22_000000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp20"
-                    android:text="@string/signup_title"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:text="@string/signin_pw_tv"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/signup_btnClose"
-                    android:layout_width="@dimen/dp40"
-                    android:layout_height="@dimen/dp40"
-                    android:background="@drawable/btn_close_selector"
-                    android:onClick="onClickSignUp"
-                    app:layout_constraintBottom_toBottomOf="@id/signup_tvSignUp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/signup_tvSignUp" />
-
-
-                <EditText
-                    android:id="@+id/signup_edtEmail"
-                    style="@style/Font_15_000000"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp45"
-                    android:layout_marginTop="@dimen/dp32"
-                    android:background="@drawable/input_selector"
-                    android:hint="@string/signup_email_hint"
-                    android:inputType="textEmailAddress"
-                    android:paddingStart="@dimen/dp10"
-                    android:paddingEnd="@dimen/dp120"
-                    android:singleLine="true"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/signup_tvSignUp" />
-
-                <ImageButton
-                    android:id="@+id/signup_btnEmailDelete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/dp10"
-                    android:background="@drawable/btn_delete_selector"
-                    android:onClick="onClickSignUp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/signup_edtEmail"
-                    app:layout_constraintRight_toLeftOf="@id/signup_btnEmailConfirm"
-                    app:layout_constraintTop_toTopOf="@id/signup_edtEmail"
-                    tools:visibility="visible" />
-
-                <Button
-                    android:id="@+id/signup_btnEmailConfirm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp45"
-                    android:layout_marginTop="@dimen/dp32"
-                    android:background="@drawable/btn_confirm_selector"
-                    android:enabled="@{signUpVm.signUpFormState.isEmailOverlapValid}"
-                    android:onClick="onClickSignUp"
-                    android:text="@string/signup_btn_email_overlap"
-                    android:textColor="@{signUpVm.signUpFormState.isEmailOverlapValid?  @color/c_ffffff : @color/c_000000}"
-                    android:textSize="@dimen/dp14"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/signup_tvSignUp" />
-
-                <TextView
-                    android:id="@+id/signup_tvEmailErr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp01"
-                    android:textColor="@{signUpVm.jW1001Data.resbody.emailValid.equals(&quot;N&quot;)?  @color/c_004680 : @color/c_f13e51}"
-                    android:textSize="@dimen/dp12"
-                    app:argId="@{signUpVm.signUpFormState.emailMsg}"
-                    app:format="@{@string/string_format}"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/signup_edtEmail"
-                    tools:text="에러에러에러에러에러" />
-
 
                 <EditText
                     android:id="@+id/signup_edtPw"
                     style="@style/Font_15_000000"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp45"
-                    android:layout_marginTop="@dimen/dp08"
+                    android:layout_marginTop="@dimen/dp10"
                     android:background="@drawable/input_selector"
-                    android:ellipsize="end"
-                    android:hint="@string/signup_pw_hint"
+                    android:hint="@string/signin_pw_hint"
                     android:inputType="textPassword"
-                    android:maxLength="15"
                     android:paddingStart="@dimen/dp10"
-                    android:paddingEnd="@dimen/dp16"
+                    android:paddingEnd="@dimen/dp30"
                     android:singleLine="true"
-                    app:layout_constraintTop_toBottomOf="@id/signup_tvEmailErr" />
+                    app:layout_constraintTop_toBottomOf="@id/signup_tvPw" />
 
                 <CheckBox
-                    android:id="@+id/signup_chkPwVisible"
+                    android:id="@+id/signup_ckbPwVisible"
                     android:layout_width="@dimen/dp20"
                     android:layout_height="@dimen/dp20"
                     android:layout_centerVertical="true"
@@ -151,7 +75,7 @@
                     android:button="@null"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/signup_edtPw"
-                    app:layout_constraintRight_toRightOf="@id/signup_edtPw"
+                    app:layout_constraintEnd_toEndOf="@id/signup_edtPw"
                     app:layout_constraintTop_toTopOf="@id/signup_edtPw"
                     tools:visibility="visible" />
 
@@ -163,28 +87,36 @@
                     android:layout_marginTop="@dimen/dp01"
                     app:argId="@{signUpVm.signUpFormState.passwordError}"
                     app:format="@{@string/string_format}"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/signup_edtPw"
                     tools:text="에러에러에러에러에러" />
+
+                <TextView
+                    android:id="@+id/signup_tvPw2"
+                    style="@style/Font_22_000000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp26"
+                    android:text="@string/signin_pw_tv2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/signup_edtPw" />
 
                 <EditText
                     android:id="@+id/signup_edtPw2"
                     style="@style/Font_15_000000"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp45"
-                    android:layout_marginTop="@dimen/dp08"
+                    android:layout_marginTop="@dimen/dp10"
                     android:background="@drawable/input_selector"
-                    android:ellipsize="end"
                     android:hint="@string/signup_pw2_hint"
                     android:inputType="textPassword"
-                    android:maxLength="15"
                     android:paddingStart="@dimen/dp10"
-                    android:paddingEnd="@dimen/dp16"
+                    android:paddingEnd="@dimen/dp30"
                     android:singleLine="true"
-                    app:layout_constraintTop_toBottomOf="@id/signup_tvPwErr" />
+                    app:layout_constraintTop_toBottomOf="@id/signup_tvPw2" />
 
                 <CheckBox
-                    android:id="@+id/signup_chkPw2Visible"
+                    android:id="@+id/signup_ckbPw2Visible"
                     android:layout_width="@dimen/dp20"
                     android:layout_height="@dimen/dp20"
                     android:layout_centerVertical="true"
@@ -194,34 +126,38 @@
                     android:button="@null"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/signup_edtPw2"
-                    app:layout_constraintRight_toRightOf="@id/signup_edtPw2"
+                    app:layout_constraintEnd_toEndOf="@id/signup_edtPw2"
                     app:layout_constraintTop_toTopOf="@id/signup_edtPw2"
                     tools:visibility="visible" />
 
                 <TextView
+                    android:id="@+id/signup_tvPw2Err"
                     style="@style/Font_12_f13e51"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp01"
+                    android:paddingBottom="@dimen/dp10"
                     app:argId="@{signUpVm.signUpFormState.password2Error}"
                     app:format="@{@string/string_format}"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/signup_edtPw2"
                     tools:text="에러에러에러에러에러" />
 
+                <Button
+                    android:id="@+id/signup_btnSignUp"
+                    style="@style/Font_16_ffffff"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp51"
+                    android:layout_marginTop="@dimen/dp75"
+                    android:background="@drawable/btn_bottom_r4_selector"
+                    android:enabled="@{signUpVm.signUpFormState.dataValid}"
+                    android:onClick="onClickSignUp"
+                    android:text="@string/signup_title"
+                    app:layout_constraintTop_toBottomOf="@id/signup_edtPw2" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </ScrollView>
 
-        <Button
-            android:id="@+id/signup_btnSignup"
-            style="@style/Font_18_ffffff"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp60"
-            android:background="@drawable/btn_bottom_selector"
-            android:enabled="@{signUpVm.signUpFormState.dataValid}"
-            android:onClick="onClickSignUp"
-            android:text="@string/signup_btn_signup"
-            app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

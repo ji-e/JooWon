@@ -28,7 +28,7 @@
             android:layout_width="@dimen/dp90"
             android:layout_height="@dimen/dp90"
             android:layout_marginBottom="@dimen/dp10"
-            android:background="@drawable/people"
+            android:background="@drawable/img_people"
             android:onClick="onClickWorkerMain" />
 
         <TextView

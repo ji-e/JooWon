@@ -69,9 +69,9 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
         var emailMsg: Int? = null
         var isDataValid = false
 
-        if (email.isNotEmpty() && !Pattern.matches(Constants.EMAIL_PATTERN, email)) {
+        if (!Pattern.matches(Constants.EMAIL_PATTERN, email)) {
             emailMsg = R.string.signup_email_err
-        } else {
+        } else if (email.isNotEmpty()) {
             isDataValid = true
         }
 
@@ -88,7 +88,7 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
         var passwordError: Int? = null
         var isDataValid = false
 
-        if (password.length in 1..7) {
+        if (password.length in 0..7) {
             passwordError = R.string.signup_password_err1
         } else {
             isDataValid = true

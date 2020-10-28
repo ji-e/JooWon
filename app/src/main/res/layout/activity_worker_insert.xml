@@ -61,7 +61,7 @@
                         android:id="@+id/workerInsert_ImgProfileImg"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/people" />
+                        android:src="@drawable/img_people" />
 
                     <ImageView
                         android:layout_width="wrap_content"

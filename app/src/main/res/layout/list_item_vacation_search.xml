@@ -13,7 +13,7 @@
         android:layout_width="@dimen/dp25"
         android:layout_height="@dimen/dp25"
         android:layout_marginRight="@dimen/dp10"
-        android:src="@drawable/people" />
+        android:src="@drawable/img_people" />
 
     <TextView
         android:id="@+id/item_vacation_name"

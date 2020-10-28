@@ -31,7 +31,7 @@
                 android:layout_height="@dimen/dp55"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/dp15"
-                android:background="@drawable/people"
+                android:background="@drawable/img_people"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp02"
-                    android:text="@{mainListItem.phone_number.empty?&quot;P.H&quot;:mainListItem.phone_number}"
+                    android:text="@{mainListItem.phone_number.empty?@string/mainList_ph:mainListItem.phone_number}"
                     tools:text="@string/mainList_phone" />
 
                 <!--휴가일수-->
@@ -76,7 +76,7 @@
                     style="@style/Font_13_4a4a4a"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{&quot;남은휴가일수: &quot;+mainListItem.use_vacation_cnt+&quot;/&quot;+mainListItem.total_vacation_cnt}"
+                    android:text="@{@string/mainList_vacation+mainListItem.use_vacation_cnt+&quot;/&quot;+mainListItem.total_vacation_cnt}"
                     tools:text="@string/mainList_vacation" />
             </LinearLayout>
 

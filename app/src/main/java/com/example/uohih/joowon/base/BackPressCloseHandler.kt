@@ -25,7 +25,7 @@ class BackPressCloseHandler(mContext: Context) {
 
         // 2초 안에 두번 눌렀을 때
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
-            (mContext as Activity).finish()
+            (mContext as Activity).finishAffinity()
             android.os.Process.killProcess(android.os.Process.myPid())
             toast.cancel()
         }

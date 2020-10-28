@@ -64,10 +64,12 @@
     <dimen name="dp195">195dp</dimen>
     <dimen name="dp200">200dp</dimen>
     <dimen name="dp240">240dp</dimen>
+    <dimen name="dp230">230dp</dimen>
     <dimen name="dp250">250dp</dimen>
+    <dimen name="dp260">260dp</dimen>
     <dimen name="dp270">270dp</dimen>
     <dimen name="dp280">280dp</dimen>
-    <dimen name="dp284">284dp</dimen>
+    <dimen name="dp285">285dp</dimen>
     <dimen name="dp290">290dp</dimen>
     <dimen name="dp360">360dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->

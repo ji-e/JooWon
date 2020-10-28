@@ -33,7 +33,6 @@ class SignInPwActivity : JWBaseActivity() {
         CustomDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
     }
 
-    private lateinit var keyboardShowUtil: KeyboardShowUtil
 
     private lateinit var edtPW: EditText
     private lateinit var ckbPwVisible: CheckBox
@@ -63,11 +62,11 @@ class SignInPwActivity : JWBaseActivity() {
 
     }
 
+
     private fun initView() {
         edtPW = binding.signinEdtPw
         ckbPwVisible = binding.signinCkbPwVisible
         btnSignIn = binding.signinBtnSignIn
-        layDummy = binding.signinDummy
 
 
 //        edtPW.onFocusChangeListener = SignInFocusChangeListener()
@@ -77,20 +76,6 @@ class SignInPwActivity : JWBaseActivity() {
 
         ckbPwVisible.setOnCheckedChangeListener(SignInCheckChangeListener())
 
-
-        keyboardShowUtil = KeyboardShowUtil(window,
-                onShowKeyboard = {
-                    btnSignIn.visibility = View.GONE
-                    layDummy.visibility = View.GONE
-                    layDummy.post {
-                        btnSignIn.visibility = View.VISIBLE
-                    }
-                },
-                onHideKeyboard = {
-                    layDummy.post {
-                        layDummy.visibility = View.VISIBLE
-                    }
-                })
 
         setObserve()
     }
@@ -210,8 +195,6 @@ class SignInPwActivity : JWBaseActivity() {
         startActivity(intent)
 
         finish()
-        SignInActivity().thisActivity.finish()
-
     }
 
 

@@ -16,6 +16,7 @@ import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.databinding.ActivitySignupBinding
+import com.example.uohih.joowon.util.KeyboardShowUtil
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
@@ -27,13 +28,14 @@ class SignUpActivity : JWBaseActivity() {
 
     private lateinit var binding: ActivitySignupBinding
 
-    private lateinit var edtEmail: EditText
     private lateinit var edtPW: EditText
     private lateinit var edtPW2: EditText
-    private lateinit var btnEmailDelete: ImageButton
     private lateinit var chkPwVisible: CheckBox
     private lateinit var chkPw2Visible: CheckBox
+    private lateinit var btnSignUp: Button
 
+
+    private var signInBundle = Bundle()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,25 +46,28 @@ class SignUpActivity : JWBaseActivity() {
             signUpVm = signUpViewModel
         }
 
-        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up)
+        val args = intent
+        if (args.hasExtra("signIn")) {
+            signInBundle = args.getBundleExtra("signIn")
+        }
 
         initView()
     }
 
 
     private fun initView() {
-        edtEmail = binding.signupEdtEmail
+
         edtPW = binding.signupEdtPw
         edtPW2 = binding.signupEdtPw2
-        btnEmailDelete = binding.signupBtnEmailDelete
-        chkPwVisible = binding.signupChkPwVisible
-        chkPw2Visible = binding.signupChkPw2Visible
+        chkPwVisible = binding.signupCkbPwVisible
+        chkPw2Visible = binding.signupCkbPw2Visible
+        btnSignUp = binding.signupBtnSignUp
 
-        edtEmail.addTextChangedListener(SignUpTextWatcher(edtEmail))
+
         edtPW.addTextChangedListener(SignUpTextWatcher(edtPW))
         edtPW2.addTextChangedListener(SignUpTextWatcher(edtPW2))
 
-        edtEmail.onFocusChangeListener = SignUpFocusChangeListner()
+
         edtPW.onFocusChangeListener = SignUpFocusChangeListner()
         edtPW2.onFocusChangeListener = SignUpFocusChangeListner()
 
@@ -70,6 +75,7 @@ class SignUpActivity : JWBaseActivity() {
 
         chkPwVisible.setOnCheckedChangeListener(SignUpCheckChangeListener())
         chkPw2Visible.setOnCheckedChangeListener(SignUpCheckChangeListener())
+
 
         setObserve()
     }
@@ -95,26 +101,10 @@ class SignUpActivity : JWBaseActivity() {
 
     fun onClickSignUp(view: View) {
         when (view) {
-            binding.signupBtnClose -> {
-                // 닫기
-                finish()
-            }
-            binding.signupBtnSignup -> {
+            binding.signupBtnSignUp -> {
                 // 회원가입
                 signUp()
             }
-            binding.signupBtnEmailConfirm -> {
-                // 이메일 중복확인
-                val jsonObject = JsonObject()
-                jsonObject.addProperty("methodid", Constants.JW1001)
-                jsonObject.addProperty("email", edtEmail.text.toString())
-                signUpViewModel.isEmailOverlapConfirm(jsonObject)
-            }
-            btnEmailDelete -> {
-                // 입력한 아이디 삭제
-                edtEmail.setText("")
-            }
-
         }
 
     }
@@ -125,12 +115,11 @@ class SignUpActivity : JWBaseActivity() {
     private fun signUp() {
         val jsonObject = JsonObject()
         jsonObject.addProperty("methodid", Constants.JW1002)
-        jsonObject.addProperty("email", edtEmail.text.toString())
+        jsonObject.addProperty("email", signInBundle.getString("email", ""))
         jsonObject.addProperty("password", edtPW.text.toString())
         jsonObject.addProperty("provider", UICommonUtil.getPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID))
         signUpViewModel.signUp(jsonObject)
 
-        edtEmail.clearFocus()
         edtPW.clearFocus()
         edtPW2.clearFocus()
     }
@@ -143,11 +132,6 @@ class SignUpActivity : JWBaseActivity() {
         override fun beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {
-            if (mEditText == edtEmail) {
-                btnEmailDelete.visibility =
-                        if (charSequence.isNotEmpty()) View.VISIBLE
-                        else View.GONE
-            }
         }
 
         override fun afterTextChanged(s: Editable) {
@@ -156,7 +140,6 @@ class SignUpActivity : JWBaseActivity() {
             }
 
             signUpViewModel.signUpDataChanged(
-                    edtEmail.text.toString(),
                     edtPW.text.toString(),
                     edtPW2.text.toString()
             )
@@ -170,15 +153,11 @@ class SignUpActivity : JWBaseActivity() {
         override fun onFocusChange(v: View?, hasFocus: Boolean) {
             if (hasFocus) {
                 when (v) {
-                    edtEmail -> btnEmailDelete.visibility =
-                            if (edtEmail.text.isNotEmpty()) View.VISIBLE
-                            else View.GONE
                     edtPW -> chkPwVisible.visibility = View.VISIBLE
                     edtPW2 -> chkPw2Visible.visibility = View.VISIBLE
                 }
             } else {
                 when (v) {
-                    edtEmail -> btnEmailDelete.visibility = View.GONE
                     edtPW -> chkPwVisible.visibility = View.GONE
                     edtPW2 -> chkPw2Visible.visibility = View.GONE
                 }

@@ -5,8 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.databinding.DataBindingUtil
@@ -21,7 +23,9 @@ import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CalendarDialog.ConfirmBtnClickListener
 import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.ui.main.MainListActivity
+import com.example.uohih.joowon.ui.signup.SignUpActivity
 import com.example.uohih.joowon.util.KeyboardShowUtil
+import com.example.uohih.joowon.util.SizeConverterUtil
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import com.nhn.android.naverlogin.OAuthLogin
@@ -48,7 +52,6 @@ class SignInActivity : JWBaseActivity() {
     private lateinit var btnEmailDelete: ImageButton
     private lateinit var ckbAutoSignIn: CheckBox
     private lateinit var btnContinue: Button
-    private lateinit var layDummy: LinearLayout
 
     private var isNaverSignIn = false
 
@@ -67,13 +70,8 @@ class SignInActivity : JWBaseActivity() {
 
     }
 
-    override fun onStart() {
-        super.onStart()
-        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down)
-    }
-
     override fun onDestroy() {
-        keyboardShowUtil.detachKeyboardListeners()
+//        keyboardShowUtil.detachKeyboardListeners()
         super.onDestroy()
     }
 
@@ -82,25 +80,30 @@ class SignInActivity : JWBaseActivity() {
         btnEmailDelete = binding.signinBtnDelete
         ckbAutoSignIn = binding.signinCkbAutoSignIn
         btnContinue = binding.signinBtnContinue
-        layDummy = binding.signinDummy
 
 //        edtEmail.onFocusChangeListener = SignInFocusChangeListener()
         edtEmail.addTextChangedListener(SignInTextWatcher(edtEmail))
         edtEmail.setOnEditorActionListener(SignInEditActionListener())
 
-        keyboardShowUtil = KeyboardShowUtil(window,
-                onShowKeyboard = {
-                    btnContinue.visibility = View.GONE
-                    layDummy.visibility = View.GONE
-                    layDummy.post {
-                        btnContinue.visibility = View.VISIBLE
-                    }
-                },
-                onHideKeyboard = {
-                    layDummy.post {
-                        layDummy.visibility = View.VISIBLE
-                    }
-                })
+//        keyboardShowUtil = KeyboardShowUtil(window,
+//                onShowKeyboard = {
+//
+//                    btnContinue.visibility = View.GONE
+//                    layDummy.visibility = View.GONE
+//                    layDummy.post {
+//                        btnContinue.visibility = View.VISIBLE
+//
+//                    }
+//                    btnEmailDelete.visibility =
+//                            if (edtEmail.text.isNotEmpty()) View.VISIBLE
+//                            else View.GONE
+//                },
+//                onHideKeyboard = {
+////                    layDummy.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, SizeConverterUtil(mContext).dp(230f))
+//                    layDummy.post {
+//                        layDummy.visibility = View.VISIBLE
+//                    }
+//                })
 
         setObserve()
     }
@@ -120,7 +123,20 @@ class SignInActivity : JWBaseActivity() {
             val jw1001Data = it ?: return@Observer
             if ("N" == jw1001Data.resbody?.emailValid) {
                 // 회원가입
-
+                customDialog.showDialog(
+                        thisActivity,
+                        getString(R.string.signin_dialog_msg_email_registration2),
+                        getString(R.string.btnCancel), null,
+                        getString(R.string.btnConfirm),
+                        DialogInterface.OnClickListener { dialog, which ->
+                            val intentUp = Intent(mContext, SignUpActivity::class.java).apply {
+                                val bundle = Bundle()
+                                bundle.putString("email", edtEmail.text.toString())
+                                bundle.putBoolean("autoSignIn", ckbAutoSignIn.isChecked)
+                                putExtra("signIn", bundle)
+                            }
+                            mContext.startActivity(intentUp)
+                        })
             } else {
                 // 로그인
                 // 비밀번호 입력
@@ -320,6 +336,7 @@ class SignInActivity : JWBaseActivity() {
 
         override fun onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {
             if (mEditText == edtEmail) {
+                edtEmail.requestFocus()
                 btnEmailDelete.visibility =
                         if (charSequence.isNotEmpty()) View.VISIBLE
                         else View.GONE

@@ -30,25 +30,19 @@ class SignUpViewModel(application: JWBaseApplication, private val jwBaseReposito
     val JW1002Data: LiveData<JW1002> = _jw1002Data
 
     fun isDataValidCheck() {
-        if (_signUpForm.value?.emailMsg == R.string.signup_email_confirm
-                && _signUpForm.value?.passwordError == null
-                && _signUpForm.value?.password2Error == null) {
-            _signUpForm.value = SignUpFormState(
-                    emailMsg = signUpFormState.value?.emailMsg,
-                    isDataValid = true)
+        if (_signUpForm.value?.passwordError == null && _signUpForm.value?.password2Error == null) {
+            _signUpForm.value = SignUpFormState(isDataValid = true)
         }
     }
 
-    fun signUpDataChanged(email: String, password: String, password2: String) {
-        val emailError = isEmailValid(email)
+    fun signUpDataChanged( password: String, password2: String) {
+
         val passwordErr = isPasswordValid(password)
         val password2Err = isPassword2Valid(password, password2)
 
         _signUpForm.value = SignUpFormState(
-                emailMsg = emailError,
                 passwordError = passwordErr,
-                password2Error = password2Err,
-                isEmailOverlapValid = emailError == null)
+                password2Error = password2Err)
 
         isDataValidCheck()
     }
@@ -110,9 +104,9 @@ class SignUpViewModel(application: JWBaseApplication, private val jwBaseReposito
         if (password.length < 8) {
             return R.string.signup_password_err1
         }
-        if (!Pattern.compile(Constants.PASSWORD_PATTERN).matcher(password).matches()) {
-            return R.string.signup_password_err2
-        }
+//        if (!Pattern.compile(Constants.PASSWORD_PATTERN).matcher(password).matches()) {
+//            return R.string.signup_password_err2
+//        }
         if (Pattern.compile(Constants.PASSWORD_CONTINUE_PATTEN).matcher(password).find()) {
             return R.string.signup_password_err3
         }

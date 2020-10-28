@@ -21,8 +21,10 @@
     <string name="mainList_join">Join</string>
     <string name="mainList_phone">Phone</string>
     <string name="mainList_balance">Balance</string>
-    <string name="mainList_vacation">Vacation</string>
+<!--    <string name="mainList_vacation">Vacation</string>-->
     <string name="mainList_search_hint">이름 또는 전화번호를 입력해주세요.</string>
+    <string name="mainList_ph">P.H</string>
+    <string name="mainList_vacation">남은휴가일수: </string>
 
     <!--WorkerInsertActivity-->
     <string name="workerInsert_title">직원등록</string>
@@ -136,7 +138,8 @@
     <string name="signin_pw_tv2">비밀번호확인</string>
     <string name="signin_pw">비밀번호</string>
     <string name="signin_auto_signin">자동로그인</string>
-    <string name="signin_dialog_msg_email_registration">이미 등록된 이메일 입니다. 네이버아이디로 연동하시겠습니까?</string>
+    <string name="signin_dialog_msg_email_registration">이미 등록된 이메일입니다. 네이버아이디로 연동하시겠습니까?</string>
+    <string name="signin_dialog_msg_email_registration2">등록되지 않은 이메일입니다. 회원가입하시겠습니까?</string>
     <string name="signin_dialog_mst_sns_registration">네이버아이디로 연동된 이메일입니다. 네이버아이디로 로그인...?</string>
     <string name="signin_email_hint">이메일을 입력해주세요.</string>
     <string name="signin_pw_hint">비밀번호를 입력해주세요.</string>

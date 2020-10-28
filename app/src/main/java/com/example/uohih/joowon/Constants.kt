@@ -37,8 +37,8 @@ class Constants {
         val PASSWORD_CONTINUE_PATTEN = "(.)\\1\\1\\1"
 
         // 네이버 api
-        val OAUTH_CLIENT_ID = 
-        val OAUTH_CLIENT_SECRET =
+        val OAUTH_CLIENT_ID = "SSVjX00IPK8w6O_rjzaw"
+        val OAUTH_CLIENT_SECRET = "TbfvxZ6tBf"
         val OAUTH_CLIENT_NAME = "네이버 아이디로 로그인"
     }
 
