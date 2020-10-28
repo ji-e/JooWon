@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="signInVm"
+            type="com.example.uohih.joowon.ui.signin.SignInViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
+        tools:context=".ui.signup.SignUpInitActiviy">
+
+        <!--상단 타이틀 및 아이콘 바-->
+        <com.example.uohih.joowon.ui.customView.TopTitleView
+            android:id="@+id/signin_titleView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp60"
+            android:gravity="center_vertical"
+            app:btnBack="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tvTitle="@string/signin_title" />
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signin_titleView">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="@dimen/dp30"
+                android:paddingEnd="@dimen/dp30"
+                android:paddingBottom="@dimen/dp30">
+
+                <TextView
+                    android:id="@+id/signin_tvPw"
+                    style="@style/Font_24_000000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp40"
+                    android:text="@string/signin_pw_tv"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/signin_edtPw"
+                    style="@style/Font_15_000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp45"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:background="@drawable/input_selector"
+                    android:hint="@string/signin_pw_hint"
+                    android:inputType="textPassword"
+                    android:paddingStart="@dimen/dp10"
+                    android:paddingEnd="@dimen/dp30"
+                    android:singleLine="true"
+                    app:layout_constraintTop_toBottomOf="@id/signin_tvPw" />
+
+                <CheckBox
+                    android:id="@+id/signin_ckbPwVisible"
+                    android:layout_width="@dimen/dp20"
+                    android:layout_height="@dimen/dp20"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/dp10"
+                    android:background="@drawable/btn_eye_selector"
+                    android:button="@null"
+                    app:layout_constraintBottom_toBottomOf="@id/signin_edtPw"
+                    app:layout_constraintEnd_toEndOf="@id/signin_edtPw"
+                    app:layout_constraintTop_toTopOf="@id/signin_edtPw" />
+
+                <TextView
+                    android:id="@+id/signin_tvPwErr"
+                    style="@style/Font_12_f13e51"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp01"
+                    app:argId="@{signInVm.signInFormState.emailMsg}"
+                    app:format="@{@string/string_format}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/signin_edtPw"
+                    tools:text="에러에러에러에러에러" />
+
+
+                <Button
+                    android:id="@+id/signin_btnSignIn"
+                    style="@style/Font_16_ffffff"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp51"
+                    android:background="@drawable/btn_bottom_r4_selector"
+                    android:enabled="@{signInVm.signInFormState.dataValid}"
+                    android:onClick="onClickSignIn"
+                    android:text="@string/signin_title"
+                    app:layout_constraintBottom_toTopOf="@id/signin_dummy" />
+
+                <LinearLayout
+                    android:id="@+id/signin_dummy"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp270"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <TextView
+                        android:id="@+id/signin_tvFindPw"
+                        style="@style/Font_13_4a4a4a"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dp13"
+                        android:onClick="onClickSignIn"
+                        android:text="@string/signin_find_pw" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

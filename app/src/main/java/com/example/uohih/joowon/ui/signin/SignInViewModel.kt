@@ -19,19 +19,21 @@ import java.util.regex.Pattern
 class SignInViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : AndroidViewModel(application) {
 
     private val _isLoading = MutableLiveData<Boolean>()
+    private val _jw1001Data = MutableLiveData<JW1001>()
+    private val _jw1002Data = MutableLiveData<JW1002>()
     private val _jw1003Data = MutableLiveData<JW1003>()
     private val _jw1005Data = MutableLiveData<JW1005>()
     private val _jw1006Data = MutableLiveData<JW1006>()
-    private val _jw1002Data = MutableLiveData<JW1002>()
     private val _jw2001Data = MutableLiveData<JW2001>()
     private val _signInForm = MutableLiveData<SignInFormState>()
 
     val isLoading: LiveData<Boolean> = _isLoading
-    val jw1003Data: LiveData<JW1003> = _jw1003Data
-    val jw1005Data: LiveData<JW1005> = _jw1005Data
-    val jw1006Data: LiveData<JW1006> = _jw1006Data
-    val jw1002Data: LiveData<JW1002> = _jw1002Data
-    val jw2001Data: LiveData<JW2001> = _jw2001Data
+    val jw1001Data: LiveData<JW1001> = _jw1001Data  // 아이디확인
+    val jw1002Data: LiveData<JW1002> = _jw1002Data  // 회원가입
+    val jw1003Data: LiveData<JW1003> = _jw1003Data  // 네이버로그인정보가져오기
+    val jw1005Data: LiveData<JW1005> = _jw1005Data  // 회원정보업데이트
+    val jw1006Data: LiveData<JW1006> = _jw1006Data  // 회원정보가져오기
+    val jw2001Data: LiveData<JW2001> = _jw2001Data  // 로그인
     val signInFormState: LiveData<SignInFormState> = _signInForm
 
     private fun isDataValidCheck() {
@@ -42,43 +44,112 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
         }
     }
 
-    fun signInDataChanged(email: String, password: String) {
-        val emailError = isEmailValid(email)
-        val passwordErr = isPasswordValid(password)
+    fun signInDataChanged(email: String) {
+        var emailMsg: Int? = null
+        var isDataValid = true
+
+
+        if (!Pattern.matches(Constants.EMAIL_PATTERN, email)) {
+            emailMsg = R.string.signup_email_err
+            isDataValid = false
+        }
 
         _signInForm.value = SignInFormState(
-                emailMsg = emailError,
-                passwordError = passwordErr)
+                emailMsg = emailMsg,
+                isDataValid = isDataValid)
 
-        isDataValidCheck()
+
+//        isDataValidCheck()
     }
 
     /**
      * 이메일 검증
      */
-    private fun isEmailValid(email: String): Int? {
-        var emailError: Int? = null
+    fun isEmailValid(email: String) {
+        var emailMsg: Int? = null
+        var isDataValid = false
 
-        if (!Pattern.matches(Constants.EMAIL_PATTERN, email)) {
-            emailError = R.string.signup_email_err
+        if (email.isNotEmpty() && !Pattern.matches(Constants.EMAIL_PATTERN, email)) {
+            emailMsg = R.string.signup_email_err
+        } else {
+            isDataValid = true
         }
 
-        return emailError
+        _signInForm.value = SignInFormState(
+                emailMsg = emailMsg,
+                isDataValid = isDataValid)
+
     }
 
     /**
      * 비밀번호 검증
      */
-    private fun isPasswordValid(password: String): Int? {
-        if (password.isEmpty()) {
-            return R.string.blank
+    fun isPasswordValid(password: String) {
+        var passwordError: Int? = null
+        var isDataValid = false
+
+        if (password.length in 1..7) {
+            passwordError = R.string.signup_password_err1
+        } else {
+            isDataValid = true
         }
-        if (password.length < 8) {
-            return R.string.signup_password_err1
-        }
-        return null
+
+        _signInForm.value = SignInFormState(
+                passwordError = passwordError,
+                isDataValid = isDataValid)
     }
 
+
+    /**
+     * 아이디 확인
+     * jw1001
+     */
+    fun isEmailOverlapConfirm(jsonObject: JsonObject) {
+        _isLoading.value = true
+        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
+            override fun onSuccess(code: Int, data: JSONObject) {
+                val jw1001Data = Gson().fromJson(data.toString(), JW1001::class.java)
+                _jw1001Data.value = jw1001Data
+                _isLoading.value = false
+            }
+
+            override fun onFailure(code: Int) {
+                _isLoading.value = false
+            }
+
+            override fun onError(throwable: Throwable) {
+                _isLoading.value = false
+            }
+        })
+    }
+
+    /**
+     * 회원가입
+     * jw1002
+     */
+    fun signUp(jsonObject: JsonObject) {
+        _isLoading.value = true
+        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
+            override fun onSuccess(code: Int, data: JSONObject) {
+                val jw1002Data = Gson().fromJson(data.toString(), JW1002::class.java)
+                if ("N" == jw1002Data.result) {
+                    return
+                }
+                _jw1002Data.value = jw1002Data
+                _isLoading.value = false
+            }
+
+            override fun onFailure(code: Int) {
+                LogUtil.e(code)
+                _isLoading.value = false
+            }
+
+            override fun onError(throwable: Throwable) {
+                _isLoading.value = false
+            }
+
+        })
+    }
 
     /**
      * 네이버로그인 정보 가져오기
@@ -126,6 +197,34 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
     }
 
     /**
+     * 회원정보 업데이트
+     * jw1005
+     */
+    fun updateAdminInfo(jsonObject: JsonObject) {
+        _isLoading.value = true
+        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
+            override fun onSuccess(code: Int, data: JSONObject) {
+                val jw1005Data = Gson().fromJson(data.toString(), JW1005::class.java)
+                if ("N" == jw1005Data.result) {
+                    return
+                }
+                _jw1005Data.value = jw1005Data
+                _isLoading.value = false
+            }
+
+            override fun onFailure(code: Int) {
+                LogUtil.e(code)
+                _isLoading.value = false
+            }
+
+            override fun onError(throwable: Throwable) {
+                _isLoading.value = false
+            }
+
+        })
+    }
+
+    /**
      * 관리자 정보 가져오기
      * jw1006
      */
@@ -169,34 +268,6 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
 
 
     /**
-     * 회원가입
-     * jw1002
-     */
-    fun signUp(jsonObject: JsonObject) {
-        _isLoading.value = true
-        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
-            override fun onSuccess(code: Int, data: JSONObject) {
-                val jw1002Data = Gson().fromJson(data.toString(), JW1002::class.java)
-                if ("N" == jw1002Data.result) {
-                    return
-                }
-                _jw1002Data.value = jw1002Data
-                _isLoading.value = false
-            }
-
-            override fun onFailure(code: Int) {
-                LogUtil.e(code)
-                _isLoading.value = false
-            }
-
-            override fun onError(throwable: Throwable) {
-                _isLoading.value = false
-            }
-
-        })
-    }
-
-    /**
      * 로그인
      * jw2001
      */
@@ -225,36 +296,6 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
 
         })
     }
-
-
-    /**
-     * 회원정보 업데이트
-     * jw1005
-     */
-    fun updateAdminInfo(jsonObject: JsonObject) {
-        _isLoading.value = true
-        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
-            override fun onSuccess(code: Int, data: JSONObject) {
-                val jw1005Data = Gson().fromJson(data.toString(), JW1005::class.java)
-                if ("N" == jw1005Data.result) {
-                    return
-                }
-                _jw1005Data.value = jw1005Data
-                _isLoading.value = false
-            }
-
-            override fun onFailure(code: Int) {
-                LogUtil.e(code)
-                _isLoading.value = false
-            }
-
-            override fun onError(throwable: Throwable) {
-                _isLoading.value = false
-            }
-
-        })
-    }
-
 
 
 }

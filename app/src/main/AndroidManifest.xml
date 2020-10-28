@@ -20,6 +20,9 @@
             android:name=".ui.signin.SignInActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".ui.signin.SignInPwActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".ui.signup.SignUpActivity"
             android:windowSoftInputMode="adjustResize" />
 

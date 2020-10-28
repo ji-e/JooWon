@@ -5,8 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.text.method.HideReturnsTransformationMethod
-import android.text.method.PasswordTransformationMethod
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -17,15 +15,13 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.databinding.ActivitySigninBinding
 import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CalendarDialog.ConfirmBtnClickListener
 import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.ui.main.MainListActivity
-import com.example.uohih.joowon.ui.signup.SignUpActivity
-import com.example.uohih.joowon.util.DateCommonUtil
+import com.example.uohih.joowon.util.KeyboardShowUtil
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import com.nhn.android.naverlogin.OAuthLogin
@@ -36,30 +32,30 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class SignInActivity : JWBaseActivity() {
+    val thisActivity by lazy { this }
+
     private lateinit var signInViewModel: SignInViewModel
     private lateinit var binding: ActivitySigninBinding
-
-    private val thisActivity by lazy { this }
 
     private val customDialog by lazy {
         CustomDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
     }
 
-
+    private lateinit var keyboardShowUtil: KeyboardShowUtil
     private lateinit var mOAuthLoginInstance: OAuthLogin
 
     private lateinit var edtEmail: EditText
-    private lateinit var edtPW: EditText
     private lateinit var btnEmailDelete: ImageButton
-    private lateinit var chkPwVisible: CheckBox
-    private lateinit var chkAutoSignIn: CheckBox
+    private lateinit var ckbAutoSignIn: CheckBox
+    private lateinit var btnContinue: Button
+    private lateinit var layDummy: LinearLayout
 
     private var isNaverSignIn = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView<ActivitySigninBinding>(thisActivity, R.layout.activity_signin)
+        binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_signin)
         binding.run {
             signInViewModel = ViewModelProviders.of(thisActivity, SignInViewModelFactory()).get(SignInViewModel::class.java)
             lifecycleOwner = thisActivity
@@ -69,8 +65,6 @@ class SignInActivity : JWBaseActivity() {
         initView()
         initNaverLoginData()
 
-
-//        signInViewModel.getSignInState()
     }
 
     override fun onStart() {
@@ -78,28 +72,41 @@ class SignInActivity : JWBaseActivity() {
         overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down)
     }
 
+    override fun onDestroy() {
+        keyboardShowUtil.detachKeyboardListeners()
+        super.onDestroy()
+    }
+
     private fun initView() {
         edtEmail = binding.signinEdtEmail
-        edtPW = binding.signinEdtPw
-        chkPwVisible = binding.signinChkPwVisible
         btnEmailDelete = binding.signinBtnDelete
-        chkAutoSignIn = binding.signinChkAutoSignIn
+        ckbAutoSignIn = binding.signinCkbAutoSignIn
+        btnContinue = binding.signinBtnContinue
+        layDummy = binding.signinDummy
 
-        edtEmail.onFocusChangeListener = SignInFocusChangeListener()
-        edtPW.onFocusChangeListener = SignInFocusChangeListener()
-
+//        edtEmail.onFocusChangeListener = SignInFocusChangeListener()
         edtEmail.addTextChangedListener(SignInTextWatcher(edtEmail))
-        edtPW.addTextChangedListener(SignInTextWatcher(edtPW))
+        edtEmail.setOnEditorActionListener(SignInEditActionListener())
 
-        edtPW.setOnEditorActionListener(SignInEditActionListener())
-
-        chkPwVisible.setOnCheckedChangeListener(SignInCheckChangeListener())
+        keyboardShowUtil = KeyboardShowUtil(window,
+                onShowKeyboard = {
+                    btnContinue.visibility = View.GONE
+                    layDummy.visibility = View.GONE
+                    layDummy.post {
+                        btnContinue.visibility = View.VISIBLE
+                    }
+                },
+                onHideKeyboard = {
+                    layDummy.post {
+                        layDummy.visibility = View.VISIBLE
+                    }
+                })
 
         setObserve()
     }
 
     private fun setObserve() {
-        signInViewModel.isLoading.observe(this@SignInActivity, Observer {
+        signInViewModel.isLoading.observe(thisActivity, Observer {
             val isLoading = it ?: return@Observer
 
             if (isLoading) {
@@ -109,21 +116,40 @@ class SignInActivity : JWBaseActivity() {
             }
         })
 
-        signInViewModel.jw1002Data.observe(this@SignInActivity, Observer {
+        signInViewModel.jw1001Data.observe(thisActivity, Observer {
+            val jw1001Data = it ?: return@Observer
+            if ("N" == jw1001Data.resbody?.emailValid) {
+                // 회원가입
+
+            } else {
+                // 로그인
+                // 비밀번호 입력
+
+                val intentPw = Intent(mContext, SignInPwActivity::class.java).apply {
+                    val bundle = Bundle()
+                    bundle.putString("email", edtEmail.text.toString())
+                    bundle.putBoolean("autoSignIn", ckbAutoSignIn.isChecked)
+                    putExtra("signIn", bundle)
+                }
+                mContext.startActivity(intentPw)
+            }
+        })
+
+        signInViewModel.jw1002Data.observe(thisActivity, Observer {
             val jw1002Data = it ?: return@Observer
             if ("Y" == jw1002Data.resbody?.signUpValid) {
                 goMain()
             }
         })
 
-        signInViewModel.jw1005Data.observe(this@SignInActivity, Observer {
+        signInViewModel.jw1005Data.observe(thisActivity, Observer {
             val jw1005Data = it ?: return@Observer
             if ("Y" == jw1005Data.resbody?.adminUpdateValid) {
                 goMain()
             }
         })
 
-        signInViewModel.jw1006Data.observe(this@SignInActivity, Observer {
+        signInViewModel.jw1006Data.observe(thisActivity, Observer {
             val jw1006Data = it ?: return@Observer
 
             if ("Y" == jw1006Data.resbody?.isSnsIdRegisted) {
@@ -151,13 +177,12 @@ class SignInActivity : JWBaseActivity() {
             }
         })
 
-
-        signInViewModel.jw2001Data.observe(this@SignInActivity, Observer {
+        signInViewModel.jw2001Data.observe(thisActivity, Observer {
             val jw2001Data = it ?: return@Observer
 
             if ("Y" == jw2001Data.resbody?.signInValid) {
                 // todo 로그인완료?
-                if (chkAutoSignIn.isChecked) {
+                if (ckbAutoSignIn.isChecked) {
                     jw2001Data.resbody.autoToken?.let { it1 -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, it1) }
                 }
                 if (signInViewModel.jw1006Data.value?.resbody?.isSnsIdRegisted == "Y" || !isNaverSignIn) goMain()
@@ -197,54 +222,55 @@ class SignInActivity : JWBaseActivity() {
         }
     }
 
+
+    fun onClickSignIn(view: View) {
+        edtEmail.clearFocus()
+        btnEmailDelete.visibility = View.GONE
+        when (view) {
+            btnContinue -> {
+                // 계속하기
+                continueSignIn()
+            }
+            binding.signinBtnOAuthLoginImg -> {
+                // 네이버아이디로 로그인
+                mOAuthLoginInstance.startOauthLoginActivity(thisActivity, mOAuthLoginHandler)
+            }
+            btnEmailDelete -> {
+                // 입력한 아이디 삭제
+                edtEmail.setText("")
+            }
+            binding.signinTvAutoSignIn -> {
+                // 자동로그인
+                ckbAutoSignIn.isChecked = !ckbAutoSignIn.isChecked
+            }
+        }
+    }
+
+    /**
+     * 메인으로이동
+     */
     private fun goMain() {
         val intent = Intent(this, MainListActivity::class.java)
         startActivity(intent)
         finish()
     }
 
-    fun onClickSignIn(view: View) {
-        when (view) {
-            binding.signinTvSignup -> {
-                // 회원가입화면으로 이동
-                val intent = Intent(this, SignUpActivity::class.java)
-                startActivity(intent)
-            }
-            binding.signinTvFindPw -> {
-                // 비밀번호 찾기
-                showCalendarDialog()
-            }
-            binding.signinBtnSignin -> {
-                // 로그인
-                signIn()
-            }
-            binding.signinBtnOAuthLoginImg -> {
-                // 네이버아이디로 로그인
-//                showLoading()
-                mOAuthLoginInstance.startOauthLoginActivity(thisActivity, mOAuthLoginHandler)
-            }
-            binding.signinBtnDelete -> {
-                // 입력한 아이디 삭제
-                edtEmail.setText("")
-            }
-        }
-    }
-
     /**
-     * 로그인
+     * 계속하기
      */
-    private fun signIn() {
+    private fun continueSignIn() {
         val jsonObject = JsonObject()
-        jsonObject.addProperty("methodid", Constants.JW2001)
+        jsonObject.addProperty("methodid", Constants.JW1001)
         jsonObject.addProperty("email", edtEmail.text.toString())
-        jsonObject.addProperty("password", edtPW.text.toString())
-        jsonObject.addProperty("provider", UICommonUtil.getPreferencesData(Constants.PREFERENCE_APP_INSTANCE_ID))
-        signInViewModel.signIn(jsonObject)
 
         edtEmail.clearFocus()
-        edtPW.clearFocus()
+        signInViewModel.isEmailOverlapConfirm(jsonObject)
     }
 
+
+    /**
+     * 회원업데이트
+     */
     private fun adminUpdate() {
         val jw1003Data = signInViewModel.jw1003Data.value?.response
         val jsonObject = JsonObject()
@@ -272,19 +298,15 @@ class SignInActivity : JWBaseActivity() {
     private inner class SignInFocusChangeListener : View.OnFocusChangeListener {
         override fun onFocusChange(v: View?, hasFocus: Boolean) {
             if (hasFocus) {
-                if (v == edtEmail) {
-                    btnEmailDelete.visibility =
-                            if (edtEmail.text.isNotEmpty()) View.VISIBLE
-                            else View.GONE
-                } else if (v == edtPW) {
-                    chkPwVisible.visibility = View.VISIBLE
-                }
+                btnEmailDelete.visibility =
+                        if (edtEmail.text.isNotEmpty()) View.VISIBLE
+                        else View.GONE
             } else {
-                if (v == edtEmail) {
-                    btnEmailDelete.visibility = View.GONE
-                } else if (v == edtPW) {
-                    chkPwVisible.visibility = View.GONE
-                }
+//                if (v == edtEmail) {
+                btnEmailDelete.visibility = View.GONE
+//                } else if (v == edtPW) {
+//                    chkPwVisible.visibility = View.GONE
+//                }
             }
         }
     }
@@ -305,27 +327,11 @@ class SignInActivity : JWBaseActivity() {
         }
 
         override fun afterTextChanged(s: Editable) {
-            signInViewModel.signInDataChanged(
-                    edtEmail.text.toString(),
-                    edtPW.text.toString())
+            signInViewModel.isEmailValid(
+                    edtEmail.text.toString())
         }
     }
 
-    /**
-     * 체크박스 체크 리스너
-     */
-    private inner class SignInCheckChangeListener : CompoundButton.OnCheckedChangeListener {
-        override fun onCheckedChanged(view: CompoundButton?, isChecked: Boolean) {
-            when (view) {
-                chkPwVisible -> {
-                    edtPW.transformationMethod =
-                            if (isChecked) HideReturnsTransformationMethod.getInstance()
-                            else PasswordTransformationMethod.getInstance()
-                    edtPW.setSelection(edtPW.text.length)
-                }
-            }
-        }
-    }
 
     /**
      * 키패드 액션리스너
@@ -333,7 +339,7 @@ class SignInActivity : JWBaseActivity() {
     private inner class SignInEditActionListener : TextView.OnEditorActionListener {
         override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent?): Boolean {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                signInViewModel.signInFormState.value?.isDataValid.let { if (it == true) signIn() }
+                signInViewModel.signInFormState.value?.isDataValid.let { if (it == true) continueSignIn() }
                 return false
             }
             return true

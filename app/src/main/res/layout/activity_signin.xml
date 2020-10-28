@@ -16,52 +16,53 @@
         android:background="@color/c_ffffff"
         tools:context=".ui.signup.SignUpInitActiviy">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp35"
-            android:background="@drawable/shadow" />
-
-        <View
-            android:id="@+id/signin_background"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp45"
-            android:background="@drawable/rectangle_r50_ffff" />
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="@id/signin_background">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/dp40">
+                android:layout_height="match_parent"
+                android:paddingStart="@dimen/dp30"
+                android:paddingEnd="@dimen/dp30"
+                android:paddingBottom="@dimen/dp30">
 
                 <TextView
-                    android:id="@+id/signin_tvSignIn"
-                    style="@style/Font_24_000000"
+                    android:id="@+id/signin_title"
+                    style="@style/Font_20_000000"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp10"
+                    android:layout_height="@dimen/dp60"
+                    android:gravity="center"
                     android:text="@string/signin_title"
                     app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/signin_tvEmail"
+                    style="@style/Font_24_000000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp40"
+                    android:text="@string/signin_email_tv"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/signin_title" />
 
                 <EditText
                     android:id="@+id/signin_edtEmail"
                     style="@style/Font_15_000000"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp45"
-                    android:layout_marginTop="@dimen/dp32"
+                    android:layout_marginTop="@dimen/dp10"
                     android:background="@drawable/input_selector"
                     android:hint="@string/signin_email_hint"
                     android:inputType="textEmailAddress"
                     android:paddingStart="@dimen/dp10"
                     android:paddingEnd="@dimen/dp30"
                     android:singleLine="true"
-                    app:layout_constraintTop_toBottomOf="@id/signin_tvSignIn" />
+                    app:layout_constraintTop_toBottomOf="@id/signin_tvEmail" />
 
                 <ImageButton
                     android:id="@+id/signin_btnDelete"
@@ -79,7 +80,7 @@
                     tools:visibility="visible" />
 
                 <TextView
-                    android:id="@+id/signin_tvEmailEerr"
+                    android:id="@+id/signin_tvEmailErr"
                     style="@style/Font_12_f13e51"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -90,157 +91,87 @@
                     app:layout_constraintTop_toBottomOf="@id/signin_edtEmail"
                     tools:text="에러에러에러에러에러" />
 
-
-                <EditText
-                    android:id="@+id/signin_edtPw"
-                    style="@style/Font_15_000000"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp45"
-                    android:layout_marginTop="@dimen/dp08"
-                    android:background="@drawable/input_selector"
-                    android:hint="@string/signin_pw_hint"
-                    android:inputType="textPassword"
-                    android:maxLength="15"
-                    android:paddingStart="@dimen/dp10"
-                    android:singleLine="true"
-                    app:layout_constraintTop_toBottomOf="@id/signin_tvEmailEerr" />
-
                 <CheckBox
-                    android:id="@+id/signin_chkPwVisible"
-                    android:layout_width="@dimen/dp20"
-                    android:layout_height="@dimen/dp20"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/dp10"
-                    android:background="@drawable/btn_eye_selector"
-                    android:button="@null"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/signin_edtPw"
-                    app:layout_constraintEnd_toEndOf="@id/signin_edtPw"
-                    app:layout_constraintTop_toTopOf="@id/signin_edtPw"
-                    tools:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/signin_tvPwErr"
-                    style="@style/Font_12_f13e51"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp01"
-                    app:argId="@{signInVm.signInFormState.passwordError}"
-                    app:format="@{@string/string_format}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/signin_edtPw"
-                    tools:text="에러에러에러에러에러" />
-
-
-                <CheckBox
-                    android:id="@+id/signin_chkAutoSignIn"
+                    android:id="@+id/signin_ckbAutoSignIn"
                     android:layout_width="@dimen/dp16"
                     android:layout_height="@dimen/dp16"
-                    android:layout_marginTop="@dimen/dp08"
+                    android:layout_marginTop="@dimen/dp27"
                     android:background="@drawable/btn_ckb_selector"
                     android:button="@null"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/signin_tvPwErr" />
+                    app:layout_constraintTop_toBottomOf="@id/signin_edtEmail" />
 
 
                 <TextView
+                    android:id="@+id/signin_tvAutoSignIn"
                     style="@style/Font_15_4a4a4a"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp05"
+                    android:onClick="onClickSignIn"
                     android:text="@string/signin_auto_signin"
-                    app:layout_constraintBottom_toBottomOf="@id/signin_chkAutoSignIn"
-                    app:layout_constraintStart_toEndOf="@id/signin_chkAutoSignIn"
-                    app:layout_constraintTop_toTopOf="@id/signin_chkAutoSignIn" />
+                    app:layout_constraintBottom_toBottomOf="@id/signin_ckbAutoSignIn"
+                    app:layout_constraintStart_toEndOf="@id/signin_ckbAutoSignIn"
+                    app:layout_constraintTop_toTopOf="@id/signin_ckbAutoSignIn" />
 
                 <Button
-                    android:id="@+id/signin_btnSignin"
-                    style="@style/Font_17_ffffff"
+                    android:id="@+id/signin_btnContinue"
+                    style="@style/Font_16_ffffff"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp51"
-                    android:layout_marginTop="@dimen/dp15"
                     android:background="@drawable/btn_bottom_r4_selector"
                     android:enabled="@{signInVm.signInFormState.dataValid}"
                     android:onClick="onClickSignIn"
-                    android:text="@string/signin_title"
-                    app:layout_constraintTop_toBottomOf="@id/signin_chkAutoSignIn" />
-
-
-                <LinearLayout
-                    android:id="@+id/signin_laySignup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/signin_btnSignin">
-
-                    <TextView
-                        android:id="@+id/signin_tvSignup"
-                        style="@style/Font_15_4a4a4a"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onClickSignIn"
-                        android:paddingTop="@dimen/dp15"
-                        android:paddingEnd="@dimen/dp15"
-                        android:paddingBottom="@dimen/dp15"
-                        android:text="@string/signin_sign_up" />
-
-                    <TextView
-                        android:id="@+id/signin_tvDiv"
-                        style="@style/Font_15_4a4a4a"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/dp15"
-                        android:text="|" />
-
-                    <TextView
-                        android:id="@+id/signin_tvFindPw"
-                        style="@style/Font_15_4a4a4a"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="onClickSignIn"
-                        android:padding="@dimen/dp15"
-                        android:text="@string/signin_find_pw" />
-                </LinearLayout>
+                    android:text="@string/signin_btn_continue"
+                    app:layout_constraintBottom_toTopOf="@id/signin_dummy" />
 
                 <LinearLayout
-                    android:id="@+id/signin_laySns"
+                    android:id="@+id/signin_dummy"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp100"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/signin_laySignup">
+                    android:layout_height="@dimen/dp270"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
+                    <LinearLayout
+                        android:id="@+id/signin_laySns"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:background="@drawable/dashline" />
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        style="@style/Font_12_cccccc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dp15"
-                        android:text="OR" />
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dp37"
+                            android:layout_weight="1"
+                            android:background="@drawable/dashline" />
 
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/dashline" />
+                        <TextView
+                            style="@style/Font_12_cccccc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp10"
+                            android:text="@string/signin_sns" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dp37"
+                            android:layout_weight="1"
+                            android:background="@drawable/dashline" />
+                    </LinearLayout>
+
+
+                    <ImageButton
+                        android:id="@+id/signin_btn_OAuthLoginImg"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp51"
+                        android:background="@drawable/btn_naver_signin"
+                        android:onClick="onClickSignIn"
+                        android:visibility="visible"
+                        app:layout_constraintTop_toBottomOf="@id/signin_laySns" />
                 </LinearLayout>
-
-
-                <ImageButton
-                    android:id="@+id/signin_btn_OAuthLoginImg"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp51"
-                    android:background="@drawable/btn_naver_signin"
-                    android:onClick="onClickSignIn"
-                    app:layout_constraintTop_toBottomOf="@id/signin_laySns" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
