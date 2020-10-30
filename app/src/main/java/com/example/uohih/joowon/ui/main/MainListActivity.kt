@@ -29,6 +29,7 @@ import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.customView.DraggableFloatingButton
 import com.example.uohih.joowon.ui.setting.SettingActivity
 import com.example.uohih.joowon.ui.worker.WorkerInsertActivity
+import com.example.uohih.joowon.ui.worker.WorkerMainActivity
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.list_item_main_list.view.*
@@ -168,7 +169,7 @@ class MainListActivity : JWBaseActivity() {
 
 
     /**
-     * db에서 데이터 가져온 후 set
+     * 직원리스트 set
      */
     private fun setData() {
         recyclerView.setHasFixedSize(true)
@@ -184,6 +185,12 @@ class MainListActivity : JWBaseActivity() {
                     val intent = Intent(thisActivity, PictureActivity::class.java)
                     thisActivity.startActivity(intent)
                 }
+
+                holder.itemView.setOnClickListener {
+                    val intent = Intent(thisActivity, WorkerMainActivity::class.java)
+                    thisActivity.startActivity(intent)
+                }
+
 //               val imageBasicPath =  mainListViewModel.jw3001Data.value?.resbody?.employeeList?.get(position)?.profile_image
 //                if (!imageBasicPath.isNullOrEmpty()) {
 //                    val imagePath = ApiService.Base_URL_ORIGIN + mainListViewModel.jw3001Data.value?.resbody?.employeeList?.get(position)?.profile_image

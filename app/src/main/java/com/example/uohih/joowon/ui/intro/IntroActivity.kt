@@ -225,8 +225,17 @@ class IntroActivity : JWBaseActivity() {
     private fun setObserve() {
         signInViewModel.jw2001Data.observe(this@IntroActivity, Observer {
             val jw2001Data = it ?: return@Observer
+            if (jw2001Data.resbody == null) {
+                customDialog.showDialog(
+                        thisActivity,
+                        getString(R.string.network_Err),
+                        getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
+                    exit()
+                })
+                return@Observer
+            }
 
-            if ("Y" == jw2001Data.resbody?.signInValid) {
+            if ("Y" == jw2001Data.resbody.signInValid) {
                 // todo 로그인완료?
                 jw2001Data.resbody.autoToken?.let { it1 -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, it1) }
                 goMainActivity()

@@ -8,6 +8,6 @@ data class JW3001ResBodyList(
         val birth: String? = null,               // 생년월일
         val entered_date: String? = null,        // 입사일
         val total_vacation_cnt: String? = null,  // 총휴가일수
-        val remain_vacation_cnt: String? = null, // 남은휴가일수
+        val use_vacation: Array<String>? = null,
         val use_vacation_cnt: String? = null
 )

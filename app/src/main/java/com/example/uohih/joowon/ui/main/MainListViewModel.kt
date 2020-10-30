@@ -9,6 +9,7 @@ import com.example.uohih.joowon.model.JW3001
 import com.example.uohih.joowon.model.JW3001ResBodyList
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
+import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.json.JSONObject
@@ -55,10 +56,10 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
                     val birth = item?.birth
                     val enteredDate = (Constants.YYYYMMDD_PATTERN).toRegex().replace((item?.entered_date)?.substring(0, 8).toString(), "$1-$2-$3")
                     val totalVacationCnt = item?.total_vacation_cnt?.toInt() ?: 0
-                    val remainVacationCnt = item?.remain_vacation_cnt?.toInt() ?: 0
-                    val useVacationCnt = (totalVacationCnt - remainVacationCnt)
+                    val useVacation = item?.use_vacation
+                    val useVacationCnt = useVacation?.size ?: 0
 
-                    employeeList.add(JW3001ResBodyList(_id, profileImage, name, phoneNumber, birth, enteredDate, totalVacationCnt.toString(), remainVacationCnt.toString(), useVacationCnt.toString()))
+                    employeeList.add(JW3001ResBodyList(_id, profileImage, name, phoneNumber, birth, enteredDate, totalVacationCnt.toString(), useVacation, useVacationCnt.toString()))
                 }
 
                 liveEmployeeList.postValue(employeeList)

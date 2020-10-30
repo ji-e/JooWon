@@ -70,11 +70,6 @@ class SignInActivity : JWBaseActivity() {
 
     }
 
-    override fun onDestroy() {
-//        keyboardShowUtil.detachKeyboardListeners()
-        super.onDestroy()
-    }
-
     private fun initView() {
         edtEmail = binding.signinEdtEmail
         btnEmailDelete = binding.signinBtnDelete
@@ -195,8 +190,16 @@ class SignInActivity : JWBaseActivity() {
 
         signInViewModel.jw2001Data.observe(thisActivity, Observer {
             val jw2001Data = it ?: return@Observer
-
-            if ("Y" == jw2001Data.resbody?.signInValid) {
+            if (jw2001Data.resbody == null) {
+                customDialog.showDialog(
+                        thisActivity,
+                        getString(R.string.network_Err),
+                        getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
+                    exit()
+                })
+                return@Observer
+            }
+            if ("Y" == jw2001Data.resbody.signInValid) {
                 // todo 로그인완료?
                 if (ckbAutoSignIn.isChecked) {
                     jw2001Data.resbody.autoToken?.let { it1 -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, it1) }

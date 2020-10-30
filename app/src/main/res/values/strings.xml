@@ -5,6 +5,7 @@
     <string name="exit_msg">한번 더 누르시면 종료 됩니다.</string>
     <string name="blank"></string>
     <string name="string_format" formatted="false">%s</string>
+    <string name="network_Err">네트워크에러</string>
 
     <!--button-->
     <string name="btnConfirm">확인</string>
