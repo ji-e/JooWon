@@ -20,6 +20,7 @@ import com.example.uohih.joowon.util.KeyboardShowUtil
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
+import kotlinx.android.synthetic.main.btn_positive.view.*
 
 class SignUpActivity : JWBaseActivity() {
     private lateinit var signUpViewModel: SignUpViewModel
@@ -61,8 +62,16 @@ class SignUpActivity : JWBaseActivity() {
         edtPW2 = binding.signupEdtPw2
         chkPwVisible = binding.signupCkbPwVisible
         chkPw2Visible = binding.signupCkbPw2Visible
-        btnSignUp = binding.signupBtnSignUp
+        btnSignUp = binding.signupBtnSignUp.btnPositive
 
+
+        btnSignUp.text = getString(R.string.signin_sign_up)
+        btnSignUp.setOnClickListener {
+            // 가입하기
+            if( binding.signupBtnSignUp.isEnabled){
+                signUp()
+            }
+        }
 
         edtPW.addTextChangedListener(SignUpTextWatcher(edtPW))
         edtPW2.addTextChangedListener(SignUpTextWatcher(edtPW2))
@@ -81,6 +90,15 @@ class SignUpActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
+        // 네트워크에러
+        signUpViewModel.isNetworkErr.observe(thisActivity, Observer {
+            val isNetworkErr = it ?: return@Observer
+            if(isNetworkErr){
+                showNetworkErrDialog(mContext)
+            }
+        })
+
+        // 로딩
         signUpViewModel.isLoading.observe(this@SignUpActivity, Observer {
             val isLoading = it ?: return@Observer
 

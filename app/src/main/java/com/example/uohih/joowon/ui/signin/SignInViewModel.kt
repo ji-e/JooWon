@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseApplication
+import com.example.uohih.joowon.base.JWBaseViewModel
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.model.*
 import com.example.uohih.joowon.repository.JWBaseRepository
@@ -16,7 +17,7 @@ import com.google.gson.JsonObject
 import org.json.JSONObject
 import java.util.regex.Pattern
 
-class SignInViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : AndroidViewModel(application) {
+class SignInViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : JWBaseViewModel(application, jwBaseRepository) {
 
     private val _isLoading = MutableLiveData<Boolean>()
     private val _jw1001Data = MutableLiveData<JW1001>()
@@ -115,10 +116,12 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
 
             override fun onFailure(code: Int) {
                 _isLoading.value = false
+                _isNetworkErr.value = true
             }
 
             override fun onError(throwable: Throwable) {
                 _isLoading.value = false
+                _isNetworkErr.value = true
             }
         })
     }
@@ -142,10 +145,12 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
             override fun onFailure(code: Int) {
                 LogUtil.e(code)
                 _isLoading.value = false
+                _isNetworkErr.value = true
             }
 
             override fun onError(throwable: Throwable) {
                 _isLoading.value = false
+                _isNetworkErr.value = true
             }
 
         })
@@ -185,11 +190,13 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
             override fun onFailure(code: Int) {
                 LogUtil.e(code)
                 _isLoading.value = false
+                _isNetworkErr.value = true
             }
 
             override fun onError(throwable: Throwable) {
                 LogUtil.e("err")
                 _isLoading.value = false
+                _isNetworkErr.value = true
             }
 
         })
@@ -215,10 +222,12 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
             override fun onFailure(code: Int) {
                 LogUtil.e(code)
                 _isLoading.value = false
+                _isNetworkErr.value = true
             }
 
             override fun onError(throwable: Throwable) {
                 _isLoading.value = false
+                _isNetworkErr.value = true
             }
 
         })
@@ -257,10 +266,12 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
             override fun onFailure(code: Int) {
                 LogUtil.e(code)
                 _isLoading.value = false
+                _isNetworkErr.value = true
             }
 
             override fun onError(throwable: Throwable) {
                 _isLoading.value = false
+                _isNetworkErr.value = true
             }
 
         })
@@ -285,13 +296,13 @@ class SignInViewModel(application: JWBaseApplication, private val jwBaseReposito
 
             override fun onFailure(code: Int) {
                 LogUtil.e(code)
-                _jw2001Data.value = JW2001(resbody = null)
                 _isLoading.value = false
+                _isNetworkErr.value = true
             }
 
             override fun onError(throwable: Throwable) {
-                _jw2001Data.value = JW2001(resbody = null)
                 _isLoading.value = false
+                _isNetworkErr.value = true
             }
 
         })

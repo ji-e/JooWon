@@ -7,8 +7,8 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.adapters.TextViewBindingAdapter
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -18,22 +18,17 @@ import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.BackPressCloseHandler
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.databinding.ActivityMainListBinding
 import com.example.uohih.joowon.databinding.ListItemMainListBinding
-import com.example.uohih.joowon.model.JW0000
 import com.example.uohih.joowon.model.JW3001ResBodyList
-import com.example.uohih.joowon.repository.JWBaseRepository
-import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.customView.DraggableFloatingButton
 import com.example.uohih.joowon.ui.setting.SettingActivity
 import com.example.uohih.joowon.ui.worker.WorkerInsertActivity
 import com.example.uohih.joowon.ui.worker.WorkerMainActivity
-import com.google.gson.Gson
+import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.list_item_main_list.view.*
-import org.json.JSONObject
 
 
 class MainListActivity : JWBaseActivity() {
@@ -48,6 +43,7 @@ class MainListActivity : JWBaseActivity() {
     private lateinit var edtSearch: EditText
     private lateinit var btnSearchDelete: ImageButton
     private lateinit var recyclerView: RecyclerView
+    private lateinit var tvEmpty: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +63,7 @@ class MainListActivity : JWBaseActivity() {
         }
 
 
-        binding = DataBindingUtil.setContentView<ActivityMainListBinding>(this, R.layout.activity_main_list)
+        binding = DataBindingUtil.setContentView<ActivityMainListBinding>(thisActivity, R.layout.activity_main_list)
         binding.run {
             mainListViewModel = ViewModelProviders.of(thisActivity, MainListViewModelFactory()).get(MainListViewModel::class.java)
             lifecycleOwner = thisActivity
@@ -88,10 +84,10 @@ class MainListActivity : JWBaseActivity() {
     }
 
     private fun initView() {
-
         edtSearch = binding.mainListEdtSearch
         btnSearchDelete = binding.mainListBtnSearchDelete
         recyclerView = binding.mainListRecyclerView
+        tvEmpty = binding.mainListTvEmpty
 
         edtSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -128,6 +124,15 @@ class MainListActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
+        // 네트워크에러
+        mainListViewModel.isNetworkErr.observe(thisActivity, Observer {
+            val isNetworkErr = it ?: return@Observer
+            if (isNetworkErr) {
+                showNetworkErrDialog(mContext)
+            }
+        })
+
+        // 로딩
         mainListViewModel.isLoading.observe(thisActivity, Observer {
             val isLoading = it ?: return@Observer
 
@@ -140,12 +145,15 @@ class MainListActivity : JWBaseActivity() {
 
         mainListViewModel.jw3001Data.observe(thisActivity, Observer {
             val jw3001Data = it ?: return@Observer
+            if (jw3001Data.resbody == null) {
+                showNetworkErrDialog(thisActivity)
+                return@Observer
+            }
             setData()
         })
 
         mainListViewModel.searchData.observe(thisActivity, Observer {
             val searchData = it ?: return@Observer
-
             if (searchData) {
                 setData()
             }
@@ -160,10 +168,8 @@ class MainListActivity : JWBaseActivity() {
     }
 
     fun onClickMainList(view: View) {
-        if (view == binding.mainListBtnSignout) {
-            signOut(this)
-        } else if (view == binding.mainListBtnSession) {
-            ssss()
+        if (view == btnSearchDelete) {
+            edtSearch.setText("")
         }
     }
 
@@ -172,6 +178,7 @@ class MainListActivity : JWBaseActivity() {
      * 직원리스트 set
      */
     private fun setData() {
+        tvEmpty.visibility = if (mainListViewModel.searchEmployeeList.size == 0) View.VISIBLE else View.GONE
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = object : BaseRecyclerView.Adapter<JW3001ResBodyList, ListItemMainListBinding>(
@@ -203,27 +210,5 @@ class MainListActivity : JWBaseActivity() {
 //                }
             }
         }
-    }
-
-
-    fun ssss() {
-        JWBaseRepository().requestSignInService(JsonObject(), object : GetResbodyCallback {
-            override fun onSuccess(code: Int, data: JSONObject) {
-                val jw0000Data = Gson().fromJson(data.toString(), JW0000::class.java)
-                if ("N" == jw0000Data.result) {
-                    return
-                }
-
-            }
-
-            override fun onFailure(code: Int) {
-
-            }
-
-            override fun onError(throwable: Throwable) {
-
-            }
-
-        })
     }
 }

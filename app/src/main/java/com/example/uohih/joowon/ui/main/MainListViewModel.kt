@@ -5,16 +5,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.base.JWBaseApplication
+import com.example.uohih.joowon.base.JWBaseViewModel
 import com.example.uohih.joowon.model.JW3001
 import com.example.uohih.joowon.model.JW3001ResBodyList
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.example.uohih.joowon.util.LogUtil
+import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.json.JSONObject
 
-class MainListViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : AndroidViewModel(application) {
+class MainListViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : JWBaseViewModel(application, jwBaseRepository) {
     private val _isLoading = MutableLiveData<Boolean>()
     private var _jw3001Data = MutableLiveData<JW3001>()
     private val _searchData = MutableLiveData<Boolean>()
@@ -24,6 +26,7 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
     val searchData: LiveData<Boolean> = _searchData
 
     var initEmployeeList = mutableListOf<JW3001ResBodyList>()
+    var searchEmployeeList = mutableListOf<JW3001ResBodyList>()
     val liveEmployeeList = MutableLiveData<List<JW3001ResBodyList>>()
 
     /**
@@ -64,16 +67,20 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
 
                 liveEmployeeList.postValue(employeeList)
                 initEmployeeList = employeeList
+                searchEmployeeList = employeeList
 
+                UICommonUtil.setInitEmployeeList(initEmployeeList)
                 _jw3001Data.value = jw3001Data
             }
 
             override fun onFailure(code: Int) {
                 _isLoading.value = false
+                _jw3001Data.value = JW3001(resbody = null)
             }
 
             override fun onError(throwable: Throwable) {
                 _isLoading.value = false
+                _jw3001Data.value =  JW3001(resbody = null)
             }
         })
     }
@@ -92,6 +99,7 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
             }
         }
         liveEmployeeList.postValue(employeeList)
+        searchEmployeeList = employeeList
         _searchData.value = true
     }
 

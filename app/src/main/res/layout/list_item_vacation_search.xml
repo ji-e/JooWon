@@ -1,30 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/item_vacation_layout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/c_ffffff"
-    android:orientation="horizontal"
-    android:padding="@dimen/dp16">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
-    <ImageView
-        android:id="@+id/item_vacation_img"
-        android:layout_width="@dimen/dp25"
-        android:layout_height="@dimen/dp25"
-        android:layout_marginRight="@dimen/dp10"
-        android:src="@drawable/img_people" />
+        <variable
+            name="vacationItem"
+            type="com.example.uohih.joowon.model.JW3001ResBodyList" />
+    </data>
 
-    <TextView
-        android:id="@+id/item_vacation_name"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/item_vacation_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:background="@color/c_null"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/dp15"
+        android:paddingTop="@dimen/dp10"
+        android:paddingBottom="@dimen/dp10">
 
-    <TextView
-        android:id="@+id/item_vacation_phone"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="4" />
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/item_vacation_img"
+            android:layout_width="@dimen/dp18"
+            android:layout_height="@dimen/dp18"
+            android:layout_marginEnd="@dimen/dp10"
+            android:src="@drawable/img_people" />
+
+        <TextView
+            android:id="@+id/item_vacation_name"
+            style="@style/Font_15_4a4a4a"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@{vacationItem.name}"
+            tools:text="이름"/>
+
+        <TextView
+            android:id="@+id/item_vacation_phone"
+            style="@style/Font_15_4a4a4a"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="@{vacationItem.phone_number}" />
+
+    </LinearLayout>
+</layout>

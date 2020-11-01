@@ -37,14 +37,17 @@ import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.ui.customView.CustomListDialog
 import com.example.uohih.joowon.util.DateCommonUtil
+import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_worker_insert.*
+import kotlinx.android.synthetic.main.btn_positive_bottom.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.ArrayList
@@ -82,10 +85,7 @@ class WorkerInsertActivity : JWBaseActivity() {
     private lateinit var tvEnjoyDate: TextView
     private lateinit var btnNameDelete: ImageButton
     private lateinit var btnPhoneDelete: ImageButton
-
-    private val customDialog by lazy {
-        CustomDialog(this, android.R.style.Theme_Material_Dialog_MinWidth)
-    }
+    private lateinit var btnResister: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,6 +167,7 @@ class WorkerInsertActivity : JWBaseActivity() {
         tvEnjoyDate = binding.workerInsertTvEnjoyDate
         btnNameDelete = binding.workerInsertBtnNameDelete
         btnPhoneDelete = binding.workerInsertBtnPhoneDelete
+        btnResister = binding.workerInsertBtnRegister.btnPositive
 
         tvEnjoyDate.isFocusableInTouchMode = true
 
@@ -180,6 +181,14 @@ class WorkerInsertActivity : JWBaseActivity() {
         tvEnjoyDate.onFocusChangeListener = WorkerInsertFocusChangeListner()
 
         edtTotalCnt.setOnEditorActionListener(WorkerInsertEditActionListener())
+
+        btnResister.text = getString(R.string.workerInsert_btn_register)
+        btnResister.setOnClickListener {
+            if (binding.workerInsertBtnRegister.isEnabled) {
+                // 등록하기
+                addEmployee()
+            }
+        }
 
         setObserve()
     }
@@ -197,20 +206,27 @@ class WorkerInsertActivity : JWBaseActivity() {
 
         workerViewModel.jw3002Data.observe(thisActivity, Observer {
             val jw3002Data = it ?: return@Observer
-
+            val customDialog = CustomDialog(mContext)
             if ("failure" == jw3002Data.result) {
-
+                customDialog.apply {
+                    setBottomDialog(
+                            jw3002Data.msg.toString(),
+                            getString(R.string.btnConfirm), null)
+                }
             } else {
                 if ("Y" == jw3002Data.resbody?.addEmployeeValid) {
-                    customDialog.showDialog(
-                            thisActivity,
-                            getString(R.string.workerInsert_dialog_msg),
-                            getString(R.string.btnConfirm),
-                            DialogInterface.OnClickListener { dialog, which ->
-                                thisActivity.finish()
-                            })
+                    customDialog.apply {
+                        setBottomDialog(
+                                getString(R.string.workerInsert_dialog_msg),
+                                getString(R.string.btnConfirm),
+                                View.OnClickListener {
+                                    thisActivity.finish()
+                                })
+                        dismiss()
+                    }
                 }
             }
+            customDialog.show()
         })
     }
 
@@ -273,8 +289,8 @@ class WorkerInsertActivity : JWBaseActivity() {
                     edtPhone -> btnPhoneDelete.visibility =
                             if (edtPhone.text.isNotEmpty()) View.VISIBLE
                             else View.GONE
-                    tvBirthDate -> showCalendarDialog(tvBirthDate)
-                    tvEnjoyDate -> showCalendarDialog(tvEnjoyDate)
+                    tvBirthDate -> showCalendarDialog(tvBirthDate, false)
+                    tvEnjoyDate -> showCalendarDialog(tvEnjoyDate, true)
                 }
             } else {
                 when (v) {
@@ -294,13 +310,10 @@ class WorkerInsertActivity : JWBaseActivity() {
                 edtPhone.setText("")
             }
             tvBirthDate, binding.workerInsertBtnBirthCalendar -> {
-                showCalendarDialog(tvBirthDate)
+                showCalendarDialog(tvBirthDate, false)
             }
             tvEnjoyDate, binding.workerInsertBtnEnjoyCalendar -> {
-                showCalendarDialog(tvEnjoyDate)
-            }
-            binding.workerInsertBtnConfirm -> {
-                addEmployee()
+                showCalendarDialog(tvEnjoyDate, true)
             }
             layProfile -> {
                 showListDialog()
@@ -321,7 +334,6 @@ class WorkerInsertActivity : JWBaseActivity() {
         }
 
     }
-
 
 
     /**
@@ -355,7 +367,7 @@ class WorkerInsertActivity : JWBaseActivity() {
     private fun hideKeypad(edt: EditText) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(edt.windowToken, 0)
-        workerInsert_btnConfirm.requestFocus()
+//        workerInsert_btnConfirm.requestFocus()
     }
 
     /**
@@ -386,15 +398,23 @@ class WorkerInsertActivity : JWBaseActivity() {
     /**
      * 캘린더 다이얼로그
      */
-    private fun showCalendarDialog(textView: TextView) {
-        val date = textView.text.toString()
-//        val calendarDialog = CalendarDialog(thisActivity, android.R.style.Theme_Material_Dialog_MinWidth)
-//
-//        calendarDialog.createDialogCalendar(thisActivity, date)?.apply {
-//            setOnDismissListener {
-//                textView.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(base.getSelectDate(), "$1-$2-$3")
-//            }
-//        }?.show()
+    private fun showCalendarDialog(textView: TextView, isFutureSelect: Boolean) {
+        val calendarDialog = CalendarDialog(thisActivity).apply {
+            setBottomDialog(
+                    textView.text.toString(),
+                    null,
+                    object : CalendarDialog.ConfirmBtnClickListener {
+                        override fun onConfirmClick(date: ArrayList<LocalDate>) {
+                            LogUtil.e(date)
+                            textView.text = date[0].toString()
+                        }
+                    },
+                    isFutureSelect = isFutureSelect,
+                    isSelectedMulti = false,
+                    isSelectedRang = false,
+                    isVisibleCalendar = false)
+        }
+        calendarDialog.show()
     }
 
 

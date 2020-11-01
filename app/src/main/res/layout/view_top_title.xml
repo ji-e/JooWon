@@ -24,8 +24,8 @@
 
     <ImageButton
         android:id="@+id/top_btnBack"
-        android:layout_width="@dimen/dp36"
-        android:layout_height="@dimen/dp36"
+        android:layout_width="@dimen/dp33"
+        android:layout_height="@dimen/dp33"
         android:layout_centerVertical="true"
         android:background="@drawable/btn_back_selector"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -77,15 +77,15 @@
 
         <ImageButton
             android:id="@+id/top_btnWrite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp39"
+            android:layout_height="@dimen/dp39"
             android:layout_marginStart="@dimen/dp10"
             android:background="@drawable/btn_write_selector" />
 
         <ImageButton
             android:id="@+id/top_btnSetting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp39"
+            android:layout_height="@dimen/dp39"
             android:layout_marginStart="@dimen/dp10"
             android:background="@drawable/btn_setting_selector" />
 

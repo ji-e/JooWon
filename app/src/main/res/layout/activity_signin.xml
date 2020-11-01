@@ -114,17 +114,14 @@
                     app:layout_constraintStart_toEndOf="@id/signin_ckbAutoSignIn"
                     app:layout_constraintTop_toBottomOf="@id/signin_edtEmail" />
 
-                <Button
+                <include
                     android:id="@+id/signin_btnContinue"
-                    style="@style/Font_16_ffffff"
+                    layout="@layout/btn_positive"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp51"
                     android:layout_marginTop="@dimen/dp75"
-                    android:background="@drawable/btn_bottom_r4_selector"
                     android:enabled="@{signInVm.signInFormState.dataValid}"
-                    android:onClick="onClickSignIn"
-                    android:text="@string/signin_btn_continue"
-                    app:layout_constraintTop_toBottomOf="@id/signin_edtEmail" />
+                    app:layout_constraintTop_toBottomOf="@id/signin_edtEmail"/>
 
                 <LinearLayout
                     android:id="@+id/signin_laySns"
@@ -161,6 +158,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp51"
                     android:background="@drawable/btn_naver_signin"
+                    android:foreground="?attr/selectableItemBackground"
                     android:onClick="onClickSignIn"
                     android:visibility="visible"
                     app:layout_constraintTop_toBottomOf="@id/signin_laySns" />

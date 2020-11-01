@@ -56,7 +56,7 @@ class VacationFragment : Fragment(), View.OnClickListener {
 
 
     private val customDialog by lazy {
-        CustomDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
+        CustomDialog(mContext)
     }
 
 
@@ -170,10 +170,10 @@ class VacationFragment : Fragment(), View.OnClickListener {
      */
     private fun validation(): Boolean {
         if (vacationList.size == 0) {
-            customDialog.showDialog(
-                    mContext,
+            customDialog.setBottomDialog(
                     resources.getString(R.string.vacation_dialog_msg4),
                     resources.getString(R.string.btnConfirm), null)
+            customDialog.show()
             return false
         }
         if (vacation_edt_content.text.isNullOrEmpty())
@@ -243,14 +243,14 @@ class VacationFragment : Fragment(), View.OnClickListener {
      * 캘린더 다이얼로그
      */
     private fun showCalendarDialog(date: String, mTv: TextView) {
-//        var calendarDialog = CalendarDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
+//        var calendarDialog = CalendarDialog(mContext)
 //        calendarDialog = calendarDialog.createDialogCalendar(mContext, date, true)!!
 //        calendarDialog.show()
 //        calendarDialog.setOnDismissListener {
 //            if (mTv.id == R.id.vacation_tv_endD) {
 //                val startD = vacation_tv_startD.text.toString().replace("-", "").toInt()
 //                if (startD > baseApplication.getSelectDate().toInt()) {
-//                    customDialog.showDialog(mContext, resources.getString(R.string.vacation_dialog_msg3), resources.getString(R.string.btnConfirm), null)
+//                    customDialog.setBottomDialog(mContext, resources.getString(R.string.vacation_dialog_msg3), resources.getString(R.string.btnConfirm), null)
 //                    return@setOnDismissListener
 //                }
 //            }
@@ -284,11 +284,10 @@ class VacationFragment : Fragment(), View.OnClickListener {
             val cursor = dbHelper.selectVacation(phone, name, date)
 
             if (cursor.count > 0) {
-                customDialog.showDialog(
-                        mContext,
+                customDialog.setBottomDialog(
                         getString(R.string.vacation_dialog_msg2),
                         getString(R.string.btnConfirm), null)
-
+                customDialog.show()
                 return
             }
 
@@ -298,18 +297,19 @@ class VacationFragment : Fragment(), View.OnClickListener {
             dbHelper.update(dbHelper.tableNameWorkerJW, name, joinDate, phone, use, cntTotal, bitmap, no)
         }
 
-        customDialog.showDialog(
-                mContext,
+        customDialog.setBottomDialog(
                 getString(R.string.vacation_dialog_msg),
                 getString(R.string.btnConfirm),
-                DialogInterface.OnClickListener { dialog, which ->
+                View.OnClickListener {
 
                     if (mContext is VacationActivity) {
-                        (mContext as VacationActivity).clearEditName()
+//                        (mContext as VacationActivity).clearEditName()
                     } else {
                         (mContext as Activity).finish()
                     }
+                    customDialog.dismiss()
                 })
+        customDialog.show()
     }
 
 

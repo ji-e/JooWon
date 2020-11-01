@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 <!--    <item android:drawable="@drawable/rectangle_r4_003570s0" android:state_pressed="true" />-->
 <!--    <item android:drawable="@drawable/rectangle_r4_003570s0" android:state_focused="true" />-->
-    <item android:drawable="@drawable/rectangle_r4_e6e6e6se" android:state_enabled="false" />
-    <item android:drawable="@drawable/rectangle_r4_004680s0" />
+    <item android:drawable="@drawable/rectangle_r4_4a4a4ae6" android:state_enabled="false" />
+    <item android:drawable="@drawable/rectangle_r4_4a4a4a" />
 
 </selector>

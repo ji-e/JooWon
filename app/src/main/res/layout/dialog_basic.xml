@@ -1,43 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/rectangle_r4_ffffff"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/dialog_text"
+    <data>
+
+        <variable
+            name="customDialogVar"
+            type="com.example.uohih.joowon.ui.customView.CustomDialog" />
+    </data>
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:minHeight="@dimen/dp150"
-        android:padding="@dimen/dp16"
-        android:textColor="@color/c_333333"
-        android:textSize="@dimen/dp15" />
+        android:layout_height="@dimen/dp200"
+        android:background="@drawable/rectangle_r4_ffffff"
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp50"
-        android:orientation="horizontal">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/dialog_no"
-            style="@style/Font_16_000000"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/btn_bottom_selector2"
-            android:text="@string/btnCancel" />
 
-        <Button
-            android:id="@+id/dialog_yes"
-            style="@style/Font_16_ffffff"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/btn_bottom_selector"
-            android:text="@string/btnConfirm" />
+            <TextView
+                android:id="@+id/dialog_tvTitle"
+                style="@style/Font_18_000000"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp60"
+                android:gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="알림" />
 
-    </LinearLayout>
-</LinearLayout>
+            <ImageButton
+                android:id="@+id/dialog_btnClose"
+                android:layout_width="@dimen/dp36"
+                android:layout_height="@dimen/dp36"
+                android:layout_marginEnd="@dimen/dp12"
+                android:background="@drawable/btn_close_selector"
+                app:layout_constraintBottom_toBottomOf="@id/dialog_tvTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/dialog_tvTitle" />
+
+            <TextView
+                android:id="@+id/dialog_tvContent"
+                style="@style/Font_15_4a4a4a"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/dp51"
+                android:gravity="center"
+                android:paddingStart="@dimen/dp30"
+                android:paddingTop="@dimen/dp40"
+                android:paddingEnd="@dimen/dp30"
+                android:paddingBottom="@dimen/dp10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="메시지메시지메시지메시징루루루루루루루ㅜ루루루ㅜ룰라라\n라라라라라ㅏ라로로로로로로" />
+
+             <include
+                android:id="@+id/dialog_btnNo"
+                layout="@layout/btn_negative_bottom"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp51"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/dialog_btnYes"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <include
+                android:id="@+id/dialog_btnYes"
+                layout="@layout/btn_positive_bottom"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp51"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/dialog_btnNo" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

@@ -53,8 +53,7 @@
         <activity android:name=".ui.setting.PasswordSettingActivity" />
         <activity android:name=".ui.setting.PasswordCheckActivity" />
         <activity
-            android:name=".ui.vacation.VacationActivity"
-            android:windowSoftInputMode="adjustNothing" />
+            android:name=".ui.vacation.VacationActivity" />
         <activity android:name=".base.BlankActivity" />
     </application>
 

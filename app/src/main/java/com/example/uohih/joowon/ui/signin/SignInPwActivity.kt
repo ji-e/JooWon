@@ -23,17 +23,13 @@ import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.util.KeyboardShowUtil
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
+import kotlinx.android.synthetic.main.btn_positive.view.*
 
 class SignInPwActivity : JWBaseActivity() {
     private lateinit var signInViewModel: SignInViewModel
     private lateinit var binding: ActivitySigninPwBinding
 
     private val thisActivity by lazy { this }
-
-    private val customDialog by lazy {
-        CustomDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
-    }
-
 
     private lateinit var edtPW: EditText
     private lateinit var ckbPwVisible: CheckBox
@@ -67,9 +63,15 @@ class SignInPwActivity : JWBaseActivity() {
     private fun initView() {
         edtPW = binding.signinEdtPw
         ckbPwVisible = binding.signinCkbPwVisible
-        btnSignIn = binding.signinBtnSignIn
+        btnSignIn = binding.signinBtnSignIn.btnPositive
 
-
+        btnSignIn.text = getString(R.string.signin_title)
+        btnSignIn.setOnClickListener {
+            if(binding.signinBtnSignIn.isEnabled){
+                // 로그인
+                signIn()
+            }
+        }
 //        edtPW.onFocusChangeListener = SignInFocusChangeListener()
 
         edtPW.addTextChangedListener(SignInTextWatcher(edtPW))
@@ -82,6 +84,15 @@ class SignInPwActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
+        // 네트워크에러
+        signInViewModel.isNetworkErr.observe(thisActivity, Observer {
+            val isNetworkErr = it ?: return@Observer
+            if(isNetworkErr){
+                showNetworkErrDialog(mContext)
+            }
+        })
+
+        // 로딩
         signInViewModel.isLoading.observe(thisActivity, Observer {
             val isLoading = it ?: return@Observer
 
@@ -94,16 +105,7 @@ class SignInPwActivity : JWBaseActivity() {
 
         signInViewModel.jw2001Data.observe(thisActivity, Observer {
             val jw2001Data = it ?: return@Observer
-            if (jw2001Data.resbody == null) {
-                customDialog.showDialog(
-                        thisActivity,
-                        getString(R.string.network_Err),
-                        getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
-                    exit()
-                })
-                return@Observer
-            }
-            if ("Y" == jw2001Data.resbody.signInValid) {
+            if ("Y" == jw2001Data.resbody?.signInValid) {
                 // todo 로그인완료?
                 if (signInBundle.getBoolean("autoSignIn", false)) {
                     jw2001Data.resbody.autoToken?.let { it1 -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, it1) }
@@ -112,22 +114,19 @@ class SignInPwActivity : JWBaseActivity() {
                 goMain()
 
             } else {
-                customDialog.showDialog(
-                        thisActivity,
-                        getString(R.string.signin_err),
-                        getString(R.string.btnConfirm), null)
+                val customDialog = CustomDialog(mContext).apply {
+                    setBottomDialog(
+                            getString(R.string.signin_err),
+                            getString(R.string.btnConfirm), null)
+                }
+                customDialog.show()
             }
         })
-
     }
 
     fun onClickSignIn(view: View) {
         edtPW.clearFocus()
         when (view) {
-            btnSignIn -> {
-                // 로그인
-                signIn()
-            }
             binding.signinTvFindPw -> {
 
             }

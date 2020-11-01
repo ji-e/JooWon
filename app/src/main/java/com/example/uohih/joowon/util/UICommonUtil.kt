@@ -4,12 +4,13 @@ import android.app.Activity
 import android.os.Handler
 import android.view.View
 import com.example.uohih.joowon.base.JWBaseApplication
+import com.example.uohih.joowon.model.JW3001ResBodyList
 import java.io.Serializable
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class UICommonUtil{
+class UICommonUtil {
     companion object {
         private val uiCommonHandler = Handler()
 
@@ -64,10 +65,21 @@ class UICommonUtil{
             preferences.data = value
         }
 
-        fun removePreferencesData(key:String){
+        fun removePreferencesData(key: String) {
             val preferences = JWBaseApplication.useSharedPreference.apply {
                 setKey(key)
             }
             preferences.data = ""
-        }    }
+        }
+
+        private var initEmployeeList =  mutableListOf<JW3001ResBodyList>()
+        fun setInitEmployeeList(initEmployeeList: MutableList<JW3001ResBodyList>){
+            this.initEmployeeList = initEmployeeList
+        }
+        fun getInitEmployeeList():MutableList<JW3001ResBodyList>{
+            return initEmployeeList
+        }
+    }
+
+
 }

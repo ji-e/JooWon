@@ -27,14 +27,14 @@ class DateCommonUtil {
 
         val year = instance.year.toString()                                             //현재 년도
         val month = String.format("%02d", (instance.monthValue))                        //현재 월
-        val date = String.format("%02d", instance.dayOfMonth)                           //현재 날짜
+        val dayM = String.format("%02d", instance.dayOfMonth)                           //현재 날짜
         val day = instance.dayOfWeek.getDisplayName(TextStyle.NARROW, Locale.KOREAN)    //현재 요일
 
         jsonCalendar.put("year", year)
         jsonCalendar.put("month", month)
-        jsonCalendar.put("date", date)
+        jsonCalendar.put("datM", dayM)
         jsonCalendar.put("day", day)
-        jsonCalendar.put("yyyymmdd", "$year$month$date")
+        jsonCalendar.put("yyyymmdd", "$year$month$dayM")
 
         return jsonCalendar
     }

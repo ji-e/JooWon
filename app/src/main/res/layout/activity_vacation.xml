@@ -1,119 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/c_ffffff"
-    android:orientation="vertical"
-    tools:context=".ui.vacation.VacationActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!--상단 타이틀 및 아이콘 바-->
-    <com.example.uohih.joowon.ui.customView.TopTitleView
-        android:id="@+id/vacation_title_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp60"
-        android:gravity="center_vertical"
-        app:btnClose="true"
-        app:tvTitle="@string/vacation_title" />
+    <data>
 
-    <RelativeLayout
+        <variable
+            name="vacationVm"
+            type="com.example.uohih.joowon.ui.vacation.VacationViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp40"
-        android:paddingLeft="@dimen/dp16"
-        android:layout_marginTop="@dimen/dp16"
-        android:layout_marginBottom="@dimen/dp16"
-        android:paddingRight="@dimen/dp16">
+        android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
+        android:orientation="vertical"
+        tools:context=".ui.vacation.VacationActivity">
+
+        <!--상단 타이틀 및 아이콘 바-->
+        <com.example.uohih.joowon.ui.customView.TopTitleView
+            android:id="@+id/vacation_titleView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp60"
+            android:gravity="center_vertical"
+            app:btnBack="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tvTitle="@string/vacation_title" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/dp21"
+            android:background="@color/c_efefef"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/vacation_edtSearch" />
 
         <EditText
-            android:id="@+id/vacation_edt_name"
+            android:id="@+id/vacation_edtSearch"
+            style="@style/Font_15_000000"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp40"
+            android:layout_height="@dimen/dp45"
+            android:layout_marginStart="@dimen/dp20"
+            android:layout_marginEnd="@dimen/dp20"
             android:background="@drawable/input_selector"
-            android:hint="@string/vacation_hint"
-            android:imeOptions="actionNext"
-            android:inputType="text"
-            android:maxLength="15"
-            android:paddingLeft="@dimen/dp10"
-            android:paddingRight="@dimen/dp80"
+            android:hint="@string/mainList_search_hint"
+            android:inputType="textEmailAddress"
+            android:paddingStart="@dimen/dp40"
+            android:paddingEnd="@dimen/dp30"
             android:singleLine="true"
-            android:textColor="@color/c_333333"
-            android:textSize="@dimen/dp15" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vacation_titleView" />
 
         <ImageButton
-            android:id="@+id/vacation_btn_delete1"
+            android:id="@+id/vacation_btnSearchDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
-            android:layout_marginRight="@dimen/dp70"
+            android:layout_marginEnd="@dimen/dp10"
             android:background="@drawable/btn_delete_selector"
-            android:visibility="gone" />
+            android:onClick="onClickVacation"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/vacation_edtSearch"
+            app:layout_constraintEnd_toEndOf="@id/vacation_edtSearch"
+            app:layout_constraintTop_toTopOf="@id/vacation_edtSearch"
+            tools:visibility="visible" />
 
-        <Button
-            android:id="@+id/vacation_btn_search"
-            android:layout_width="@dimen/dp60"
-            android:layout_height="@dimen/dp40"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/rectangle_right_selector"
-            android:text="@string/btnSearch"
-            android:textColor="@color/c_ffffff"
-            android:textSize="@dimen/dp12" />
-    </RelativeLayout>
-
-    <FrameLayout
-        android:id="@+id/vacation_frame_ly"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true"
-        android:visibility="gone" />
-    <!--    <include layout="@layout/inflater_vacation" />-->
-
-    <RelativeLayout
-        android:id="@+id/vacation_ly_search"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/dp20"
-        android:layout_marginBottom="@dimen/dp20"
-        android:layout_weight="1"
-        android:background="@drawable/rectangle_r4_aaaaaa"
-        android:padding="@dimen/dp02"
-        android:layout_marginLeft="@dimen/dp16"
-        android:layout_marginRight="@dimen/dp16"
-        android:visibility="visible">
-
-        <TextView
-            android:id="@+id/vacation_tv_nothing"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/vacation_nothing"
-            android:textColor="@color/c_aaaaaa"
-            android:textSize="@dimen/dp14" />
+            android:layout_marginStart="@dimen/dp05"
+            android:src="@drawable/btn_search_nor"
+            app:layout_constraintBottom_toBottomOf="@id/vacation_edtSearch"
+            app:layout_constraintStart_toStartOf="@id/vacation_edtSearch"
+            app:layout_constraintTop_toTopOf="@id/vacation_edtSearch" />
 
-        <ListView
-            android:id="@+id/vacation_listview_search"
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            android:visibility="gone"
-            tools:listitem="@layout/list_item_vacation" />
-    </RelativeLayout>
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/dp20"
+            android:background="@drawable/rectangle_r4_cccccc"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vacation_edtSearch">
+
+            <TextView
+                android:id="@+id/vacation_tvEmpty"
+                style="@style/Font_14_4a4a4a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/mainList_empty"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/vacation_recyclerView"
+                replaceAll="@{vacationVm.liveEmployeeList}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/dp05"
+                android:paddingBottom="@dimen/dp05"
+                tools:listitem="@layout/list_item_vacation_search" />
+        </RelativeLayout>
 
 
-    <!--    &lt;!&ndash;확인버튼&ndash;&gt;-->
-    <!--    <Button-->
-    <!--        android:id="@+id/vacation_btn_bottom"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="@dimen/dp50"-->
-    <!--        android:background="@drawable/btn_bottom_selector"-->
-    <!--        android:text="@string/btn04"-->
-    <!--        android:textColor="@color/c_ffffff"-->
-    <!--        android:textSize="@dimen/dp20"-->
-    <!--        android:visibility="gone" />-->
+        <!--        <RelativeLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="@dimen/dp40"-->
+        <!--            android:layout_marginTop="@dimen/dp16"-->
+        <!--            android:layout_marginBottom="@dimen/dp16"-->
+        <!--            android:paddingLeft="@dimen/dp16"-->
+        <!--            android:paddingRight="@dimen/dp16">-->
+
+        <!--            <EditText-->
+        <!--                android:id="@+id/vacation_edt_name"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="@dimen/dp40"-->
+        <!--                android:background="@drawable/input_selector"-->
+        <!--                android:hint="@string/vacation_hint"-->
+        <!--                android:imeOptions="actionNext"-->
+        <!--                android:inputType="text"-->
+        <!--                android:maxLength="15"-->
+        <!--                android:paddingLeft="@dimen/dp10"-->
+        <!--                android:paddingRight="@dimen/dp80"-->
+        <!--                android:singleLine="true"-->
+        <!--                android:textColor="@color/c_333333"-->
+        <!--                android:textSize="@dimen/dp15" />-->
+
+        <!--            <ImageButton-->
+        <!--                android:id="@+id/vacation_btn_delete1"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_alignParentRight="true"-->
+        <!--                android:layout_centerVertical="true"-->
+        <!--                android:layout_gravity="center"-->
+        <!--                android:layout_marginRight="@dimen/dp70"-->
+        <!--                android:background="@drawable/btn_delete_selector"-->
+        <!--                android:visibility="gone" />-->
+
+        <!--            <Button-->
+        <!--                android:id="@+id/vacation_btn_search"-->
+        <!--                android:layout_width="@dimen/dp60"-->
+        <!--                android:layout_height="@dimen/dp40"-->
+        <!--                android:layout_alignParentRight="true"-->
+        <!--                android:background="@drawable/rectangle_right_selector"-->
+        <!--                android:text="@string/btnSearch"-->
+        <!--                android:textColor="@color/c_ffffff"-->
+        <!--                android:textSize="@dimen/dp12" />-->
+        <!--        </RelativeLayout>-->
+
+        <!--        <FrameLayout-->
+        <!--            android:id="@+id/vacation_frame_ly"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:fillViewport="true"-->
+        <!--            android:visibility="gone" />-->
+        <!--        &lt;!&ndash;    <include layout="@layout/inflater_vacation" />&ndash;&gt;-->
+
+        <!--        <RelativeLayout-->
+        <!--            android:id="@+id/vacation_ly_search"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:layout_marginLeft="@dimen/dp16"-->
+        <!--            android:layout_marginTop="@dimen/dp20"-->
+        <!--            android:layout_marginRight="@dimen/dp16"-->
+        <!--            android:layout_marginBottom="@dimen/dp20"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:background="@drawable/rectangle_r4_aaaaaa"-->
+        <!--            android:padding="@dimen/dp02"-->
+        <!--            android:visibility="visible">-->
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/vacation_tv_nothing"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_centerInParent="true"-->
+        <!--                android:text="@string/vacation_nothing"-->
+        <!--                android:textColor="@color/c_aaaaaa"-->
+        <!--                android:textSize="@dimen/dp14" />-->
+
+        <!--            <ListView-->
+        <!--                android:id="@+id/vacation_listview_search"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:divider="@null"-->
+        <!--                android:dividerHeight="0dp"-->
+        <!--                android:visibility="gone"-->
+        <!--                tools:listitem="@layout/list_item_vacation" />-->
+        <!--        </RelativeLayout>-->
 
 
-</LinearLayout>
+        <!--    &lt;!&ndash;확인버튼&ndash;&gt;-->
+        <!--    <Button-->
+        <!--        android:id="@+id/vacation_btn_bottom"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="@dimen/dp50"-->
+        <!--        android:background="@drawable/btn_bottom_selector"-->
+        <!--        android:text="@string/btn04"-->
+        <!--        android:textColor="@color/c_ffffff"-->
+        <!--        android:textSize="@dimen/dp20"-->
+        <!--        android:visibility="gone" />-->
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

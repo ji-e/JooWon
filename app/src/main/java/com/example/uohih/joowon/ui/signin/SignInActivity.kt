@@ -1,14 +1,11 @@
 package com.example.uohih.joowon.ui.signin
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.databinding.DataBindingUtil
@@ -17,7 +14,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.databinding.ActivitySigninBinding
 import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CalendarDialog.ConfirmBtnClickListener
@@ -25,12 +21,13 @@ import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.ui.signup.SignUpActivity
 import com.example.uohih.joowon.util.KeyboardShowUtil
-import com.example.uohih.joowon.util.SizeConverterUtil
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.OAuthLoginHandler
 import com.nhn.android.naverlogin.data.OAuthLoginState
+import kotlinx.android.synthetic.main.btn_positive.view.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -40,10 +37,6 @@ class SignInActivity : JWBaseActivity() {
 
     private lateinit var signInViewModel: SignInViewModel
     private lateinit var binding: ActivitySigninBinding
-
-    private val customDialog by lazy {
-        CustomDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
-    }
 
     private lateinit var keyboardShowUtil: KeyboardShowUtil
     private lateinit var mOAuthLoginInstance: OAuthLogin
@@ -74,11 +67,18 @@ class SignInActivity : JWBaseActivity() {
         edtEmail = binding.signinEdtEmail
         btnEmailDelete = binding.signinBtnDelete
         ckbAutoSignIn = binding.signinCkbAutoSignIn
-        btnContinue = binding.signinBtnContinue
+        btnContinue = binding.signinBtnContinue.btnPositive
 
-//        edtEmail.onFocusChangeListener = SignInFocusChangeListener()
+
         edtEmail.addTextChangedListener(SignInTextWatcher(edtEmail))
         edtEmail.setOnEditorActionListener(SignInEditActionListener())
+
+        btnContinue.text = getString(R.string.signin_btn_continue)
+        btnContinue.setOnClickListener{
+            // 계속하기
+            if(binding.signinBtnContinue.isEnabled)
+            continueSignIn()
+        }
 
 //        keyboardShowUtil = KeyboardShowUtil(window,
 //                onShowKeyboard = {
@@ -104,6 +104,15 @@ class SignInActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
+        // 네트워크에러
+        signInViewModel.isNetworkErr.observe(thisActivity, Observer {
+            val isNetworkErr = it ?: return@Observer
+            if (isNetworkErr) {
+                showNetworkErrDialog(mContext)
+            }
+        })
+
+        // 로딩
         signInViewModel.isLoading.observe(thisActivity, Observer {
             val isLoading = it ?: return@Observer
 
@@ -118,20 +127,25 @@ class SignInActivity : JWBaseActivity() {
             val jw1001Data = it ?: return@Observer
             if ("N" == jw1001Data.resbody?.emailValid) {
                 // 회원가입
-                customDialog.showDialog(
-                        thisActivity,
-                        getString(R.string.signin_dialog_msg_email_registration2),
-                        getString(R.string.btnCancel), null,
-                        getString(R.string.btnConfirm),
-                        DialogInterface.OnClickListener { dialog, which ->
-                            val intentUp = Intent(mContext, SignUpActivity::class.java).apply {
-                                val bundle = Bundle()
-                                bundle.putString("email", edtEmail.text.toString())
-                                bundle.putBoolean("autoSignIn", ckbAutoSignIn.isChecked)
-                                putExtra("signIn", bundle)
-                            }
-                            mContext.startActivity(intentUp)
-                        })
+                val customDialog = CustomDialog(mContext).apply {
+                    setBottomDialog(
+                            getString(R.string.dialog_title),
+                            getString(R.string.signin_dialog_msg_email_registration2),
+                            null,
+                            getString(R.string.btnCancel), null,
+                            getString(R.string.btnConfirm),
+                            View.OnClickListener {
+                                val intentUp = Intent(mContext, SignUpActivity::class.java).apply {
+                                    val bundle = Bundle()
+                                    bundle.putString("email", edtEmail.text.toString())
+                                    bundle.putBoolean("autoSignIn", ckbAutoSignIn.isChecked)
+                                    putExtra("signIn", bundle)
+                                }
+                                mContext.startActivity(intentUp)
+                                dismiss()
+                            })
+                }
+                customDialog.show()
             } else {
                 // 로그인
                 // 비밀번호 입력
@@ -170,17 +184,21 @@ class SignInActivity : JWBaseActivity() {
                 if ("Y" == jw1006Data.resbody?.isEmailRegisted) {
                     if (isNaverSignIn) {
                         // 중복임
-                        customDialog.showDialog(
-                                thisActivity,
-                                getString(R.string.signin_dialog_msg_email_registration),
-                                getString(R.string.btnCancel),
-                                DialogInterface.OnClickListener { dialog, which ->
-                                    goMain()
-                                },
-                                getString(R.string.btnConfirm),
-                                DialogInterface.OnClickListener { dialog, which ->
-                                    adminUpdate()
-                                })
+                        val customDialog = CustomDialog(mContext).apply {
+                            setBottomDialog(
+                                    getString(R.string.signin_dialog_msg_email_registration),
+                                    getString(R.string.btnCancel),
+                                    View.OnClickListener {
+                                        goMain()
+                                        dismiss()
+                                    },
+                                    getString(R.string.btnConfirm),
+                                    View.OnClickListener {
+                                        adminUpdate()
+                                        dismiss()
+                                    })
+                        }
+                        customDialog.show()
                     } else {
                         goMain()
                     }
@@ -190,26 +208,20 @@ class SignInActivity : JWBaseActivity() {
 
         signInViewModel.jw2001Data.observe(thisActivity, Observer {
             val jw2001Data = it ?: return@Observer
-            if (jw2001Data.resbody == null) {
-                customDialog.showDialog(
-                        thisActivity,
-                        getString(R.string.network_Err),
-                        getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
-                    exit()
-                })
-                return@Observer
-            }
-            if ("Y" == jw2001Data.resbody.signInValid) {
+
+            if ("Y" == jw2001Data.resbody?.signInValid) {
                 // todo 로그인완료?
                 if (ckbAutoSignIn.isChecked) {
                     jw2001Data.resbody.autoToken?.let { it1 -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, it1) }
                 }
                 if (signInViewModel.jw1006Data.value?.resbody?.isSnsIdRegisted == "Y" || !isNaverSignIn) goMain()
             } else {
-                customDialog.showDialog(
-                        thisActivity,
-                        getString(R.string.signin_err),
-                        getString(R.string.btnConfirm), null)
+                val customDialog = CustomDialog(mContext).apply {
+                    setBottomDialog(
+                            getString(R.string.signin_err),
+                            getString(R.string.btnConfirm), null)
+                }
+                customDialog.show()
             }
         })
     }
@@ -246,10 +258,6 @@ class SignInActivity : JWBaseActivity() {
         edtEmail.clearFocus()
         btnEmailDelete.visibility = View.GONE
         when (view) {
-            btnContinue -> {
-                // 계속하기
-                continueSignIn()
-            }
             binding.signinBtnOAuthLoginImg -> {
                 // 네이버아이디로 로그인
                 mOAuthLoginInstance.startOauthLoginActivity(thisActivity, mOAuthLoginHandler)

@@ -188,19 +188,21 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
                 R.id.mainList_rightView -> { //오른쪽 스와이프 (삭제)
                     holder.mSwipeLayout.animateReset()
                     val dbHelper = DBHelper(mContext)
-                    val customDialog = CustomDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
-                    customDialog.showDialog(mContext, String.format(mContext.resources.getString(R.string.workerUpdate_delete_msg),
-                            holder.mTvName.text.toString()),
-                            mContext.resources.getString(R.string.btnCancel), null,
-                            mContext.resources.getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
-//                        dbHelper.delete(dbHelper.tableNameWorkerJW, workerList[position]._id.toString())
+                    val customDialog = CustomDialog(mContext).apply {
+                        setBottomDialog(String.format(mContext.resources.getString(R.string.workerUpdate_delete_msg),
+                                holder.mTvName.text.toString()),
+                                mContext.resources.getString(R.string.btnCancel), null,
+                                mContext.resources.getString(R.string.btnConfirm), View.OnClickListener {
+                            //                        dbHelper.delete(dbHelper.tableNameWorkerJW, workerList[position]._id.toString())
 
 
-                        val intent = Intent(mContext, MainListActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        mContext.startActivity(intent)
-
-                    })
+                            val intent = Intent(mContext, MainListActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            mContext.startActivity(intent)
+                            dismiss()
+                        })
+                    }
+                    customDialog.show()
 
                 }
             }

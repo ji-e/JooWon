@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlHighlight">@color/c_22004680</item>
+        <item name="colorControlHighlight">@color/c_33e6e6e6</item>
         <item name="colorControlNormal">@color/c_cccccc</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="colorPrimaryDark">@color/c_ffffff</item>
@@ -48,6 +48,13 @@
         <item name="android:textSize">@dimen/dp10</item>
         <item name="android:includeFontPadding">false</item>
     </style>
+    <style name="Font_10_4a4a4a">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_4a4a4a</item>
+        <item name="android:textSize">@dimen/dp10</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
 
     <style name="Font_10_000000">
         <!--<item name="fontFamily">@font/roboto_r</item>-->
@@ -76,6 +83,20 @@
         <item name="android:textSize">@dimen/dp12</item>
         <item name="android:includeFontPadding">false</item>
     </style>
+    <style name="Font_12_777777">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_777777</item>
+        <item name="android:textSize">@dimen/dp12</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Font_12_003570">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_003570</item>
+        <item name="android:textSize">@dimen/dp12</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
 
     <style name="Font_12_000000">
         <!--<item name="fontFamily">@font/roboto_r</item>-->
@@ -99,6 +120,13 @@
     <style name="Font_14_ffffff">
         <!--<item name="fontFamily">@font/roboto_r</item>-->
         <item name="android:textColor">@color/c_ffffff</item>
+        <item name="android:textSize">@dimen/dp14</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Font_14_4a4a4a">
+        <!--<item name="fontFamily">@font/roboto_r</item>-->
+        <item name="android:textColor">@color/c_4a4a4a</item>
         <item name="android:textSize">@dimen/dp14</item>
         <item name="android:includeFontPadding">false</item>
     </style>

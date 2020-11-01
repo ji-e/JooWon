@@ -2,21 +2,28 @@ package com.example.uohih.joowon.base
 
 import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.media.ExifInterface
+import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.model.CalendarDayInfo
-import com.example.uohih.joowon.ui.customView.CustomLoadingBar
 import com.example.uohih.joowon.model.JW2002
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
+import com.example.uohih.joowon.ui.customView.CustomDialog
+import com.example.uohih.joowon.ui.customView.CustomLoadingBar
 import com.example.uohih.joowon.ui.signin.SignInActivity
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.UICommonUtil
@@ -34,15 +41,24 @@ import kotlin.collections.ArrayList
 open class JWBaseActivity : AppCompatActivity() {
 
     val mContext: Context by lazy { this }
+    private lateinit var thisActivity:JWBaseActivity
+    private lateinit var jwBaseViewModel: JWBaseViewModel
 
 //    val ss = getPreference("cookie")
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        thisActivity = this
+        jwBaseViewModel = ViewModelProviders.of(thisActivity, JWBaseViewModelFactory()).get(JWBaseViewModel::class.java)
+    }
 
     /**
      * 앱 버전 정보 가져오기
      */
     fun getVersionInfo(): String {
-        val info: PackageInfo? = mContext.packageManager.getPackageInfo(mContext.packageName, 0)
-        return info?.versionName.toString()
+        val info = mContext.packageManager.getPackageInfo(mContext.packageName, 0)
+        return info.versionName.toString()
+
     }
 
     /**
@@ -111,7 +127,6 @@ open class JWBaseActivity : AppCompatActivity() {
             android.os.Process.killProcess(android.os.Process.myPid())
         }, 200)
     }
-
 
 
     /**
@@ -238,46 +253,57 @@ open class JWBaseActivity : AppCompatActivity() {
 
     }
 
-    fun signOut(mContext: Context) {
-        var mOAuthLoginInstance = OAuthLogin.getInstance()
+//    fun signOut(mContext: Context) {
+//        var mOAuthLoginInstance = OAuthLogin.getInstance()
+//
+//
+//        if (OAuthLoginState.NEED_LOGIN != mOAuthLoginInstance.getState(mContext)) {
+//            mOAuthLoginInstance.logout(mContext)
+//        }
+//        val jsonObject = JsonObject()
+//        jsonObject.addProperty("methodid", Constants.JW2002)
+//
+//        JWBaseRepository().requestSignInService(jsonObject, object : GetResbodyCallback {
+//            override fun onSuccess(code: Int, resbodyData: JSONObject) {
+//                val jw2002Data = Gson().fromJson(resbodyData.toString(), JW2002::class.java)
+//                if ("false" == jw2002Data.result) {
+//                    return
+//                }
+//                if ("N" == jw2002Data.resbody?.signOutValid) {
+//                    return
+//                }
+//
+//                // 자동로그인 토큰 제거
+//                UICommonUtil.removePreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN)
+//
+//                (mContext as Activity).finish()
+//                val intent = Intent(mContext, SignInActivity::class.java)
+//                startActivity(intent)
+//
+//            }
+//
+//            override fun onFailure(code: Int) {
+//                LogUtil.e(code)
+//
+//            }
+//
+//            override fun onError(throwable: Throwable) {
+//
+//            }
+//
+//        })
+//
+//    }
 
-
-        if (OAuthLoginState.NEED_LOGIN != mOAuthLoginInstance.getState(mContext)) {
-            mOAuthLoginInstance.logout(mContext)
-        }
-        val jsonObject = JsonObject()
-        jsonObject.addProperty("methodid", Constants.JW2002)
-
-        JWBaseRepository().requestSignInService(jsonObject, object : GetResbodyCallback {
-            override fun onSuccess(code: Int, resbodyData: JSONObject) {
-                val jw2002Data = Gson().fromJson(resbodyData.toString(), JW2002::class.java)
-                if ("false" == jw2002Data.result) {
-                    return
-                }
-                if ("N" == jw2002Data.resbody?.signOutValid) {
-                    return
-                }
-
-                // 자동로그인 토큰 제거
-                UICommonUtil.removePreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN)
-
-                (mContext as Activity).finish()
-                val intent = Intent(mContext, SignInActivity::class.java)
-                startActivity(intent)
-
-            }
-
-            override fun onFailure(code: Int) {
-                LogUtil.e(code)
-
-            }
-
-            override fun onError(throwable: Throwable) {
-
-            }
-
+    fun showNetworkErrDialog(mContext: Context) {
+        val customDialog = CustomDialog(mContext)
+        customDialog.setBottomDialog(
+                getString(R.string.network_Err),
+                getString(R.string.btnConfirm), View.OnClickListener {
+            exit()
+            customDialog.dismiss()
         })
-
+        customDialog.show()
     }
 
 }

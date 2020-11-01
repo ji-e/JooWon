@@ -50,9 +50,9 @@
             android:paddingStart="@dimen/dp40"
             android:paddingEnd="@dimen/dp30"
             android:singleLine="true"
-            app:layout_constraintTop_toBottomOf="@id/mainList_titleView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/mainList_titleView" />
 
         <ImageButton
             android:id="@+id/mainList_btnSearchDelete"
@@ -87,6 +87,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mainList_edtSearch">
 
+            <TextView
+                android:id="@+id/mainList_tvEmpty"
+                style="@style/Font_14_4a4a4a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mainList_empty"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mainList_recyclerView"
                 replaceAll="@{mainListVm.liveEmployeeList}"
@@ -101,25 +110,6 @@
             android:layout_height="@dimen/dp90"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
-
-
-        <Button
-            android:id="@+id/main_list_btn_signout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onClickMainList"
-            android:text="로그아웃"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/main_list_btn_session"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onClickMainList"
-            android:text="세션확인"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/main_list_btn_signout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

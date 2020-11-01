@@ -56,9 +56,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_dropdown_tri"
+                app:layout_constraintBottom_toTopOf="@id/calendar_line"
                 app:layout_constraintStart_toEndOf="@id/calendar_tvDate"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/calendar_line" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/calendar_line"
@@ -78,45 +78,60 @@
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/calendar_viewpager"
+                replaceAll="@{calendarDialogVm.liveCalendarList}"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp290"
                 android:orientation="vertical"
-                replaceAll="@{calendarDialogVm.liveCalendarList}"
                 app:layout_constraintBottom_toTopOf="@+id/calendar_btnConfirm"
                 app:layout_constraintTop_toBottomOf="@id/calendar_line" />
 
             <NumberPicker
                 android:id="@+id/calendar_pickerY"
+                style="@style/Font_12_000000"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp20"
                 android:theme="@style/AppTheme.NumberPicker"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/calendar_pickerM"
-                app:layout_constraintTop_toBottomOf="@id/calendar_line"
-                style="@style/Font_12_000000"
-                android:visibility="gone" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calendar_line" />
 
             <NumberPicker
                 android:id="@+id/calendar_pickerM"
+                style="@style/Font_12_000000"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp20"
                 android:theme="@style/AppTheme.NumberPicker"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="parent"
                 app:layout_constraintStart_toEndOf="@id/calendar_pickerY"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/calendar_line"
+                app:layout_constraintTop_toBottomOf="@id/calendar_line" />
+
+            <DatePicker
+                android:id="@+id/calendar_pickerDate"
                 style="@style/Font_12_000000"
-                android:visibility="gone" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp20"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:theme="@style/AppTheme.NumberPicker"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/calendar_btnConfirm"
+                app:layout_constraintTop_toBottomOf="@id/calendar_line"
+                tools:visibility="visible" />
+
 
             <!--버튼-->
             <Button
                 android:id="@+id/calendar_btnConfirm"
                 style="@style/Font_16_ffffff"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp50"
+                android:layout_height="@dimen/dp51"
                 android:layout_marginTop="@dimen/dp30"
                 android:background="@drawable/btn_bottom_selector"
                 android:text="@string/btnConfirm"

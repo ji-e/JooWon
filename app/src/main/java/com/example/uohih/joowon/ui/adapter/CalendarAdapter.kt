@@ -13,6 +13,9 @@ import com.example.uohih.joowon.util.LogUtil
 import kotlinx.android.synthetic.main.grid_item_worker_main.view.*
 import java.time.LocalDate
 import java.util.*
+import android.graphics.Paint.UNDERLINE_TEXT_FLAG
+import android.widget.TextView
+import android.graphics.Paint
 
 
 /**
@@ -130,7 +133,8 @@ class CalendarAdapter(private val mContext: Context, val layout: Int, private va
         }
 
         if (day.isSameDay(LocalDate.now())) {
-            cell?.setTextColor(mContext.getColor(R.color.c_cee59a))
+            cell?.paintFlags = UNDERLINE_TEXT_FLAG
+//            cell?.setTextColor(mContext.getColor(R.color.c_cee59a))
             currentPosition = position
         } else {
             if (day.isInMonth()) {
@@ -155,20 +159,6 @@ class CalendarAdapter(private val mContext: Context, val layout: Int, private va
         this.selectedDateArray = selectedDateArray
         notifyDataSetChanged()
     }
-
-//    fun setFutureSelect(isFutureSelect: Boolean) {
-//        this.isFutureSelect = isFutureSelect
-//        notifyDataSetChanged()
-//    }
-//    fun setSelectedDateArray(isSelectedDateArray: Boolean) {
-//        this.isSelectedDateArray = isSelectedDateArray
-//        notifyDataSetChanged()
-//    }
-//
-//    fun setSelectedRanges(isSelectedRanges: Boolean) {
-//        this.isSelectedRanges = isSelectedRanges
-//        notifyDataSetChanged()
-//    }
 
     fun setRangesPosition(firstPosition: Int, lastPosition: Int) {
         this.firstPosition = firstPosition

@@ -20,7 +20,6 @@ import com.example.uohih.joowon.model.CalendarDayInfo
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.adapter.CalendarAdapter
 import com.example.uohih.joowon.util.DateCommonUtil
-import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.SizeConverterUtil
 import kotlinx.android.synthetic.main.dialog_calendar_grid.view.*
 import java.time.LocalDate
@@ -35,7 +34,7 @@ import kotlin.math.min
  */
 class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnClickListener {
 
-    private var bind: DialogCalendarBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.dialog_calendar, null, false)
+    private var binding: DialogCalendarBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.dialog_calendar, null, false)
     private var calendarDialogViewModel = CalendarDialogViewModel()
 
     private lateinit var layoutBottom: CoordinatorLayout
@@ -46,11 +45,14 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
     private lateinit var viewPager: ViewPager2
     private lateinit var pickerY: NumberPicker
     private lateinit var pickerM: NumberPicker
+    private lateinit var pickerDate: DatePicker
     private lateinit var btnConfirm: Button
 
     private var calendar = LocalDate.now()
     private var selectedDate = arrayListOf<LocalDate>()
     private val todayJson = DateCommonUtil().getToday()
+
+    private var datePickerDate: LocalDate? = null
 
     private var isFutureSelect = false
     private var isSelectedMulti = false
@@ -66,9 +68,9 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
     }
 
     init {
-        bind.run {
+        binding.run {
             lifecycleOwner = mContext as LifecycleOwner
-            setContentView(bind.root)
+            setContentView(binding.root)
             calendarDialogVm = calendarDialogViewModel
         }
 
@@ -76,23 +78,20 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
     }
 
     private fun initView() {
-        layoutBottom = bind.calendarLayout
-        btnClose = bind.calendarBtnClose
-        tvDate = bind.calendarTvDate
-        imgTri = bind.calendarImgTri
-        viewPager = bind.calendarViewpager
-        pickerY = bind.calendarPickerY
-        pickerM = bind.calendarPickerM
-        btnConfirm = bind.calendarBtnConfirm
+        layoutBottom = binding.calendarLayout
+        btnClose = binding.calendarBtnClose
+        tvDate = binding.calendarTvDate
+        imgTri = binding.calendarImgTri
+        viewPager = binding.calendarViewpager
+        pickerY = binding.calendarPickerY
+        pickerM = binding.calendarPickerM
+        pickerDate = binding.calendarPickerDate
+        btnConfirm = binding.calendarBtnConfirm
 
         btnClose.setOnClickListener(this)
         tvDate.setOnClickListener(this)
         imgTri.setOnClickListener(this)
         btnConfirm.setOnClickListener(this)
-
-        setDatePicker()
-        setVisibleLayout()
-
     }
 
     /**
@@ -155,7 +154,7 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                                     val now = (LocalDate.now().toString().replace("-", "")).toInt()
                                     val selected = (liveCalendarList[position][lP].getDate().toString().replace("-", "")).toInt()
                                     if (!isFutureSelect && now < selected) {
-                                         calendarAdapter?.getCurrentDatePosition()?.let {  it1-> lP = it1 }
+                                        calendarAdapter?.getCurrentDatePosition()?.let { it1 -> lP = it1 }
                                     }
 
                                     selectedDate.clear()
@@ -187,10 +186,12 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
             viewPager.adapter = viewPagerAdapter
 
             // 뷰페이저 가운데로 인덱스변경
+
             viewPager.visibility = View.INVISIBLE
             viewPager.post {
                 viewPager.setCurrentItem(100, false)
                 viewPager.visibility = View.VISIBLE
+
             }
 
 
@@ -221,7 +222,7 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
     /**
      * picker 설정
      */
-    private fun setDatePicker() {
+    private fun setNumberPicker() {
         val year = todayJson.get("year").toString().toInt()
         val month = todayJson.get("month").toString().toInt()
 
@@ -240,6 +241,7 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
         pickerY.value = year
         pickerM.value = month
 
+
         tvDate.text = year.toString() + "." + String.format("%02d", month)
 
         pickerY.setOnValueChangedListener { picker, oldVal, newVal ->
@@ -250,6 +252,34 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
             tvDate.text = pickerY.value.toString() + "." + String.format("%02d", newVal)
         }
 //        year.setDisplayedValues(arrayOf("2019년", "2020년"))
+    }
+
+    /**
+     * picker 설정
+     */
+    private fun setDatePicker(date: String) {
+        tvDate.setOnClickListener(null)
+        imgTri.visibility = View.GONE
+        viewPager.visibility = View.GONE
+        pickerDate.visibility = View.VISIBLE
+
+        val dateArr = date.split("-")
+        val year = dateArr[0].toInt()
+        val month = dateArr[1].toInt() - 1
+        val day = dateArr[2].toInt()
+        tvDate.text = dateArr[0]+"."+dateArr[1]+"."+dateArr[2]
+
+        pickerDate.init(year, month, day) { p0, year, monthOfYear, dayOfMonth ->
+            val m = String.format("%02d", monthOfYear + 1)
+            val d = String.format("%02d", dayOfMonth)
+            val selectDate = "$year.$m.$d"
+            tvDate.text = selectDate
+            datePickerDate = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
+        }
+
+        if (!isFutureSelect) {
+            pickerDate.maxDate = System.currentTimeMillis()
+        }
     }
 
     /**
@@ -286,6 +316,16 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                         isFutureSelect: Boolean,
                         isSelectedMulti: Boolean,
                         isSelectedRang: Boolean) {
+        setBottomDialog(date, onCloseListener, onConfirmListener, isFutureSelect, isSelectedMulti, isSelectedRang, true)
+    }
+
+    fun setBottomDialog(date: String,
+                        onCloseListener: View.OnClickListener?,
+                        onConfirmListener: ConfirmBtnClickListener?,
+                        isFutureSelect: Boolean,
+                        isSelectedMulti: Boolean,
+                        isSelectedRang: Boolean,
+                        isVisibleCalendar: Boolean) {
 
         onCloseListener?.let { mCloseBtnClickListener = it }
         onConfirmListener?.let { mConfirmBtnClickListener = it }
@@ -293,6 +333,15 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
         this.isFutureSelect = isFutureSelect
         this.isSelectedMulti = isSelectedMulti
         this.isSelectedRang = isSelectedRang
+        this.isVisibleCalendar = isVisibleCalendar
+
+        if (!isVisibleCalendar) {
+            setDatePicker(date)
+        } else {
+            setNumberPicker()
+            setVisibleLayout()
+            setCalendar(LocalDate.parse(date))
+        }
 
 
         // 다이얼로그 높이 설정
@@ -302,9 +351,9 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
             setPeekHeight(bottomHeight.toFloat())
         }
 
-        setCalendar(LocalDate.parse(date))
 
     }
+
 
     override fun onClick(v: View) {
         when (v) {
@@ -338,12 +387,14 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
             btnConfirm -> {
                 // 확인버튼
                 mConfirmBtnClickListener?.run {
+                    datePickerDate?.let { selectedDate.add(it) }
                     onConfirmClick(selectedDate)
                 }
                 dismiss()
             }
         }
     }
+
 
 }
 

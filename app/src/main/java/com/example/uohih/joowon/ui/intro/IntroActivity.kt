@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -23,6 +24,7 @@ import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.ui.signin.SignInActivity
 import com.example.uohih.joowon.ui.signin.SignInViewModel
 import com.example.uohih.joowon.ui.signin.SignInViewModelFactory
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_intro.*
@@ -39,10 +41,6 @@ class IntroActivity : JWBaseActivity() {
 
     private lateinit var mListener: PermissionListener
     private lateinit var signInViewModel: SignInViewModel
-
-    private val customDialog by lazy {
-        CustomDialog(mContext, android.R.style.Theme_Material_Dialog_MinWidth)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -223,32 +221,33 @@ class IntroActivity : JWBaseActivity() {
 
 
     private fun setObserve() {
-        signInViewModel.jw2001Data.observe(this@IntroActivity, Observer {
-            val jw2001Data = it ?: return@Observer
-            if (jw2001Data.resbody == null) {
-                customDialog.showDialog(
-                        thisActivity,
-                        getString(R.string.network_Err),
-                        getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
-                    exit()
-                })
-                return@Observer
+        // 네트워크에러
+        signInViewModel.isNetworkErr.observe(thisActivity, Observer {
+            val isNetworkErr = it ?: return@Observer
+            if (isNetworkErr) {
+                showNetworkErrDialog(mContext)
             }
+        })
 
-            if ("Y" == jw2001Data.resbody.signInValid) {
-                // todo 로그인완료?
+        signInViewModel.jw2001Data.observe(thisActivity, Observer {
+            val jw2001Data = it ?: return@Observer
+
+            if ("Y" == jw2001Data.resbody?.signInValid) {
                 jw2001Data.resbody.autoToken?.let { it1 -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, it1) }
                 goMainActivity()
             } else {
-                customDialog.showDialog(
-                        thisActivity,
-                        getString(R.string.signin_err2),
-                        getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
-                    UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, "")
-                    val intent = Intent(this, SignInActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                })
+                val customDialog = CustomDialog(mContext).apply {
+                    setBottomDialog(
+                            getString(R.string.signin_err2),
+                            getString(R.string.btnConfirm), View.OnClickListener {
+                        UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, "")
+                        val intent = Intent(thisActivity, SignInActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                        dismiss()
+                    })
+                }
+                customDialog.show()
             }
         })
     }

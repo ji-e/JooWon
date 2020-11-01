@@ -6,6 +6,11 @@
     <string name="blank"></string>
     <string name="string_format" formatted="false">%s</string>
     <string name="network_Err">네트워크에러</string>
+    <string name="dialog_title">알림</string>
+    <string name="signout">로그아웃</string>
+    <string name="signout_msg">로그아웃하시겠습니까?</string>
+    <string name="version">현재버전&#160;</string>
+
 
     <!--button-->
     <string name="btnConfirm">확인</string>
@@ -25,7 +30,9 @@
 <!--    <string name="mainList_vacation">Vacation</string>-->
     <string name="mainList_search_hint">이름 또는 전화번호를 입력해주세요.</string>
     <string name="mainList_ph">P.H</string>
-    <string name="mainList_vacation">남은휴가일수: </string>
+    <string name="mainList_vacation">남은휴가일수:&#160;</string>
+    <string name="mainList_empty">검색결과가 없습니다.</string>
+
 
     <!--WorkerInsertActivity-->
     <string name="workerInsert_title">직원등록</string>
@@ -146,7 +153,7 @@
     <string name="signin_pw_hint">비밀번호를 입력해주세요.</string>
     <string name="signin_find_pw">비밀번호찾기</string>
     <string name="signin_sign_up">회원가입</string>
-    <string name="signin_err">아이디 또는 비밀번호를 확인해주세요.</string>
+    <string name="signin_err">비밀번호를 확인해주세요.</string>
     <string name="signin_err2">다시 로그인해 주시기 바랍니다.</string>
     <string name="signin_btn_continue">계속하기</string>
     <string name="signin_sns">간편로그인</string>

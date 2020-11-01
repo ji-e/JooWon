@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp60"
             android:gravity="center_vertical"
-            app:btnClose="true"
+            app:btnBack="true"
             app:layout_constraintTop_toTopOf="parent"
             app:tvTitle="@string/workerInsert_title" />
 
@@ -32,16 +32,16 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:fillViewport="true"
-            app:layout_constraintTop_toBottomOf="@id/workerInsert_titleView"
-            app:layout_constraintBottom_toTopOf="@id/workerInsert_btnConfirm">
+            app:layout_constraintBottom_toTopOf="@id/workerInsert_btnRegister"
+            app:layout_constraintTop_toBottomOf="@id/workerInsert_titleView">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/dp20"
-                android:paddingTop="@dimen/dp16"
-                android:paddingRight="@dimen/dp20"
+                android:paddingStart="@dimen/dp30"
+                android:paddingTop="@dimen/dp30"
+                android:paddingEnd="@dimen/dp30"
                 android:paddingBottom="@dimen/dp10">
 
 
@@ -51,10 +51,9 @@
                     android:layout_width="@dimen/dp80"
                     android:layout_height="@dimen/dp80"
                     android:layout_gravity="center"
-                    android:layout_margin="@dimen/dp04"
                     android:onClick="onClickWorkerInsert"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
@@ -68,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/plus"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintRight_toRightOf="parent" />
+                        app:layout_constraintEnd_toEndOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -79,25 +78,25 @@
                     style="@style/Font_15_000000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp10"
+                    android:layout_marginTop="@dimen/dp30"
                     android:text="@string/workerInsert_name"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_layProfileImg" />
 
                 <EditText
                     android:id="@+id/workerInsert_edtName"
-                    style="@style/Font_12_000000"
+                    style="@style/Font_15_000000"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp40"
-                    android:layout_marginTop="@dimen/dp05"
+                    android:layout_height="@dimen/dp45"
+                    android:layout_marginTop="@dimen/dp01"
                     android:background="@drawable/input_selector"
                     android:hint="@string/workerInsert_name2"
                     android:inputType="text"
+                    android:paddingStart="@dimen/dp10"
                     android:maxLength="15"
-                    android:paddingLeft="@dimen/dp10"
-                    android:paddingRight="@dimen/dp120"
+                    android:paddingEnd="@dimen/dp120"
                     android:singleLine="true"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_tvNameLabel" />
 
                 <ImageButton
@@ -106,12 +105,12 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:layout_marginRight="@dimen/dp10"
+                    android:layout_marginEnd="@dimen/dp10"
                     android:background="@drawable/btn_delete_selector"
                     android:onClick="onClickWorkerInsert"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/workerInsert_edtName"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/workerInsert_edtName"
                     tools:visibility="visible" />
 
@@ -120,10 +119,9 @@
                     style="@style/Font_10_f13e51"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp16"
                     app:argId="@{workerInsertVm.workerInsertForm.nameMsg}"
                     app:format="@{@string/string_format}"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_edtName" />
 
                 <!--핸드폰 번호-->
@@ -132,25 +130,25 @@
                     style="@style/Font_15_000000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp05"
+                    android:layout_marginTop="@dimen/dp13"
                     android:text="@string/workerInsert_phone"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvNameErr" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_edtName" />
 
                 <EditText
                     android:id="@+id/workerInsert_edtPhone"
-                    style="@style/Font_12_000000"
+                    style="@style/Font_15_000000"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp40"
-                    android:layout_marginTop="@dimen/dp05"
+                    android:layout_height="@dimen/dp45"
+                    android:layout_marginTop="@dimen/dp01"
                     android:background="@drawable/input_selector"
                     android:hint="@string/workerInsert_phone2"
                     android:inputType="phone"
                     android:maxLength="15"
-                    android:paddingLeft="@dimen/dp10"
-                    android:paddingRight="@dimen/dp120"
+                    android:paddingStart="@dimen/dp10"
+                    android:paddingEnd="@dimen/dp120"
                     android:singleLine="true"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_tvPhoneLabel" />
 
                 <ImageButton
@@ -159,12 +157,12 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:layout_marginRight="@dimen/dp10"
+                    android:layout_marginEnd="@dimen/dp10"
                     android:background="@drawable/btn_delete_selector"
                     android:onClick="onClickWorkerInsert"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/workerInsert_edtPhone"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/workerInsert_edtPhone"
                     tools:visibility="visible" />
 
@@ -174,25 +172,25 @@
                     style="@style/Font_15_000000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp18"
+                    android:layout_marginTop="@dimen/dp13"
                     android:text="@string/workerInsert_birth"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_edtPhone" />
 
                 <TextView
                     android:id="@+id/workerInsert_tvBirthDate"
-                    style="@style/Font_12_000000"
+                    style="@style/Font_15_000000"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp40"
-                    android:layout_marginTop="@dimen/dp05"
+                    android:layout_height="@dimen/dp45"
+                    android:layout_marginTop="@dimen/dp01"
                     android:background="@drawable/input_selector"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:gravity="center_vertical"
                     android:onClick="onClickWorkerInsert"
-                    android:paddingLeft="@dimen/dp10"
+                    android:paddingStart="@dimen/dp10"
                     android:text="@{workerInsertVm.today}"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_tvBirthLabel"
                     tools:text="2020-10-10" />
 
@@ -200,12 +198,12 @@
                     android:id="@+id/workerInsert_btnBirthCalendar"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp40"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/btn_calendar_selector"
                     android:onClick="onClickWorkerInsert"
                     app:layout_constraintBottom_toBottomOf="@id/workerInsert_tvBirthDate"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/workerInsert_tvBirthDate" />
 
                 <!--입사 날짜-->
@@ -214,25 +212,25 @@
                     style="@style/Font_15_000000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp18"
+                    android:layout_marginTop="@dimen/dp13"
                     android:text="@string/workerInsert_join"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_tvBirthDate" />
 
                 <TextView
                     android:id="@+id/workerInsert_tvEnjoyDate"
-                    style="@style/Font_12_000000"
+                    style="@style/Font_15_000000"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp40"
-                    android:layout_marginTop="@dimen/dp05"
+                    android:layout_height="@dimen/dp45"
+                    android:layout_marginTop="@dimen/dp01"
                     android:background="@drawable/input_selector"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:gravity="center_vertical"
                     android:onClick="onClickWorkerInsert"
-                    android:paddingLeft="@dimen/dp10"
+                    android:paddingStart="@dimen/dp10"
                     android:text="@{workerInsertVm.today}"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_tvEnjoyDateLabel"
                     tools:text="2020-10-10" />
 
@@ -240,97 +238,55 @@
                     android:id="@+id/workerInsert_btnEnjoyCalendar"
                     android:layout_width="@dimen/dp40"
                     android:layout_height="@dimen/dp40"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/btn_calendar_selector"
                     android:onClick="onClickWorkerInsert"
                     app:layout_constraintBottom_toBottomOf="@id/workerInsert_tvEnjoyDate"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/workerInsert_tvEnjoyDate" />
 
                 <!--총 휴가-->
                 <TextView
                     android:id="@+id/workerInsert_tvTotalCntLabel"
                     style="@style/Font_15_000000"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp18"
-                    android:layout_marginRight="@dimen/dp15"
+                    android:layout_marginTop="@dimen/dp13"
                     android:text="@string/workerInsert_vacation"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@+id/workerInsert_tvUseCntLabel"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_tvEnjoyDate" />
 
                 <EditText
                     android:id="@+id/workerInsert_edtTotalCnt"
-                    style="@style/Font_12_000000"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp40"
-                    android:layout_marginTop="@dimen/dp05"
-                    android:layout_marginRight="@dimen/dp15"
+                    style="@style/Font_15_000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp45"
+                    android:layout_marginTop="@dimen/dp01"
                     android:background="@drawable/input_selector"
                     android:hint="15"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:maxLength="3"
-                    android:paddingLeft="@dimen/dp10"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@+id/workerInsert_edtUseCnt"
+                    android:paddingStart="@dimen/dp10"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_tvTotalCntLabel" />
-
-
-                <!--사용한 휴가-->
-                <TextView
-                    android:id="@+id/workerInsert_tvUseCntLabel"
-                    style="@style/Font_15_000000"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp15"
-                    android:layout_marginTop="@dimen/dp18"
-                    android:text="@string/workerInsert_use"
-                    android:visibility="invisible"
-                    app:layout_constraintLeft_toRightOf="@id/workerInsert_tvTotalCntLabel"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvEnjoyDate"
-                    tools:visibility="visible" />
-
-                <EditText
-                    android:id="@+id/workerInsert_edtUseCnt"
-                    style="@style/Font_12_000000"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp40"
-                    android:layout_marginLeft="@dimen/dp15"
-                    android:layout_marginTop="@dimen/dp05"
-                    android:background="@drawable/input_selector"
-                    android:hint="0"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:maxLength="3"
-                    android:paddingLeft="@dimen/dp10"
-                    android:visibility="invisible"
-                    app:layout_constraintLeft_toRightOf="@id/workerInsert_edtTotalCnt"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/workerInsert_tvUseCntLabel"
-                    tools:visibility="visible" />
-
 
                 <!--삭제-->
                 <LinearLayout
                     android:id="@+id/workerInsert_layDelete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="@dimen/dp16"
+                    android:layout_marginTop="@dimen/dp13"
                     android:onClick="onClickWorkerInsert"
                     android:orientation="horizontal"
                     android:visibility="gone"
-                    app:layout_constraintRight_toRightOf="parent"
-
-                    app:layout_constraintTop_toBottomOf="@id/workerInsert_edtUseCnt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/workerInsert_edtTotalCnt"
                     tools:visibility="visible">
 
                     <TextView
-                        style="@style/Font_15_000000"
+                        style="@style/Font_14_000000"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -340,24 +296,32 @@
                         android:layout_width="@dimen/dp20"
                         android:layout_height="@dimen/dp20"
                         android:background="@drawable/btn_next_selector" />
-
-
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
         <!--확인버튼-->
-        <Button
-            android:id="@+id/workerInsert_btnConfirm"
-            style="@style/Font_16_ffffff"
+
+        <include
+            android:id="@+id/workerInsert_btnRegister"
+            layout="@layout/btn_positive_bottom"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp60"
-            android:background="@drawable/btn_bottom_selector"
+            android:layout_marginTop="@dimen/dp75"
             android:enabled="@{workerInsertVm.workerInsertForm.dataValid}"
-            android:onClick="onClickWorkerInsert"
-            android:text="@string/workerInsert_btn_register"
-            app:layout_constraintBottom_toBottomOf="parent" />
+             app:layout_constraintBottom_toBottomOf="parent"/>
+
+<!--        <Button-->
+<!--            android:id="@+id/workerInsert_btnConfirm"-->
+<!--            style="@style/Font_18_ffffff"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/dp60"-->
+<!--            android:background="@drawable/btn_bottom_selector"-->
+<!--            android:enabled="@{workerInsertVm.workerInsertForm.dataValid}"-->
+<!--            android:onClick="onClickWorkerInsert"-->
+<!--            android:text="@string/workerInsert_btn_register"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent" />-->
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

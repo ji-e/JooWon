@@ -143,17 +143,15 @@
                     app:layout_constraintTop_toBottomOf="@id/signup_edtPw2"
                     tools:text="에러에러에러에러에러" />
 
-                <Button
+
+                <include
                     android:id="@+id/signup_btnSignUp"
-                    style="@style/Font_16_ffffff"
+                    layout="@layout/btn_positive"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp51"
                     android:layout_marginTop="@dimen/dp75"
-                    android:background="@drawable/btn_bottom_r4_selector"
                     android:enabled="@{signUpVm.signUpFormState.dataValid}"
-                    android:onClick="onClickSignUp"
-                    android:text="@string/signup_title"
-                    app:layout_constraintTop_toBottomOf="@id/signup_edtPw2" />
+                    app:layout_constraintTop_toBottomOf="@id/signup_edtPw2"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
