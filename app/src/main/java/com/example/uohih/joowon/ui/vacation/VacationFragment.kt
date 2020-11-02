@@ -116,8 +116,9 @@ class VacationFragment : Fragment(), View.OnClickListener {
     }
 
     fun initView() {
-        if (_id.isNotEmpty())
+        if (_id.isNotEmpty()) {
             vacationViewModel.setEmployeeInfo(_id)
+        }
 
 
         btnRegisterV = binding.vacationBtnRegisterV.btnWhite
@@ -130,27 +131,27 @@ class VacationFragment : Fragment(), View.OnClickListener {
         btnRegister.setOnClickListener(this)
 
 
-        if (bitmap != "") {
-            val file = BitmapFactory.decodeFile(bitmap)
-            lateinit var exif: ExifInterface
-
-            try {
-                exif = ExifInterface(bitmap)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-
-            val exifOrientation: Int
-            val exifDegree: Int
-
-            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-            exifDegree = baseActivity.exifOrientationToDegrees(exifOrientation)
-
-//            Glide.with(mContext).load(baseActivity.rotate(file, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(vacation_img_people)
-
-        } else {
+//        if (bitmap != "") {
+//            val file = BitmapFactory.decodeFile(bitmap)
+//            lateinit var exif: ExifInterface
+//
+//            try {
+//                exif = ExifInterface(bitmap)
+//            } catch (e: IOException) {
+//                e.printStackTrace()
+//            }
+//
+//            val exifOrientation: Int
+//            val exifDegree: Int
+//
+//            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+//            exifDegree = baseActivity.exifOrientationToDegrees(exifOrientation)
+//
+////            Glide.with(mContext).load(baseActivity.rotate(file, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(vacation_img_people)
+//
+//        } else {
 //            vacation_img_people.setImageDrawable(mContext.getDrawable(R.drawable.people))
-        }
+//        }
 
 //        vacation_tv_name.text = name
 //        vacation_tv_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(join, "$1-$2-$3")
@@ -179,10 +180,10 @@ class VacationFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v) {
             btnRegisterV ->{
-                Toast.makeText(thisFragment as Context, "추가하기", Toast.LENGTH_SHORT).show()
+
             }
             btnRegister ->{
-                Toast.makeText(thisFragment  as Context, "등록하기", Toast.LENGTH_SHORT).show()
+
             }
 //
 //            R.id.vacation_btn_startC -> {

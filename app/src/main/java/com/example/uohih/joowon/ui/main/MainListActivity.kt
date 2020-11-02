@@ -153,6 +153,9 @@ class MainListActivity : JWBaseActivity() {
 
         mainListViewModel.jw3001Data.observe(thisActivity, Observer {
             val jw3001Data = it ?: return@Observer
+            if("ZZZZ".equals(jw3001Data.errCode)){
+                showsessionOutDialog(thisActivity)
+            }
             setData()
         })
 

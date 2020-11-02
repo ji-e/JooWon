@@ -306,4 +306,15 @@ open class JWBaseActivity : AppCompatActivity() {
         customDialog.show()
     }
 
+    fun showsessionOutDialog(mContext: Context) {
+        val customDialog = CustomDialog(mContext)
+        customDialog.setBottomDialog(
+                getString(R.string.session_Err),
+                getString(R.string.btnConfirm), View.OnClickListener {
+            exit()
+            customDialog.dismiss()
+        })
+        customDialog.show()
+    }
+
 }

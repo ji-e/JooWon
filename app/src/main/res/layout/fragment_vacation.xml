@@ -21,17 +21,16 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:fillViewport="true"
             android:scrollbars="none"
+            app:layout_constraintBottom_toTopOf="@id/vacation_btnRegister"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="@dimen/dp20"
-                android:paddingTop="@dimen/dp20"
-                android:paddingEnd="@dimen/dp20"
+                android:padding="@dimen/dp20"
                 android:orientation="vertical">
 
                 <!--Image-->
@@ -86,7 +85,7 @@
                     android:id="@+id/vacation_layCalendar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp34"
+                    android:layout_marginTop="@dimen/dp25"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="parent"

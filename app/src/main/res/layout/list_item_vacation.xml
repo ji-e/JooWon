@@ -1,35 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/item_vacation_layout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/c_ffffff"
-    android:orientation="horizontal"
-    android:paddingLeft="@dimen/dp16"
-    android:paddingBottom="@dimen/dp06"
-    android:gravity="center">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
-    <TextView
-        android:id="@+id/item_vacation_date"
-        android:layout_width="0dp"
+        <variable
+            name="vacationRItem"
+            type="com.example.uohih.joowon.model.VacationList" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/item_vacationR_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="3.5"
-        android:textSize="@dimen/dp14" />
+        android:background="@color/c_ffffff"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/dp20"
+        android:paddingTop="@dimen/dp05"
+        android:paddingEnd="@dimen/dp20"
+        android:paddingBottom="@dimen/dp05">
 
-    <TextView
-        android:id="@+id/item_vacation_cnt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="@dimen/dp14" />
+        <ImageButton
+            android:id="@+id/item_vacationR_delete"
+            android:layout_width="@dimen/dp14"
+            android:layout_height="@dimen/dp14"
+            android:layout_marginEnd="@dimen/dp10"
+            android:background="@drawable/btn_delete_v_selector" />
 
-    <CheckBox
-        android:id="@+id/item_vacation_check"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:backgroundTint="@color/c_004680"
-        android:layout_gravity="right" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/item_vacationR_date"
+            style="@style/Font_12_4a4a4a"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@{vacationRItem.vacation_date}"
+            tools:text="2020-10-10" />
+
+        <TextView
+            android:id="@+id/item_vacationR_content"
+            style="@style/Font_12_4a4a4a"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="@{vacationRItem.vacation_content}"
+            tools:text="연/월차 사용" />
+
+        <TextView
+            android:id="@+id/item_vacationR_cnt"
+            style="@style/Font_12_4a4a4a"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@{vacationRItem.vacation_cnt}"
+            tools:text="1.0" />
+
+
+    </LinearLayout>
+</layout>

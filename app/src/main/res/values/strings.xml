@@ -6,6 +6,7 @@
     <string name="blank"></string>
     <string name="string_format" formatted="false">%s</string>
     <string name="network_Err">네트워크에러</string>
+    <string name="session_Err">세션아웃</string>
     <string name="dialog_title">알림</string>
     <string name="signout">로그아웃</string>
     <string name="signout_msg">로그아웃하시겠습니까?</string>
