@@ -3,6 +3,7 @@ package com.example.uohih.joowon.ui.vacation
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import androidx.databinding.DataBindingUtil
@@ -84,6 +85,14 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
         tvEmpty = binding.vacationTvEmpty
 
         edtSearch.addTextChangedListener(VacationTextWatcher())
+        edtSearch.setOnTouchListener { view, motionEvent ->
+
+            if (motionEvent.action == MotionEvent.ACTION_UP) {
+                recyclerView.visibility = View.VISIBLE
+                layVacationFram.visibility = View.GONE
+            }
+            false
+        }
 
         setObserve()
 
@@ -149,21 +158,10 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
                     layVacationFram.visibility = View.VISIBLE
                     recyclerView.visibility = View.GONE
 
-
                     val bundle = Bundle()
-                    bundle.putString("position", position.toString())
-//            bundle.putString("join", subList[position].joinDate.toString())
-//            bundle.putString("phone", subList[position].phone)
-//            bundle.putString("vacation", subList[position].use + "/" + subList[position].total)
-//            bundle.putString("bitmap", subList[position].picture)
-//
-//            bundle.putDouble("cntRemain", cntRemain)
-//            bundle.putString("cntTotal", cntTotal)
-
-
+                    bundle.putString("_id", vacationViewModel.searchEmployeeList[position]._id)
                     replaceContainerFragment(R.id.vacation_layFrame, VacationFragment.newInstance(bundle), position)
 
-                    Toast.makeText(thisActivity, "FFFFF", Toast.LENGTH_SHORT).show()
                 }
 
 //               val imageBasicPath =  mainListViewModel.jw3001Data.value?.resbody?.employeeList?.get(position)?.profile_image
@@ -248,10 +246,10 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
 
     override fun onClick(view: View) {
         when (view) {
-            edtSearch -> {
-                recyclerView.visibility = View.VISIBLE
-                layVacationFram.visibility = View.GONE
-            }
+//            edtSearch -> {
+//                recyclerView.visibility = View.VISIBLE
+//                layVacationFram.visibility = View.GONE
+//            }
 //            R.id.vacation_btn_delete1 ->{
 //                vacation_edt_name.setText("")
 //            }

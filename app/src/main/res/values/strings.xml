@@ -111,7 +111,7 @@
     <string name="vacation_use_cnt">일수</string>
     <string name="vacation_half">반차</string>
     <string name="vacation_no">No.</string>
-
+    <string name="vacation_add">추가</string>
 
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

@@ -48,7 +48,6 @@
             android:paddingStart="@dimen/dp40"
             android:paddingEnd="@dimen/dp30"
             android:singleLine="true"
-            android:onClick="onClickVacation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/vacation_titleView" />

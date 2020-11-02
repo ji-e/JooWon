@@ -55,21 +55,40 @@ class VacationViewModel(application: JWBaseApplication, private val jwBaseReposi
     }
 
 
-    fun setEmployeeInfo(position: Int) {
-        LogUtil.e(searchEmployeeList)
-        val info = searchEmployeeList[position]
+    fun setEmployeeInfo(_id: String) {
 
-        liveEmployeeInfo.value = JW3001ResBodyList(
-                _id = info._id,
-                profile_image = info.profile_image,
-                name = info.name,
-                phone_number = info.phone_number,
-                birth = info.birth,
-                entered_date = info.entered_date,
-                total_vacation_cnt = info.total_vacation_cnt,
-                use_vacation = info.use_vacation,
-                use_vacation_cnt = info.use_vacation_cnt
+        for( i in 0 until initEmployeeList.size){
+            val info = initEmployeeList[i]
+            if(info._id == _id){
+                liveEmployeeInfo.value = JW3001ResBodyList(
+                        _id = info._id,
+                        profile_image = info.profile_image,
+                        name = info.name,
+                        phone_number = info.phone_number,
+                        birth = info.birth,
+                        entered_date = info.entered_date,
+                        total_vacation_cnt = info.total_vacation_cnt,
+                        use_vacation = info.use_vacation,
+                        use_vacation_cnt = info.use_vacation_cnt
 
-        )
+                )
+                return
+            }
+        }
+//        LogUtil.e(searchEmployeeList)
+//        val info = searchEmployeeList[position]
+//
+//        liveEmployeeInfo.value = JW3001ResBodyList(
+//                _id = info._id,
+//                profile_image = info.profile_image,
+//                name = info.name,
+//                phone_number = info.phone_number,
+//                birth = info.birth,
+//                entered_date = info.entered_date,
+//                total_vacation_cnt = info.total_vacation_cnt,
+//                use_vacation = info.use_vacation,
+//                use_vacation_cnt = info.use_vacation_cnt
+//
+//        )
     }
 }

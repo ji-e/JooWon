@@ -10,8 +10,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -28,6 +30,8 @@ import com.example.uohih.joowon.databinding.FragmentVacationBinding
 import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.util.DateCommonUtil
+import kotlinx.android.synthetic.main.btn_positive.view.*
+import kotlinx.android.synthetic.main.btn_white.view.*
 import kotlinx.android.synthetic.main.fragment_vacation.*
 import java.io.IOException
 import java.text.ParseException
@@ -35,44 +39,41 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class VacationFragment : Fragment(), View.OnClickListener {
-    private lateinit var mContext: Context
+//    private lateinit var mContext: Context
 
     private lateinit var vacationViewModel: VacationViewModel
     private lateinit var binding: FragmentVacationBinding
 
 
 
-    private val dbHelper by lazy { DBHelper(mContext) }
+//    private val dbHelper by lazy { DBHelper(mContext) }
 
     private val baseActivity = JWBaseActivity()
-    private val baseApplication = JWBaseApplication()
-    private lateinit var thisFragment: VacationFragment
 
-    private val todayJson = DateCommonUtil().getToday().get("yyyymmdd").toString()
+    private lateinit var thisFragment: VacationFragment
 
     private val vacationList = arrayListOf<String>()
     private var checkBoxList = arrayListOf<Boolean>(false)
 
     private lateinit var bitmap: String
-    private lateinit var name: String
-    private lateinit var join: String
-    private lateinit var phone: String
-    private lateinit var vacation: String
 
     private var cntSchedule = 0.0           //사용예정휴가일수
     private var cntRemain = 0.0             //남은휴가일수
     private var cntTotal = ""               //총휴가일수
 
 
-    private var position = ""
-    private val customDialog by lazy {
-        CustomDialog(mContext)
-    }
+    private var _id = ""
+
+    private lateinit var btnRegisterV:Button
+    private lateinit var btnRegister:Button
+//    private val customDialog by lazy {
+//        CustomDialog(mContext)
+//    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mContext = this.requireActivity()
+//        mContext = this.requireActivity()
         thisFragment = this
 
 
@@ -115,11 +116,20 @@ class VacationFragment : Fragment(), View.OnClickListener {
     }
 
     fun initView() {
-        vacationViewModel.setEmployeeList()
+        if (_id.isNotEmpty())
+            vacationViewModel.setEmployeeInfo(_id)
 
-        LogUtil.e(position)
-        if (position.isNotEmpty())
-            vacationViewModel.setEmployeeInfo(position.toInt())
+
+        btnRegisterV = binding.vacationBtnRegisterV.btnWhite
+        btnRegister = binding.vacationBtnRegister.btnPositive
+
+        btnRegisterV.text = getString(R.string.vacation_add)
+        btnRegister.text = getString(R.string.vacation_title)
+
+        btnRegisterV.setOnClickListener(this)
+        btnRegister.setOnClickListener(this)
+
+
         if (bitmap != "") {
             val file = BitmapFactory.decodeFile(bitmap)
             lateinit var exif: ExifInterface
@@ -160,22 +170,20 @@ class VacationFragment : Fragment(), View.OnClickListener {
         fun newInstance(bundle: Bundle): VacationFragment {
             return VacationFragment().apply {
                 arguments = Bundle().apply {
-                    position = bundle.getString("position", "")
-
-                    cntRemain = bundle.getDouble("cntRemain", 0.0)
-                    cntTotal = bundle.getString("cntTotal", "")
-                    name = bundle.getString("name", "")
-                    join = bundle.getString("join", "")
-                    phone = bundle.getString("phone", "")
-                    vacation = bundle.getString("vacation", "")
-                    bitmap = bundle.getString("bitmap", "")
+                    _id = bundle.getString("_id", "")
                 }
             }
         }
     }
 
     override fun onClick(v: View) {
-        when (v.id) {
+        when (v) {
+            btnRegisterV ->{
+                Toast.makeText(thisFragment as Context, "추가하기", Toast.LENGTH_SHORT).show()
+            }
+            btnRegister ->{
+                Toast.makeText(thisFragment  as Context, "등록하기", Toast.LENGTH_SHORT).show()
+            }
 //
 //            R.id.vacation_btn_startC -> {
 //                showCalendarDialog(vacation_tv_startD.text.toString(), vacation_tv_startD)
@@ -198,13 +206,13 @@ class VacationFragment : Fragment(), View.OnClickListener {
      * 검증
      */
     private fun validation(): Boolean {
-        if (vacationList.size == 0) {
-            customDialog.setBottomDialog(
-                    resources.getString(R.string.vacation_dialog_msg4),
-                    resources.getString(R.string.btnConfirm), null)
-            customDialog.show()
-            return false
-        }
+//        if (vacationList.size == 0) {
+//            customDialog.setBottomDialog(
+//                    resources.getString(R.string.vacation_dialog_msg4),
+//                    resources.getString(R.string.btnConfirm), null)
+//            customDialog.show()
+//            return false
+//        }
 //        if (vacation_edt_content.text.isNullOrEmpty())
 //            vacation_edt_content.setText(getString(R.string.vacation_content2))
 
@@ -216,57 +224,57 @@ class VacationFragment : Fragment(), View.OnClickListener {
     /**
      * 날짜 사이 평일 수 구하기
      */
-    private fun calDateBetweenAandB(date1: String, date2: String): Double {
-        try {
-            vacationList.clear()
-            val mVacationAdapter by lazy { VacationAdapter(mContext, vacationList) }
-            val sdf = SimpleDateFormat("yyyy-MM-dd")
-            val start = Calendar.getInstance()
-            val end = Calendar.getInstance()
-            var workingDays = 0.0
-
-            start.time = sdf.parse(date1)
-            end.time = sdf.parse(date2)
-
-            while (!start.after(end)) {
-                val day = start.get(Calendar.DAY_OF_WEEK)
-                if ((day != Calendar.SATURDAY) && (day != Calendar.SUNDAY)) {
-                    workingDays++
-                    vacationList.add(sdf.format(start.time))
-                }
-                start.add(Calendar.DATE, 1)
-
-            }
-
-//            vacation_listview.adapter = mVacationAdapter.apply {
-//                setVacationAdapterListener(object : VacationAdapter.VacationAdapterListener {
-//                    override fun getItemHeight(height: Int) {
-//                        val params = vacation_listview?.layoutParams
-//                        params?.height = height
-//                        vacation_listview?.layoutParams = params
-//                        vacation_listview?.requestLayout()
-//                    }
+//    private fun calDateBetweenAandB(date1: String, date2: String): Double {
+//        try {
+//            vacationList.clear()
+//            val mVacationAdapter by lazy { VacationAdapter(mContext, vacationList) }
+//            val sdf = SimpleDateFormat("yyyy-MM-dd")
+//            val start = Calendar.getInstance()
+//            val end = Calendar.getInstance()
+//            var workingDays = 0.0
 //
-//                    override fun getVacationCnt(mCheckBoxList: ArrayList<Boolean>, cnt: Double) {
-//                        vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cnt)
-//                        workingDays = cnt
-//                        checkBoxList = mCheckBoxList
-//                    }
-//                })
+//            start.time = sdf.parse(date1)
+//            end.time = sdf.parse(date2)
+//
+//            while (!start.after(end)) {
+//                val day = start.get(Calendar.DAY_OF_WEEK)
+//                if ((day != Calendar.SATURDAY) && (day != Calendar.SUNDAY)) {
+//                    workingDays++
+//                    vacationList.add(sdf.format(start.time))
+//                }
+//                start.add(Calendar.DATE, 1)
+//
 //            }
-
-            checkBoxList = mVacationAdapter.getCheckBoxList()
+//
+////            vacation_listview.adapter = mVacationAdapter.apply {
+////                setVacationAdapterListener(object : VacationAdapter.VacationAdapterListener {
+////                    override fun getItemHeight(height: Int) {
+////                        val params = vacation_listview?.layoutParams
+////                        params?.height = height
+////                        vacation_listview?.layoutParams = params
+////                        vacation_listview?.requestLayout()
+////                    }
+////
+////                    override fun getVacationCnt(mCheckBoxList: ArrayList<Boolean>, cnt: Double) {
+////                        vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cnt)
+////                        workingDays = cnt
+////                        checkBoxList = mCheckBoxList
+////                    }
+////                })
+////            }
+//
+//            checkBoxList = mVacationAdapter.getCheckBoxList()
 
 
 //            setListViewHeightBasedOnChildren(vacation_listview)
 
-            return workingDays
-
-        } catch (e: ParseException) {
-            LogUtil.e(e)
-            return 0.0
-        }
-    }
+//            return workingDays
+//
+//        } catch (e: ParseException) {
+//            LogUtil.e(e)
+//            return 0.0
+//        }
+//    }
 
     /**
      * 캘린더 다이얼로그
