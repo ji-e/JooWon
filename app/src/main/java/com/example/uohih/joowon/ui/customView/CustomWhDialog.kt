@@ -16,10 +16,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.databinding.DialogBasicBinding
+import com.example.uohih.joowon.databinding.DialogWhBinding
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.SizeConverterUtil
 import kotlinx.android.synthetic.main.btn_negative_bottom.view.*
 import kotlinx.android.synthetic.main.btn_positive_bottom.view.*
+import kotlinx.android.synthetic.main.btn_white.view.*
 import kotlinx.android.synthetic.main.dialog_basic.view.*
 
 /**
@@ -27,20 +29,16 @@ import kotlinx.android.synthetic.main.dialog_basic.view.*
  * context: Context
  * theme: Int
  */
-class CustomDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnClickListener {
+class CustomWhDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnClickListener {
 
 
-    private var binding: DialogBasicBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.dialog_basic, null, false)
+    private var binding: DialogWhBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.dialog_wh, null, false)
 
     private lateinit var tvTitle: TextView
     private lateinit var tvContent: TextView
     private lateinit var btnClose: ImageButton
-    private lateinit var btnNo: Button
-    private lateinit var btnYes: Button
-
-    private var mCloseBtnClickListener: View.OnClickListener? = null
-    private var mNoBtnClickListener: View.OnClickListener? = null
-    private var mYesBtnClickListener: View.OnClickListener? = null
+    private lateinit var btn1: Button
+    private lateinit var btn2: Button
 
     init {
         binding.run {
@@ -54,16 +52,16 @@ class CustomDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnClick
         tvTitle = binding.dialogTvTitle
         tvContent = binding.dialogTvContent
         btnClose = binding.dialogBtnClose
-        btnNo = binding.dialogBtnNo.btnNegative
-        btnYes = binding.dialogBtnYes.btnPositive
+        btn1 = binding.dialogBtn1.btnWhite
+        btn2 = binding.dialogBtn2.btnWhite
 
         btnClose.setOnClickListener(this)
-        btnNo.setOnClickListener(this)
-        btnYes.setOnClickListener(this)
+        btn1.setOnClickListener(this)
+        btn2.setOnClickListener(this)
     }
 
 
-    fun setBottomDialog(strContent: String,
+    fun setBottomDialog(strContent: String?,
                         strYes: String, onYesListener: View.OnClickListener?) {
 
         setBottomDialog(mContext.getString(R.string.dialog_title), strContent, null, null, null, strYes, onYesListener)
@@ -71,7 +69,7 @@ class CustomDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnClick
 
 
     fun setBottomDialog(strTitle: String,
-                        strContent: String,
+                        strContent: String?,
                         onCloseListener: View.OnClickListener?,
                         strYes: String, onYesListener: View.OnClickListener?) {
 
@@ -79,16 +77,19 @@ class CustomDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnClick
     }
 
     fun setBottomDialog(strTitle: String,
-                        strContent: String,
+                        strContent: String?,
                         onCloseListener: View.OnClickListener?,
-                        strNo: String?, onNoListener: View.OnClickListener?,
-                        strYes: String, onYesListener: View.OnClickListener?) {
-
-        LogUtil.e(onYesListener.toString())
+                        strNo: String?, onBtn1Listener: View.OnClickListener?,
+                        strYes: String, onBtn2Listener: View.OnClickListener?) {
 
         onCloseListener?.let { btnClose.setOnClickListener(it) }
-        onNoListener?.let { btnNo.setOnClickListener(it) }
-        onYesListener?.let { btnYes.setOnClickListener(it) }
+        onBtn1Listener?.let { btn1.setOnClickListener(it) }
+        onBtn2Listener?.let { btn2.setOnClickListener(it) }
+
+        tvTitle.text = strTitle
+        tvContent.text = strContent
+        btn1.text = strNo
+        btn2.text = strYes
 
 
         if (onCloseListener == null) {
@@ -96,23 +97,18 @@ class CustomDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnClick
             setCancelable(false)
         }
 
-        tvTitle.text = strTitle
-        tvContent.text = strContent
-        btnNo.text = strNo
-        btnYes.text = strYes
-
-        if (strNo.isNullOrEmpty()) {
-            binding.dialogBtnNo.visibility = View.GONE
+        if (strContent.isNullOrEmpty()) {
+            tvContent.visibility = View.GONE
         }
 
 
         // 다이얼로그 높이 설정
-        setPeekHeight(250f)
+        setPeekHeight(200f)
     }
 
     override fun onClick(view: View) {
         when (view) {
-            btnClose, btnNo, btnYes -> {
+            btnClose, btn1, btn2 -> {
                 dismiss()
             }
         }

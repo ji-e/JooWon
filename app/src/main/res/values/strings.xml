@@ -17,6 +17,7 @@
     <string name="btnCancel">취소</string>
     <string name="btnSearch">검색</string>
     <string name="btnRegistration">등록</string>
+    <string name="btnDelete">삭제하기</string>
 
     <!--menu-->
     <string name="menu01">카메라</string>
@@ -45,7 +46,7 @@
     <string name="workerInsert_phone3">핸드폰 번호를 확인해주세요.</string>
     <string name="workerInsert_vacation">총 휴가일</string>
     <string name="workerInsert_vacation2">총 휴가일을 입력해주세요.</string>
-    <string name="workerInsert_picture">사진 설정하기</string>
+    <string name="workerInsert_picture">프로필 설정</string>
     <string name="workerInsert_use">사용 휴가일</string>
     <string name="workerInsert_use2">사용 휴가일을 입력해주세요.</string>
     <string name="workerInsert_btn_register">등록하기</string>
@@ -97,6 +98,7 @@
     <string name="vacation_end_date">휴가 마지막 기간</string>
     <string name="vacation_content">휴가 내용</string>
     <string name="vacation_content2">연/월차 사용</string>
+    <string name="vacation_content_cnt">%s / 40</string>
     <string name="vacation_nothing">검색 결과가 없습니다.</string>
     <string name="vacation_use_vacation">사용 예정 휴가 일수: %s 개</string>
     <string name="vacation_hint">이름/휴대폰번호를 입력해주세요.</string>
@@ -109,6 +111,8 @@
     <string name="vacation_use_cnt">일수</string>
     <string name="vacation_half">반차</string>
     <string name="vacation_no">No.</string>
+
+
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>

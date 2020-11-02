@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="customWhDialogVar"
+            type="com.example.uohih.joowon.ui.customView.CustomWhDialog" />
+    </data>
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp200"
+        android:background="@drawable/rectangle_r4_ffffff"
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/dialog_tvTitle"
+                style="@style/Font_18_000000"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp60"
+                android:gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="알림" />
+
+            <ImageButton
+                android:id="@+id/dialog_btnClose"
+                android:layout_width="@dimen/dp36"
+                android:layout_height="@dimen/dp36"
+                android:layout_marginEnd="@dimen/dp12"
+                android:background="@drawable/btn_close_selector"
+                app:layout_constraintBottom_toBottomOf="@id/dialog_tvTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/dialog_tvTitle" />
+
+            <TextView
+                android:id="@+id/dialog_tvContent"
+                style="@style/Font_15_4a4a4a"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/dp51"
+                android:gravity="center"
+                android:paddingStart="@dimen/dp30"
+                android:paddingTop="@dimen/dp40"
+                android:paddingEnd="@dimen/dp30"
+                android:paddingBottom="@dimen/dp10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="메시지메시지메시지메시징루루루루루루루ㅜ루루루ㅜ룰라라\n라라라라라ㅏ라로로로로로로" />
+
+            <include
+                android:id="@+id/dialog_btn1"
+                layout="@layout/btn_white"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp51"
+                android:layout_marginStart="@dimen/dp20"
+                android:layout_marginEnd="@dimen/dp20"
+                android:layout_marginBottom="@dimen/dp14"
+                app:layout_constraintBottom_toTopOf="@id/dialog_btn2" />
+
+            <include
+                android:id="@+id/dialog_btn2"
+                layout="@layout/btn_white"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp51"
+                android:layout_marginStart="@dimen/dp20"
+                android:layout_marginEnd="@dimen/dp20"
+                android:layout_marginBottom="@dimen/dp20"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

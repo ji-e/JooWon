@@ -1,17 +1,24 @@
 package com.example.uohih.joowon.ui.main
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uohih.joowon.Constants
@@ -25,10 +32,11 @@ import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.customView.DraggableFloatingButton
 import com.example.uohih.joowon.ui.setting.SettingActivity
 import com.example.uohih.joowon.ui.worker.WorkerInsertActivity
-import com.example.uohih.joowon.ui.worker.WorkerMainActivity
 import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.list_item_main_list.view.*
+import org.apache.poi.ss.formula.functions.T
+import ru.rambler.libs.swipe_layout.SwipeLayout
 
 
 class MainListActivity : JWBaseActivity() {
@@ -145,10 +153,6 @@ class MainListActivity : JWBaseActivity() {
 
         mainListViewModel.jw3001Data.observe(thisActivity, Observer {
             val jw3001Data = it ?: return@Observer
-            if (jw3001Data.resbody == null) {
-                showNetworkErrDialog(thisActivity)
-                return@Observer
-            }
             setData()
         })
 
@@ -181,6 +185,7 @@ class MainListActivity : JWBaseActivity() {
         tvEmpty.visibility = if (mainListViewModel.searchEmployeeList.size == 0) View.VISIBLE else View.GONE
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
         recyclerView.adapter = object : BaseRecyclerView.Adapter<JW3001ResBodyList, ListItemMainListBinding>(
                 layoutResId = R.layout.list_item_main_list,
                 bindingVariableId = BR.mainListItem
@@ -193,11 +198,45 @@ class MainListActivity : JWBaseActivity() {
                     thisActivity.startActivity(intent)
                 }
 
-                holder.itemView.setOnClickListener {
-                    val intent = Intent(thisActivity, WorkerMainActivity::class.java)
-                    thisActivity.startActivity(intent)
+                holder.itemView.mainList_item.setOnClickListener {
+//                    val intent = Intent(thisActivity, WorkerMainActivity::class.java)
+//                    thisActivity.startActivity(intent)
                 }
 
+                holder.itemView.mainList_swipeLayout.setOnSwipeListener(
+                        object : SwipeLayout.OnSwipeListener {
+                            override fun onRightStickyEdge(swipeLayout: SwipeLayout?, moveToRight: Boolean) {
+
+                            }
+
+                            override fun onBeginSwipe(swipeLayout: SwipeLayout?, moveToRight: Boolean) {
+
+                            }
+
+                            override fun onLeftStickyEdge(swipeLayout: SwipeLayout?, moveToRight: Boolean) {
+
+                            }
+
+                            override fun onSwipeClampReached(swipeLayout: SwipeLayout?, moveToRight: Boolean) {
+                                val jsonObject = JsonObject()
+                                jsonObject.addProperty("methodid", Constants.JW3004)
+                                jsonObject.addProperty("_id", mainListViewModel.searchEmployeeList[position]._id)
+
+                                mainListViewModel.deleteEmployee(jsonObject, position)
+
+                                mainListViewModel.jw3004Data.observe(thisActivity, Observer {
+                                    val jw3004Data = it ?: return@Observer
+                                    holder.itemView.mainList_swipeLayout.animateReset()
+                                    notifyItemRemoved(position)
+                                    mainListViewModel.liveEmployeeList.postValue(mainListViewModel.searchEmployeeList)
+
+                                })
+
+
+                            }
+                        }
+                )
+//
 //               val imageBasicPath =  mainListViewModel.jw3001Data.value?.resbody?.employeeList?.get(position)?.profile_image
 //                if (!imageBasicPath.isNullOrEmpty()) {
 //                    val imagePath = ApiService.Base_URL_ORIGIN + mainListViewModel.jw3001Data.value?.resbody?.employeeList?.get(position)?.profile_image

@@ -12,7 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.uohih.joowon.Constants
@@ -21,6 +23,8 @@ import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.database.DBHelper
+import com.example.uohih.joowon.databinding.ActivityVacationBinding
+import com.example.uohih.joowon.databinding.FragmentVacationBinding
 import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.util.DateCommonUtil
@@ -32,6 +36,11 @@ import java.util.*
 
 class VacationFragment : Fragment(), View.OnClickListener {
     private lateinit var mContext: Context
+
+    private lateinit var vacationViewModel: VacationViewModel
+    private lateinit var binding: FragmentVacationBinding
+
+
 
     private val dbHelper by lazy { DBHelper(mContext) }
 
@@ -55,6 +64,7 @@ class VacationFragment : Fragment(), View.OnClickListener {
     private var cntTotal = ""               //총휴가일수
 
 
+    private var position = ""
     private val customDialog by lazy {
         CustomDialog(mContext)
     }
@@ -62,12 +72,24 @@ class VacationFragment : Fragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mContext = this.activity!!
+        mContext = this.requireActivity()
         thisFragment = this
+
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.fragment_vacation, container, false)
+//        val root = inflater.inflate(R.layout.fragment_vacation, container, false)
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_vacation, container, false)
+        binding.run {
+            vacationViewModel = ViewModelProviders.of(thisFragment, VacationViewModelFactory()).get(VacationViewModel::class.java)
+            lifecycleOwner = thisFragment
+            vacationEVm = vacationViewModel
+        }
+
+        val root = binding.root
+
         return root
     }
 
@@ -76,23 +98,28 @@ class VacationFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 휴가 시작 기간
-        vacation_tv_startD.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(todayJson, "$1-$2-$3")
-        vacation_btn_startC.setOnClickListener(this)
-
-        // 휴가 마지막 기간
-        vacation_tv_endD.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(todayJson, "$1-$2-$3")
-        vacation_btn_endC.setOnClickListener(this)
-
-        cntSchedule = (calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString()))
-        vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cntSchedule)
-
-        // 하단 등록 버튼
-        vacation_btn_bottom.setOnClickListener(this)
+//        // 휴가 시작 기간
+//        vacation_tv_startD.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(todayJson, "$1-$2-$3")
+//        vacation_btn_startC.setOnClickListener(this)
+//
+//        // 휴가 마지막 기간
+//        vacation_tv_endD.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(todayJson, "$1-$2-$3")
+//        vacation_btn_endC.setOnClickListener(this)
+//
+//        cntSchedule = (calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString()))
+//        vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cntSchedule)
+//
+//        // 하단 등록 버튼
+//        vacation_btn_bottom.setOnClickListener(this)
         initView()
     }
 
     fun initView() {
+        vacationViewModel.setEmployeeList()
+
+        LogUtil.e(position)
+        if (position.isNotEmpty())
+            vacationViewModel.setEmployeeInfo(position.toInt())
         if (bitmap != "") {
             val file = BitmapFactory.decodeFile(bitmap)
             lateinit var exif: ExifInterface
@@ -109,16 +136,16 @@ class VacationFragment : Fragment(), View.OnClickListener {
             exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
             exifDegree = baseActivity.exifOrientationToDegrees(exifOrientation)
 
-            Glide.with(mContext).load(baseActivity.rotate(file, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(vacation_img_people)
+//            Glide.with(mContext).load(baseActivity.rotate(file, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(vacation_img_people)
 
         } else {
-            vacation_img_people.setImageDrawable(mContext.getDrawable(R.drawable.people))
+//            vacation_img_people.setImageDrawable(mContext.getDrawable(R.drawable.people))
         }
 
-        vacation_tv_name.text = name
-        vacation_tv_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(join, "$1-$2-$3")
-        vacation_tv_phone.text = (Constants.PHONE_NUM_PATTERN).toRegex().replace(phone, "$1-$2-$3")
-        vacation_tv_vacation.text = vacation
+//        vacation_tv_name.text = name
+//        vacation_tv_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(join, "$1-$2-$3")
+//        vacation_tv_phone.text = (Constants.PHONE_NUM_PATTERN).toRegex().replace(phone, "$1-$2-$3")
+//        vacation_tv_vacation.text = vacation
     }
 
     companion object {
@@ -133,6 +160,8 @@ class VacationFragment : Fragment(), View.OnClickListener {
         fun newInstance(bundle: Bundle): VacationFragment {
             return VacationFragment().apply {
                 arguments = Bundle().apply {
+                    position = bundle.getString("position", "")
+
                     cntRemain = bundle.getDouble("cntRemain", 0.0)
                     cntTotal = bundle.getString("cntTotal", "")
                     name = bundle.getString("name", "")
@@ -147,20 +176,20 @@ class VacationFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-
-            R.id.vacation_btn_startC -> {
-                showCalendarDialog(vacation_tv_startD.text.toString(), vacation_tv_startD)
-            }
-            R.id.vacation_btn_endC -> {
-                showCalendarDialog(vacation_tv_endD.text.toString(), vacation_tv_endD)
-            }
-            R.id.vacation_btn_bottom -> {
-                if (validation()) {
-                    //todo
-                    LogUtil.e("True")
-                    setVacationRegister()
-                }
-            }
+//
+//            R.id.vacation_btn_startC -> {
+//                showCalendarDialog(vacation_tv_startD.text.toString(), vacation_tv_startD)
+//            }
+//            R.id.vacation_btn_endC -> {
+//                showCalendarDialog(vacation_tv_endD.text.toString(), vacation_tv_endD)
+//            }
+//            R.id.vacation_btn_bottom -> {
+//                if (validation()) {
+//                    //todo
+//                    LogUtil.e("True")
+//                    setVacationRegister()
+//                }
+//            }
 
         }
     }
@@ -176,8 +205,8 @@ class VacationFragment : Fragment(), View.OnClickListener {
             customDialog.show()
             return false
         }
-        if (vacation_edt_content.text.isNullOrEmpty())
-            vacation_edt_content.setText(getString(R.string.vacation_content2))
+//        if (vacation_edt_content.text.isNullOrEmpty())
+//            vacation_edt_content.setText(getString(R.string.vacation_content2))
 
         // 휴가 일수 확인
         return cntRemain >= cntSchedule
@@ -209,22 +238,22 @@ class VacationFragment : Fragment(), View.OnClickListener {
 
             }
 
-            vacation_listview.adapter = mVacationAdapter.apply {
-                setVacationAdapterListener(object : VacationAdapter.VacationAdapterListener {
-                    override fun getItemHeight(height: Int) {
-                        val params = vacation_listview?.layoutParams
-                        params?.height = height
-                        vacation_listview?.layoutParams = params
-                        vacation_listview?.requestLayout()
-                    }
-
-                    override fun getVacationCnt(mCheckBoxList: ArrayList<Boolean>, cnt: Double) {
-                        vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cnt)
-                        workingDays = cnt
-                        checkBoxList = mCheckBoxList
-                    }
-                })
-            }
+//            vacation_listview.adapter = mVacationAdapter.apply {
+//                setVacationAdapterListener(object : VacationAdapter.VacationAdapterListener {
+//                    override fun getItemHeight(height: Int) {
+//                        val params = vacation_listview?.layoutParams
+//                        params?.height = height
+//                        vacation_listview?.layoutParams = params
+//                        vacation_listview?.requestLayout()
+//                    }
+//
+//                    override fun getVacationCnt(mCheckBoxList: ArrayList<Boolean>, cnt: Double) {
+//                        vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cnt)
+//                        workingDays = cnt
+//                        checkBoxList = mCheckBoxList
+//                    }
+//                })
+//            }
 
             checkBoxList = mVacationAdapter.getCheckBoxList()
 
@@ -260,57 +289,57 @@ class VacationFragment : Fragment(), View.OnClickListener {
 //        }
     }
 
-    private fun setVacationRegister() {
-//        val name = vacation_tv_name.text.toString()
-        val phone = vacation_tv_phone.text.toString().replace("-", "")
-        val content = vacation_edt_content.text.toString()
-        val joinDate = vacation_tv_join.text.toString().replace("-", "")
-
-        val cursor = dbHelper.selectWorker(name, phone.replace("-", ""))
-        cursor.moveToFirst()
-        val bitmap = cursor.getString(6)
-        var use = cursor.getString(4).toString()
-        val no = cursor.getInt(0).toString()
-
-        for (i in 0 until vacationList.size) {
-            val date = vacationList[i].replace("-", "")
-            val cntUse by lazy {
-                if (checkBoxList[i]) "0.5"
-                else "1.0"
-            }
-
-            use = (use.toDouble() + cntUse.toDouble()).toString()
-
-            val cursor = dbHelper.selectVacation(phone, name, date)
-
-            if (cursor.count > 0) {
-                customDialog.setBottomDialog(
-                        getString(R.string.vacation_dialog_msg2),
-                        getString(R.string.btnConfirm), null)
-                customDialog.show()
-                return
-            }
-
-            dbHelper.insert(dbHelper.tableNameVacationJW, "name", "phone", "date", "content", "use", "total",
-                    name, phone, date, content, cntUse, cntTotal)
-
-            dbHelper.update(dbHelper.tableNameWorkerJW, name, joinDate, phone, use, cntTotal, bitmap, no)
-        }
-
-        customDialog.setBottomDialog(
-                getString(R.string.vacation_dialog_msg),
-                getString(R.string.btnConfirm),
-                View.OnClickListener {
-
-                    if (mContext is VacationActivity) {
-//                        (mContext as VacationActivity).clearEditName()
-                    } else {
-                        (mContext as Activity).finish()
-                    }
-                    customDialog.dismiss()
-                })
-        customDialog.show()
-    }
+//    private fun setVacationRegister() {
+////        val name = vacation_tv_name.text.toString()
+//        val phone = vacation_tv_phone.text.toString().replace("-", "")
+//        val content = vacation_edt_content.text.toString()
+//        val joinDate = vacation_tv_join.text.toString().replace("-", "")
+//
+//        val cursor = dbHelper.selectWorker(name, phone.replace("-", ""))
+//        cursor.moveToFirst()
+//        val bitmap = cursor.getString(6)
+//        var use = cursor.getString(4).toString()
+//        val no = cursor.getInt(0).toString()
+//
+//        for (i in 0 until vacationList.size) {
+//            val date = vacationList[i].replace("-", "")
+//            val cntUse by lazy {
+//                if (checkBoxList[i]) "0.5"
+//                else "1.0"
+//            }
+//
+//            use = (use.toDouble() + cntUse.toDouble()).toString()
+//
+//            val cursor = dbHelper.selectVacation(phone, name, date)
+//
+//            if (cursor.count > 0) {
+//                customDialog.setBottomDialog(
+//                        getString(R.string.vacation_dialog_msg2),
+//                        getString(R.string.btnConfirm), null)
+//                customDialog.show()
+//                return
+//            }
+//
+//            dbHelper.insert(dbHelper.tableNameVacationJW, "name", "phone", "date", "content", "use", "total",
+//                    name, phone, date, content, cntUse, cntTotal)
+//
+//            dbHelper.update(dbHelper.tableNameWorkerJW, name, joinDate, phone, use, cntTotal, bitmap, no)
+//        }
+//
+//        customDialog.setBottomDialog(
+//                getString(R.string.vacation_dialog_msg),
+//                getString(R.string.btnConfirm),
+//                View.OnClickListener {
+//
+//                    if (mContext is VacationActivity) {
+////                        (mContext as VacationActivity).clearEditName()
+//                    } else {
+//                        (mContext as Activity).finish()
+//                    }
+//                    customDialog.dismiss()
+//                })
+//        customDialog.show()
+//    }
 
 
     private fun vacationExistence() {

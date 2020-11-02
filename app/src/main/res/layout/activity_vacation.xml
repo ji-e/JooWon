@@ -48,6 +48,7 @@
             android:paddingStart="@dimen/dp40"
             android:paddingEnd="@dimen/dp30"
             android:singleLine="true"
+            android:onClick="onClickVacation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/vacation_titleView" />
@@ -102,6 +103,13 @@
                 android:paddingTop="@dimen/dp05"
                 android:paddingBottom="@dimen/dp05"
                 tools:listitem="@layout/list_item_vacation_search" />
+
+            <FrameLayout
+                android:id="@+id/vacation_layFrame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </RelativeLayout>
 
 

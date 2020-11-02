@@ -17,13 +17,16 @@
         android:layout_height="wrap_content"
         android:background="@color/c_null"
         android:orientation="vertical"
-        tools:ignore="MissingPrefix">
+        tools:ignore="MissingPrefix"
+        app:left_swipe_enabled="false"
+        app:right_swipe_enabled="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mainList_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground">
+            android:background="@color/c_null"
+            android:foreground="?attr/selectableItemBackground">
 
             <!--Image-->
             <ImageView
@@ -92,56 +95,50 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <!--CheckBox-->
-            <!--        <CheckBox-->
-            <!--            android:id="@+id/mainList_check"-->
-            <!--            android:layout_width="wrap_content"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:layout_gravity="center_vertical"-->
-            <!--            android:layout_marginRight="@dimen/dp11"-->
-            <!--            android:buttonTint="@color/c_004680"-->
-            <!--            android:visibility="gone" />-->
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <!--RIGHT-->
         <FrameLayout
             android:id="@+id/mainList_rightView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/c_e6e6e6"
+            android:background="@color/c_efefef"
             android:padding="@dimen/dp10"
-            app:bring_to_clamp="@dimen/dp100"
+            app:bring_to_clamp="@dimen/dp150"
             app:clamp="self"
             app:gravity="right"
             app:sticky="none">
 
-            <ImageView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/btn_trash_selector" />
+                style="@style/Font_13_4a4a4a"
+                android:text="@string/btnDelete"
+                android:layout_marginStart="@dimen/dp15"
+                android:layout_gravity="center_vertical" />
+
         </FrameLayout>
 
         <!--LEFT-->
-        <FrameLayout
-            android:id="@+id/mainList_leftView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@color/c_004680"
-            android:padding="@dimen/dp10"
-            app:bring_to_clamp="@dimen/dp100"
-            app:clamp="self"
-            app:gravity="left"
-            app:sticky="none">
+        <!--        <FrameLayout-->
+        <!--            android:id="@+id/mainList_leftView"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:background="@color/c_004680"-->
+        <!--            android:padding="@dimen/dp10"-->
+        <!--            app:bring_to_clamp="@dimen/dp100"-->
+        <!--            app:clamp="self"-->
+        <!--            app:gravity="left"-->
+        <!--            app:sticky="none"-->
+        <!--            android:visibility="gone">-->
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/btn_trash_selector" />
-        </FrameLayout>
+        <!--            <ImageView-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_gravity="center"-->
+        <!--                android:src="@drawable/btn_trash_selector" />-->
+        <!--        </FrameLayout>-->
 
     </ru.rambler.libs.swipe_layout.SwipeLayout>
 </layout>

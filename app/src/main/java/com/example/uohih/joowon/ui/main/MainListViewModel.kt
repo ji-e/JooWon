@@ -8,6 +8,7 @@ import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.base.JWBaseViewModel
 import com.example.uohih.joowon.model.JW3001
 import com.example.uohih.joowon.model.JW3001ResBodyList
+import com.example.uohih.joowon.model.JW3004
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.example.uohih.joowon.util.LogUtil
@@ -19,10 +20,12 @@ import org.json.JSONObject
 class MainListViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : JWBaseViewModel(application, jwBaseRepository) {
     private val _isLoading = MutableLiveData<Boolean>()
     private var _jw3001Data = MutableLiveData<JW3001>()
+    private var _jw3004Data = MutableLiveData<JW3004>()
     private val _searchData = MutableLiveData<Boolean>()
 
     val isLoading: LiveData<Boolean> = _isLoading
     val jw3001Data: LiveData<JW3001> = _jw3001Data
+    val jw3004Data: LiveData<JW3004> = _jw3004Data
     val searchData: LiveData<Boolean> = _searchData
 
     var initEmployeeList = mutableListOf<JW3001ResBodyList>()
@@ -75,12 +78,12 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
 
             override fun onFailure(code: Int) {
                 _isLoading.value = false
-                _jw3001Data.value = JW3001(resbody = null)
+                _isNetworkErr.value = true
             }
 
             override fun onError(throwable: Throwable) {
                 _isLoading.value = false
-                _jw3001Data.value =  JW3001(resbody = null)
+                _isNetworkErr.value = true
             }
         })
     }
@@ -101,6 +104,43 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
         liveEmployeeList.postValue(employeeList)
         searchEmployeeList = employeeList
         _searchData.value = true
+    }
+
+    /**
+     * 직원삭제하기
+     * jw3004
+     */
+    fun deleteEmployee(jsonObject: JsonObject, position: Int) {
+//        _isLoading.value = true
+        jwBaseRepository.requestBaseService(jsonObject, object : GetResbodyCallback {
+            override fun onSuccess(code: Int, data: JSONObject) {
+//                _isLoading.value = false
+
+                val jw3004Data = Gson().fromJson(data.toString(), JW3004::class.java)
+
+                if ("false" == jw3004Data.result) {
+                    return
+                }
+                if ("N" == jw3004Data.resbody?.successYn) {
+                    return
+                }
+
+                searchEmployeeList.removeAt(position)
+                liveEmployeeList.postValue(searchEmployeeList)
+                UICommonUtil.setInitEmployeeList(searchEmployeeList)
+                _jw3004Data.value = jw3004Data
+            }
+
+            override fun onFailure(code: Int) {
+//                _isLoading.value = false
+                _isNetworkErr.value = true
+            }
+
+            override fun onError(throwable: Throwable) {
+//                _isLoading.value = false
+                _isNetworkErr.value = true
+            }
+        })
     }
 
 }

@@ -36,10 +36,10 @@ import com.example.uohih.joowon.ui.adapter.DialogListAdapter
 import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.ui.customView.CustomListDialog
+import com.example.uohih.joowon.ui.customView.CustomWhDialog
 import com.example.uohih.joowon.util.DateCommonUtil
 import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.JsonObject
-import kotlinx.android.synthetic.main.activity_worker_insert.*
 import kotlinx.android.synthetic.main.btn_positive_bottom.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -213,6 +213,7 @@ class WorkerInsertActivity : JWBaseActivity() {
                             jw3002Data.msg.toString(),
                             getString(R.string.btnConfirm), null)
                 }
+                customDialog.show()
             } else {
                 if ("Y" == jw3002Data.resbody?.addEmployeeValid) {
                     customDialog.apply {
@@ -220,13 +221,16 @@ class WorkerInsertActivity : JWBaseActivity() {
                                 getString(R.string.workerInsert_dialog_msg),
                                 getString(R.string.btnConfirm),
                                 View.OnClickListener {
+                                    dismiss()
                                     thisActivity.finish()
                                 })
-                        dismiss()
+
                     }
+                    customDialog.show()
                 }
+
             }
-            customDialog.show()
+
         })
     }
 
@@ -316,7 +320,7 @@ class WorkerInsertActivity : JWBaseActivity() {
                 showCalendarDialog(tvEnjoyDate, true)
             }
             layProfile -> {
-                showListDialog()
+                showProfileDialog()
             }
 //            worker_layout_delete -> {
 //                customDialog.showDialog(this, String.format(resources.getString(R.string.workerUpdate_delete_msg), name),
@@ -373,25 +377,45 @@ class WorkerInsertActivity : JWBaseActivity() {
     /**
      * 리스트 다이얼로그
      */
-    private fun showListDialog() {
-        val listViewAdapter = DialogListAdapter(thisActivity, ArrayList()).apply {
-            setContent(getString(R.string.menu01))
-            setContent(getString(R.string.menu02))
+    private fun showProfileDialog() {
+//        val listViewAdapter = DialogListAdapter(thisActivity, ArrayList()).apply {
+//            setContent(getString(R.string.menu01))
+//            setContent(getString(R.string.menu02))
+//        }
+//
+//        val customDialogList = CustomListDialog(thisActivity, android.R.style.Theme_Material_Dialog_MinWidth)
+//        customDialogList.showDialogList(
+//                thisActivity,
+//                getString(R.string.workerInsert_picture),
+//                DialogInterface.OnClickListener { dialogInterface: DialogInterface, i: Int -> },
+//                listViewAdapter,
+//                AdapterView.OnItemClickListener { parent, view, p, id ->
+//                    when (p) {
+//                        0 -> sendTakePhotoIntent()      //카메라
+//                        1 -> sendTakeGalleryIntent()    //갤러리
+//                    }
+//                    customDialogList.dismiss()
+//                })?.show()
+
+        val customWhDialog = CustomWhDialog(mContext).apply {
+            setBottomDialog(
+                    getString(R.string.workerInsert_picture),
+                    "",
+                    View.OnClickListener { dismiss() },
+                    getString(R.string.menu01),
+                    View.OnClickListener {
+                        sendTakePhotoIntent()
+                        dismiss()
+                    },
+                    getString(R.string.menu02),
+                    View.OnClickListener {
+                        sendTakeGalleryIntent()
+                        dismiss()
+                    }
+            )
         }
 
-        val customDialogList = CustomListDialog(thisActivity, android.R.style.Theme_Material_Dialog_MinWidth)
-        customDialogList.showDialogList(
-                thisActivity,
-                getString(R.string.workerInsert_picture),
-                DialogInterface.OnClickListener { dialogInterface: DialogInterface, i: Int -> },
-                listViewAdapter,
-                AdapterView.OnItemClickListener { parent, view, p, id ->
-                    when (p) {
-                        0 -> sendTakePhotoIntent()      //카메라
-                        1 -> sendTakeGalleryIntent()    //갤러리
-                    }
-                    customDialogList.dismiss()
-                })?.show()
+        customWhDialog.show()
 
     }
 

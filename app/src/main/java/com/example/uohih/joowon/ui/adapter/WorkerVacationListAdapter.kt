@@ -10,9 +10,9 @@ import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.database.VacationData
 import kotlinx.android.synthetic.main.list_item_main_list.view.mainList_item
-import kotlinx.android.synthetic.main.list_item_main_list.view.mainList_leftView
-import kotlinx.android.synthetic.main.list_item_main_list.view.mainList_rightView
-import kotlinx.android.synthetic.main.list_item_main_list.view.mainList_swipeLayout
+//import kotlinx.android.synthetic.main.list_item_main_list.view.mainList_leftView
+//import kotlinx.android.synthetic.main.list_item_main_list.view.mainList_rightView
+//import kotlinx.android.synthetic.main.list_item_main_list.view.mainList_swipeLayout
 import kotlinx.android.synthetic.main.list_item_worker_main.view.*
 import java.util.*
 

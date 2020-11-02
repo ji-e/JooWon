@@ -102,9 +102,9 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private var view: View = v
-        val mSwipeLayout: SwipeLayout = view.mainList_swipeLayout
-        val mLayoutLeft = itemView.mainList_leftView      //왼쪽 스와이프
-        val mLayoutRight = itemView.mainList_rightView    //오른쪽 스와이프
+//        val mSwipeLayout: SwipeLayout = view.mainList_swipeLayout
+//        val mLayoutLeft = itemView.mainList_leftView      //왼쪽 스와이프
+//        val mLayoutRight = itemView.mainList_rightView    //오른쪽 스와이프
 
         val mTvName = view.mainList_tvName                //이름
 
@@ -147,11 +147,11 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
             mImgPeople.setOnClickListener(listener)
             view.mainList_item.setOnClickListener(listener)
 
-            mLayoutLeft.isClickable = true
-            mLayoutLeft.setOnClickListener(listener)
-
-            mLayoutRight.isClickable = true
-            mLayoutRight.setOnClickListener(listener)
+//            mLayoutLeft.isClickable = true
+//            mLayoutLeft.setOnClickListener(listener)
+//
+//            mLayoutRight.isClickable = true
+//            mLayoutRight.setOnClickListener(listener)
 
         }
     }
@@ -182,29 +182,29 @@ class MainListAdapter(private val workerList: ArrayList<StaffData>) : RecyclerVi
 //                    intent.putExtra("worker", bundle)
 //                    mContext.startActivity(intent)
                 }
-                R.id.mainList_leftView -> { //왼쪽 스와이프 (즐겨찾기)
-                    holder.mSwipeLayout.animateReset()
-                }
-                R.id.mainList_rightView -> { //오른쪽 스와이프 (삭제)
-                    holder.mSwipeLayout.animateReset()
-                    val dbHelper = DBHelper(mContext)
-                    val customDialog = CustomDialog(mContext).apply {
-                        setBottomDialog(String.format(mContext.resources.getString(R.string.workerUpdate_delete_msg),
-                                holder.mTvName.text.toString()),
-                                mContext.resources.getString(R.string.btnCancel), null,
-                                mContext.resources.getString(R.string.btnConfirm), View.OnClickListener {
-                            //                        dbHelper.delete(dbHelper.tableNameWorkerJW, workerList[position]._id.toString())
-
-
-                            val intent = Intent(mContext, MainListActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            mContext.startActivity(intent)
-                            dismiss()
-                        })
-                    }
-                    customDialog.show()
-
-                }
+//                R.id.mainList_leftView -> { //왼쪽 스와이프 (즐겨찾기)
+//                    holder.mSwipeLayout.animateReset()
+//                }
+//                R.id.mainList_rightView -> { //오른쪽 스와이프 (삭제)
+//                    holder.mSwipeLayout.animateReset()
+//                    val dbHelper = DBHelper(mContext)
+//                    val customDialog = CustomDialog(mContext).apply {
+//                        setBottomDialog(String.format(mContext.resources.getString(R.string.workerUpdate_delete_msg),
+//                                holder.mTvName.text.toString()),
+//                                mContext.resources.getString(R.string.btnCancel), null,
+//                                mContext.resources.getString(R.string.btnConfirm), View.OnClickListener {
+//                            //                        dbHelper.delete(dbHelper.tableNameWorkerJW, workerList[position]._id.toString())
+//
+//
+//                            val intent = Intent(mContext, MainListActivity::class.java)
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                            mContext.startActivity(intent)
+//                            dismiss()
+//                        })
+//                    }
+//                    customDialog.show()
+//
+//                }
             }
         }
 

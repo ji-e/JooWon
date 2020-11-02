@@ -92,8 +92,8 @@
                     android:background="@drawable/input_selector"
                     android:hint="@string/workerInsert_name2"
                     android:inputType="text"
-                    android:paddingStart="@dimen/dp10"
                     android:maxLength="15"
+                    android:paddingStart="@dimen/dp10"
                     android:paddingEnd="@dimen/dp120"
                     android:singleLine="true"
                     app:layout_constraintStart_toStartOf="parent"
@@ -310,18 +310,18 @@
             android:layout_height="@dimen/dp60"
             android:layout_marginTop="@dimen/dp75"
             android:enabled="@{workerInsertVm.workerInsertForm.dataValid}"
-             app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-<!--        <Button-->
-<!--            android:id="@+id/workerInsert_btnConfirm"-->
-<!--            style="@style/Font_18_ffffff"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="@dimen/dp60"-->
-<!--            android:background="@drawable/btn_bottom_selector"-->
-<!--            android:enabled="@{workerInsertVm.workerInsertForm.dataValid}"-->
-<!--            android:onClick="onClickWorkerInsert"-->
-<!--            android:text="@string/workerInsert_btn_register"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent" />-->
+        <!--        <Button-->
+        <!--            android:id="@+id/workerInsert_btnConfirm"-->
+        <!--            style="@style/Font_18_ffffff"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="@dimen/dp60"-->
+        <!--            android:background="@drawable/btn_bottom_selector"-->
+        <!--            android:enabled="@{workerInsertVm.workerInsertForm.dataValid}"-->
+        <!--            android:onClick="onClickWorkerInsert"-->
+        <!--            android:text="@string/workerInsert_btn_register"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent" />-->
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

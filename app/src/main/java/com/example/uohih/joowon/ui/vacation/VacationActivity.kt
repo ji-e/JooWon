@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
@@ -49,6 +46,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
     private lateinit var edtSearch: EditText
     private lateinit var btnSearchDelete: ImageButton
     private lateinit var recyclerView: RecyclerView
+    private lateinit var layVacationFram: FrameLayout
     private lateinit var tvEmpty: TextView
 
     private var cntSchedule = 0.0           //사용예정휴가일수
@@ -82,6 +80,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
         edtSearch = binding.vacationEdtSearch
         btnSearchDelete = binding.vacationBtnSearchDelete
         recyclerView = binding.vacationRecyclerView
+        layVacationFram = binding.vacationLayFrame
         tvEmpty = binding.vacationTvEmpty
 
         edtSearch.addTextChangedListener(VacationTextWatcher())
@@ -119,6 +118,8 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
     private fun setObserve() {
         vacationViewModel.liveEmployeeList.observe(thisActivity, Observer {
             val liveEmployeeList = it ?: return@Observer
+            layVacationFram.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
             setData()
         })
     }
@@ -145,6 +146,23 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
                 super.onBindViewHolder(holder, position)
 
                 holder.itemView.setOnClickListener {
+                    layVacationFram.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
+
+
+                    val bundle = Bundle()
+                    bundle.putString("position", position.toString())
+//            bundle.putString("join", subList[position].joinDate.toString())
+//            bundle.putString("phone", subList[position].phone)
+//            bundle.putString("vacation", subList[position].use + "/" + subList[position].total)
+//            bundle.putString("bitmap", subList[position].picture)
+//
+//            bundle.putDouble("cntRemain", cntRemain)
+//            bundle.putString("cntTotal", cntTotal)
+
+
+                    replaceContainerFragment(R.id.vacation_layFrame, VacationFragment.newInstance(bundle), position)
+
                     Toast.makeText(thisActivity, "FFFFF", Toast.LENGTH_SHORT).show()
                 }
 
@@ -229,7 +247,11 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
 //    }
 
     override fun onClick(view: View) {
-        when (view.id) {
+        when (view) {
+            edtSearch -> {
+                recyclerView.visibility = View.VISIBLE
+                layVacationFram.visibility = View.GONE
+            }
 //            R.id.vacation_btn_delete1 ->{
 //                vacation_edt_name.setText("")
 //            }

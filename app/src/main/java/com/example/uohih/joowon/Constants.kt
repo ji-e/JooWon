@@ -17,7 +17,7 @@ class Constants {
         val JW2003 = "JW2003"   // 자동로그인
         val JW3001 = "JW3001"   // 직원리스트 가져오기
         val JW3002 = "JW3002"   // 직원정보 추가하기
-
+        val JW3004 = "JW3004"   // 직원삭제하기
 
         // PasswordCheckActivity requestCode
         val passwordCheck = 1000
