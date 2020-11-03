@@ -113,6 +113,7 @@ class VacationViewModel(application: JWBaseApplication, private val jwBaseReposi
             vObject.addProperty("vacation_id", liveEmployeeInfo.value?._id)
             paramInsertData.add(vObject)
         }
+        jsonObject.addProperty("vacation_id", liveEmployeeInfo.value?._id)
         jsonObject.add("paramInsertData", paramInsertData)
 
         jwBaseRepository.requestBaseService(jsonObject, Constants.SERVICE_VACATION, object : GetResbodyCallback {
