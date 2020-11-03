@@ -95,9 +95,10 @@
                 android:layout_margin="@dimen/dp20"
                 android:theme="@style/AppTheme.NumberPicker"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/calendar_pickerM"
+                app:layout_constraintBottom_toTopOf="@id/calendar_btnConfirm"
+                app:layout_constraintEnd_toStartOf="@id/calendar_pickerM"
                 app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="visible"
                 app:layout_constraintTop_toBottomOf="@id/calendar_line" />
 
             <NumberPicker
@@ -108,8 +109,9 @@
                 android:layout_margin="@dimen/dp20"
                 android:theme="@style/AppTheme.NumberPicker"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="parent"
+                tools:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@id/calendar_btnConfirm"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/calendar_pickerY"
                 app:layout_constraintTop_toBottomOf="@id/calendar_line" />
 
@@ -125,7 +127,7 @@
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@id/calendar_btnConfirm"
                 app:layout_constraintTop_toBottomOf="@id/calendar_line"
-                tools:visibility="visible" />
+                tools:visibility="gone" />
 
 
             <!--버튼-->

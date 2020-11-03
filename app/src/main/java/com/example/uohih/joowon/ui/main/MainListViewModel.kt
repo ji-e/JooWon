@@ -63,7 +63,12 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
                     val enteredDate = (Constants.YYYYMMDD_PATTERN).toRegex().replace((item?.entered_date)?.substring(0, 8).toString(), "$1-$2-$3")
                     val totalVacationCnt = item?.total_vacation_cnt?.toInt() ?: 0
                     val useVacation = item?.use_vacation
-                    val useVacationCnt = useVacation?.size ?: 0
+                    val useVacationSize = useVacation?.size ?: 0
+                    var useVacationCnt = 0f
+
+                    for(i in 0 until useVacationSize){
+                        useVacationCnt += (useVacation?.get(i)?.vacation_cnt)?.toFloat() ?:0f
+                    }
 
                     employeeList.add(JW3001ResBodyList(_id, profileImage, name, phoneNumber, birth, enteredDate, totalVacationCnt.toString(), useVacation, useVacationCnt.toString()))
                 }

@@ -145,8 +145,9 @@ class MainListActivity : JWBaseActivity() {
 
         mainListViewModel.jw3001Data.observe(thisActivity, Observer {
             val jw3001Data = it ?: return@Observer
-            if("ZZZZ".equals(jw3001Data.errCode)){
+            if ("ZZZZ" == jw3001Data.errCode) {
                 showSessionOutDialog(thisActivity)
+                return@Observer
             }
             setData()
         })
@@ -194,7 +195,7 @@ class MainListActivity : JWBaseActivity() {
                 }
 
                 holder.itemView.mainList_item.setOnClickListener {
-//                    val intent = Intent(thisActivity, WorkerMainActivity::class.java)
+                    //                    val intent = Intent(thisActivity, WorkerMainActivity::class.java)
 //                    thisActivity.startActivity(intent)
                 }
 

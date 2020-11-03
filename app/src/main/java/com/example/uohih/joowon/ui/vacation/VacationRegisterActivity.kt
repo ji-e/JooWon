@@ -1,5 +1,6 @@
 package com.example.uohih.joowon.ui.vacation
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +21,7 @@ import com.example.uohih.joowon.databinding.ListItemVacationBinding
 import com.example.uohih.joowon.model.VacationList
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.customView.CalendarDialog
+import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.btn_positive_bottom.view.*
 import kotlinx.android.synthetic.main.btn_white.view.*
@@ -27,6 +30,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
+
 import kotlin.collections.ArrayList
 
 class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
@@ -45,6 +49,7 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
 
 
     private var _id = ""
+    private var isCalendarDialogShow = false
 
     private lateinit var btnCalendar: ImageButton
     private lateinit var tvDate: TextView
@@ -102,7 +107,7 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
 
         setRecyclerView()
 
-
+        setObserve()
 //        if (bitmap != "") {
 //            val file = BitmapFactory.decodeFile(bitmap)
 //            lateinit var exif: ExifInterface
@@ -131,6 +136,51 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
 //        vacation_tv_vacation.text = vacation
     }
 
+
+    private fun setObserve() {
+        // 네트워크에러
+        vacationViewModel.isNetworkErr.observe(thisActivity, Observer {
+            val isNetworkErr = it ?: return@Observer
+            if (isNetworkErr) {
+                showNetworkErrDialog(mContext)
+            }
+        })
+
+        // 로딩
+        vacationViewModel.isLoading.observe(thisActivity, Observer {
+            val isLoading = it ?: return@Observer
+
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+
+        vacationViewModel.jw4001Data.observe(thisActivity, Observer {
+            val jw4001Data = it ?: return@Observer
+
+            if ("ZZZZ" == jw4001Data.errCode) {
+                showSessionOutDialog(thisActivity)
+                return@Observer
+            }
+
+            val customDialog = CustomDialog(mContext).apply {
+                setBottomDialog(
+                        getString(R.string.dialog_title),
+                        getString(R.string.vacation_dialog_msg),
+                        null,
+                        getString(R.string.btnConfirm),
+                        View.OnClickListener {
+                            finish()
+                            dismiss()
+                        })
+            }
+            customDialog.show()
+        })
+
+    }
+
     private fun setRecyclerView() {
         vacationViewModel.setInitVacationList()
         recyclerView.setHasFixedSize(true)
@@ -156,7 +206,9 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v) {
             btnCalendar, tvDate -> {
-                showCalendarDialog(LocalDate.now().toString())
+                if (!isCalendarDialogShow) {
+                    showCalendarDialog(LocalDate.now().toString())
+                }
             }
             tvHalf -> {
                 ckbHalf.isChecked = !ckbHalf.isChecked
@@ -283,7 +335,11 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
         }
 
         calendarDialog.show()
+        isCalendarDialogShow = true
 
+        calendarDialog.setOnDismissListener {
+            isCalendarDialogShow = false
+        }
     }
 
     override fun onStop() {
