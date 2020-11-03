@@ -68,9 +68,9 @@ class VacationAdapter(mContext: Context, private val list: List<String>) : BaseA
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_vacation, viewGroup, false)
 
             viewHolder.mLayout = convertView.findViewById(R.id.item_vacation_layout)
-            viewHolder.mDate = convertView.findViewById(R.id.item_vacation_date)
-            viewHolder.mCnt = convertView.findViewById(R.id.item_vacation_cnt)
-            viewHolder.mCheck = convertView.findViewById(R.id.item_vacation_check)
+//            viewHolder.mDate = convertView.findViewById(R.id.item_vacation_date)
+//            viewHolder.mCnt = convertView.findViewById(R.id.item_vacation_cnt)
+//            viewHolder.mCheck = convertView.findViewById(R.id.item_vacation_check)
 
             convertView.tag = viewHolder
         } else {

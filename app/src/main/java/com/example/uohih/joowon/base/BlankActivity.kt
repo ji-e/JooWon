@@ -3,7 +3,8 @@ package com.example.uohih.joowon.base
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.ui.vacation.VacationFragment
+
+//import com.example.uohih.joowon.ui.vacation.VacationFragment
 
 class BlankActivity : JWBaseActivity() {
 
@@ -31,7 +32,7 @@ class BlankActivity : JWBaseActivity() {
         var fragment: Fragment? = null
 
         if ("vacation" == fragmentFlag) {
-            fragment = VacationFragment.newInstance(bundle)
+//            fragment = VacationFragment.newInstance(bundle)
         }
 
 

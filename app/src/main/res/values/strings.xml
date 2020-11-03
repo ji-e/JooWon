@@ -97,7 +97,7 @@
     <string name="vacation_title">휴가등록</string>
     <string name="vacation_start_date">휴가 시작 기간</string>
     <string name="vacation_end_date">휴가 마지막 기간</string>
-    <string name="vacation_content">휴가 내용</string>
+    <string name="vacation_content">휴가내용</string>
     <string name="vacation_content2">연/월차 사용</string>
     <string name="vacation_content_cnt">%s / 40</string>
     <string name="vacation_nothing">검색 결과가 없습니다.</string>
@@ -108,11 +108,12 @@
     <string name="vacation_dialog_msg2">이미 등록된 휴가입니다.</string>
     <string name="vacation_dialog_msg3">휴가 시작 날짜 이후로 선택해주세요.</string>
     <string name="vacation_dialog_msg4">휴가 날짜를 확인해주세요.</string>
-    <string name="vacation_date">휴가일자</string>
-    <string name="vacation_use_cnt">일수</string>
+    <string name="vacation_date">휴가사용일자</string>
+    <string name="vacation_use_cnt">근태일수</string>
     <string name="vacation_half">반차</string>
     <string name="vacation_no">No.</string>
     <string name="vacation_add">추가</string>
+    <string name="vacation_btn">총 %s일 휴가등록</string>
 
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -162,5 +163,9 @@
     <string name="signin_err2">다시 로그인해 주시기 바랍니다.</string>
     <string name="signin_btn_continue">계속하기</string>
     <string name="signin_sns">간편로그인</string>
+
+    <string name="calendar_content_basic">날짜를 선택해주세요.</string>
+    <string name="calendar_content_multi">날짜를 선택해주세요. (다중선택가능)</string>
+    <string name="calendar_content_ranges">길게 눌러 날짜 범위를 선택해주세요.</string>
 
 </resources>

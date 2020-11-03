@@ -20,6 +20,7 @@ import com.example.uohih.joowon.model.CalendarDayInfo
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.adapter.CalendarAdapter
 import com.example.uohih.joowon.util.DateCommonUtil
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.SizeConverterUtil
 import kotlinx.android.synthetic.main.dialog_calendar_grid.view.*
 import java.time.LocalDate
@@ -134,7 +135,6 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                         }
                     }
 
-
                     var prePosition = -1
                     if (isSelectedRang) {
                         gridview.setOnItemLongClickListener { adapterView, view, firstPosition, l ->
@@ -179,6 +179,27 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                             }
                             false
                         }
+                        gridview.setOnItemClickListener { parent, view, p, id ->
+                            val itDate = (liveCalendarList[position][p].getDate())
+                            val now = (LocalDate.now().toString().replace("-", "")).toInt()
+                            val selected = (itDate.toString().replace("-", "")).toInt()
+                            if (!isFutureSelect && now < selected) {
+                                return@setOnItemClickListener
+                            }
+
+                            if (isSelectedMulti) {
+                                if (selectedDate.contains(itDate)) {
+                                    selectedDate.remove(itDate)
+                                } else {
+                                    itDate?.let { it1 -> selectedDate.add(it1) }
+                                }
+                            } else {
+                                selectedDate.clear()
+                                itDate?.let { it1 -> selectedDate.add(it1) }
+                            }
+
+                            calendarAdapter?.setSelectedDate(selectedDate)
+                        }
                     }
                 }
             }
@@ -217,7 +238,6 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
             })
         })
     }
-
 
     /**
      * picker 설정
@@ -267,14 +287,14 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
         val year = dateArr[0].toInt()
         val month = dateArr[1].toInt() - 1
         val day = dateArr[2].toInt()
-        tvDate.text = dateArr[0]+"."+dateArr[1]+"."+dateArr[2]
+        tvDate.text = dateArr[0] + "." + dateArr[1] + "." + dateArr[2]
 
         pickerDate.init(year, month, day) { p0, year, monthOfYear, dayOfMonth ->
             val m = String.format("%02d", monthOfYear + 1)
             val d = String.format("%02d", dayOfMonth)
             val selectDate = "$year.$m.$d"
             tvDate.text = selectDate
-            datePickerDate = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
+//            datePickerDate = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
         }
 
         if (!isFutureSelect) {
@@ -387,6 +407,10 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
             btnConfirm -> {
                 // 확인버튼
                 mConfirmBtnClickListener?.run {
+                    if (!isVisibleCalendar) {
+                        val dateArr = tvDate.text.split(".")
+                        datePickerDate = LocalDate.of(dateArr[0].toInt(), dateArr[1].toInt(), dateArr[2].toInt())
+                    }
                     datePickerDate?.let { selectedDate.add(it) }
                     onConfirmClick(selectedDate)
                 }

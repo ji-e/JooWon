@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vacationRegisterVm"
+            type="com.example.uohih.joowon.ui.vacation.VacationViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vacation_layVacationE"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
+        android:fillViewport="true"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <!--상단 타이틀 및 아이콘 바-->
+        <com.example.uohih.joowon.ui.customView.TopTitleView
+            android:id="@+id/vacation_titleView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp60"
+            android:gravity="center_vertical"
+            app:btnBack="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tvTitle="@string/vacation_title" />
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vacation_titleView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:padding="@dimen/dp30">
+
+                    <!--Image-->
+                    <ImageView
+                        android:id="@+id/vacation_imgPeople"
+                        android:layout_width="@dimen/dp55"
+                        android:layout_height="@dimen/dp55"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/img_people"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <!--이름-->
+                    <TextView
+                        android:id="@+id/vacation_tvName"
+                        style="@style/Font_17_000000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp16"
+                        android:text="@{vacationRegisterVm.liveEmployeeInfo.name}"
+                        app:layout_constraintStart_toEndOf="@id/vacation_imgPeople"
+                        app:layout_constraintTop_toTopOf="@id/vacation_imgPeople"
+                        tools:text="@string/mainList_name" />
+
+                    <!--휴대폰번호-->
+                    <TextView
+                        android:id="@+id/vacation_tvPhone"
+                        style="@style/Font_13_4a4a4a"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp16"
+                        android:layout_marginTop="@dimen/dp02"
+                        android:text="@{vacationRegisterVm.liveEmployeeInfo.phone_number.empty?@string/mainList_ph:vacationRegisterVm.liveEmployeeInfo.phone_number}"
+                        app:layout_constraintBottom_toTopOf="@id/vacation_tvVacation"
+                        app:layout_constraintStart_toEndOf="@id/vacation_imgPeople"
+                        tools:text="@string/mainList_phone" />
+
+                    <!--휴가일수-->
+                    <TextView
+                        android:id="@+id/vacation_tvVacation"
+                        style="@style/Font_13_4a4a4a"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp16"
+                        android:text="@{@string/mainList_vacation+vacationRegisterVm.liveEmployeeInfo.use_vacation_cnt+&quot;/&quot;+vacationRegisterVm.liveEmployeeInfo.total_vacation_cnt}"
+                        app:layout_constraintBottom_toBottomOf="@id/vacation_imgPeople"
+                        app:layout_constraintStart_toEndOf="@id/vacation_imgPeople"
+                        tools:text="@string/mainList_vacation" />
+
+                    <ImageButton
+                        android:id="@+id/vacation_btnCalendar"
+                        android:layout_width="@dimen/dp36"
+                        android:layout_height="@dimen/dp36"
+                        android:layout_marginTop="@dimen/dp25"
+                        android:background="@drawable/btn_calendar_selector"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/vacation_imgPeople" />
+
+                    <TextView
+                        android:id="@+id/vacation_tvDate"
+                        style="@style/Font_15_000000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@id/vacation_btnCalendar"
+                        app:layout_constraintStart_toEndOf="@id/vacation_btnCalendar"
+                        app:layout_constraintTop_toTopOf="@id/vacation_btnCalendar"
+                        tools:text="2020-10-10" />
+
+                    <CheckBox
+                        android:id="@+id/vacation_ckbHalf"
+                        android:layout_width="@dimen/dp16"
+                        android:layout_height="@dimen/dp16"
+                        android:layout_marginEnd="@dimen/dp05"
+                        android:background="@drawable/btn_ckb_selector"
+                        android:button="@null"
+                        app:layout_constraintBottom_toBottomOf="@id/vacation_btnCalendar"
+                        app:layout_constraintEnd_toStartOf="@id/vacation_tvHalf"
+                        app:layout_constraintTop_toTopOf="@id/vacation_btnCalendar" />
+
+
+                    <TextView
+                        android:id="@+id/vacation_tvHalf"
+                        style="@style/Font_15_4a4a4a"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onClickVacation"
+                        android:text="@string/vacation_half"
+                        app:layout_constraintBottom_toBottomOf="@id/vacation_btnCalendar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/vacation_btnCalendar" />
+
+                    <EditText
+                        android:id="@+id/vacation_edtContent"
+                        style="@style/Font_15_000000"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp75"
+                        android:layout_marginTop="@dimen/dp08"
+                        android:background="@drawable/input_selector"
+                        android:hint="@string/vacation_content2"
+                        android:maxLength="40"
+                        android:paddingStart="@dimen/dp10"
+                        android:paddingEnd="@dimen/dp10"
+                        app:layout_constraintTop_toBottomOf="@id/vacation_btnCalendar" />
+
+                    <TextView
+                        style="@style/Font_10_4a4a4a"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dp10"
+                        android:layout_marginBottom="@dimen/dp10"
+                        app:layout_constraintBottom_toBottomOf="@id/vacation_edtContent"
+                        app:layout_constraintEnd_toEndOf="@id/vacation_edtContent"
+                        tools:text="0/40" />
+
+                    <include
+                        android:id="@+id/vacation_btnRegisterV"
+                        layout="@layout/btn_white"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp51"
+                        android:layout_marginTop="@dimen/dp10"
+                        app:layout_constraintTop_toBottomOf="@id/vacation_edtContent" />
+
+
+                    <LinearLayout
+                        android:id="@+id/item_vacationR_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp20"
+                        android:background="@color/c_ffffff"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@id/vacation_btnRegisterV">
+
+                        <ImageButton
+                            android:id="@+id/item_vacationR_delete"
+                            android:layout_width="@dimen/dp14"
+                            android:layout_height="@dimen/dp14"
+                            android:layout_marginEnd="@dimen/dp10"
+                            android:background="@drawable/btn_delete_v_selector" />
+
+
+                        <TextView
+                            android:id="@+id/item_vacationR_date"
+                            style="@style/Font_12_4a4a4a"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="@string/vacation_date" />
+
+                        <TextView
+                            android:id="@+id/item_vacationR_content"
+                            style="@style/Font_12_4a4a4a"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:text="@string/vacation_content" />
+
+                        <TextView
+                            android:id="@+id/item_vacationR_cnt"
+                            style="@style/Font_12_4a4a4a"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="@string/vacation_use_cnt"
+                            android:textAlignment="textEnd" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/vacation_recyclerViewE"
+                        replaceAll="@{vacationRegisterVm.liveVacationList}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp10"
+                        app:layout_constraintTop_toBottomOf="@id/item_vacationR_layout"
+                        tools:listitem="@layout/list_item_vacation" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <include
+                    android:id="@+id/vacation_btnRegister"
+                    layout="@layout/btn_positive_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp60"
+                    android:enabled="@{vacationRegisterVm.isBtnRegisterState}" />
+            </LinearLayout>
+        </ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

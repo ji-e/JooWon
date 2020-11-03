@@ -99,8 +99,6 @@
                 replaceAll="@{vacationVm.liveEmployeeList}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="@dimen/dp05"
-                android:paddingBottom="@dimen/dp05"
                 tools:listitem="@layout/list_item_vacation_search" />
 
             <FrameLayout

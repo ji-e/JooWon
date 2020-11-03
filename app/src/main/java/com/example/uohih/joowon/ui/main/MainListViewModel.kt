@@ -38,7 +38,7 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
      */
     fun getEmployeeList(jsonObject: JsonObject) {
         _isLoading.value = true
-        jwBaseRepository.requestBaseService(jsonObject, object : GetResbodyCallback {
+        jwBaseRepository.requestBaseService(jsonObject, Constants.SERVICE_EMPLOYEE, object : GetResbodyCallback {
             override fun onSuccess(code: Int, data: JSONObject) {
                 _isLoading.value = false
 
@@ -112,7 +112,7 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
      */
     fun deleteEmployee(jsonObject: JsonObject, position: Int) {
 //        _isLoading.value = true
-        jwBaseRepository.requestBaseService(jsonObject, object : GetResbodyCallback {
+        jwBaseRepository.requestBaseService(jsonObject, Constants.SERVICE_EMPLOYEE, object : GetResbodyCallback {
             override fun onSuccess(code: Int, data: JSONObject) {
 //                _isLoading.value = false
 

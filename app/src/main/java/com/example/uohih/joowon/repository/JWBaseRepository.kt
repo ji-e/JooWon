@@ -65,7 +65,7 @@ open class JWBaseRepository {
         })
     }
 
-    fun requestBaseService(jsonObject: JsonObject, callback: GetResbodyCallback) {
+    fun requestBaseService(jsonObject: JsonObject, method: String, callback: GetResbodyCallback) {
         val retroClient = JWBaseDataSource.instance.createBaseApi()
         val apiService = JWBaseDataSource.apiService
 
@@ -74,7 +74,7 @@ open class JWBaseRepository {
 
         LogUtil.d("requsetBody:  ", jsonObject)
 
-        retroClient.requestDataRetrofit(apiService.baseProcessService(Constants.SERVICE_EMPLOYEE, jsonObject), object : GetResbodyCallback {
+        retroClient.requestDataRetrofit(apiService.baseProcessService(method, jsonObject), object : GetResbodyCallback {
 
             override fun onFailure(code: Int) {
                 LogUtil.d(code)

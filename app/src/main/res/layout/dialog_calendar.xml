@@ -68,13 +68,15 @@
                 android:background="@color/c_004680"
                 app:layout_constraintTop_toBottomOf="@id/calendar_tvDate" />
 
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp01"
-                android:background="@color/c_004680"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/calendar_line" />
+            <TextView
+                android:id="@+id/calendar_tvContent"
+                style="@style/Font_10_4a4a4a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp20"
+                app:layout_constraintTop_toBottomOf="@id/calendar_line"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="@string/calendar_content_ranges" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/calendar_viewpager"
@@ -83,7 +85,7 @@
                 android:layout_height="@dimen/dp290"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/calendar_btnConfirm"
-                app:layout_constraintTop_toBottomOf="@id/calendar_line" />
+                app:layout_constraintTop_toBottomOf="@id/calendar_tvContent" />
 
             <NumberPicker
                 android:id="@+id/calendar_pickerY"

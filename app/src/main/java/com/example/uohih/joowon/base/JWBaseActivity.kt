@@ -11,6 +11,8 @@ import android.media.ExifInterface
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -41,7 +43,7 @@ import kotlin.collections.ArrayList
 open class JWBaseActivity : AppCompatActivity() {
 
     val mContext: Context by lazy { this }
-    private lateinit var thisActivity:JWBaseActivity
+    private lateinit var thisActivity: JWBaseActivity
     private lateinit var jwBaseViewModel: JWBaseViewModel
 
 //    val ss = getPreference("cookie")
@@ -253,67 +255,35 @@ open class JWBaseActivity : AppCompatActivity() {
 
     }
 
-//    fun signOut(mContext: Context) {
-//        var mOAuthLoginInstance = OAuthLogin.getInstance()
-//
-//
-//        if (OAuthLoginState.NEED_LOGIN != mOAuthLoginInstance.getState(mContext)) {
-//            mOAuthLoginInstance.logout(mContext)
-//        }
-//        val jsonObject = JsonObject()
-//        jsonObject.addProperty("methodid", Constants.JW2002)
-//
-//        JWBaseRepository().requestSignInService(jsonObject, object : GetResbodyCallback {
-//            override fun onSuccess(code: Int, resbodyData: JSONObject) {
-//                val jw2002Data = Gson().fromJson(resbodyData.toString(), JW2002::class.java)
-//                if ("false" == jw2002Data.result) {
-//                    return
-//                }
-//                if ("N" == jw2002Data.resbody?.signOutValid) {
-//                    return
-//                }
-//
-//                // 자동로그인 토큰 제거
-//                UICommonUtil.removePreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN)
-//
-//                (mContext as Activity).finish()
-//                val intent = Intent(mContext, SignInActivity::class.java)
-//                startActivity(intent)
-//
-//            }
-//
-//            override fun onFailure(code: Int) {
-//                LogUtil.e(code)
-//
-//            }
-//
-//            override fun onError(throwable: Throwable) {
-//
-//            }
-//
-//        })
-//
-//    }
+    /**
+     * 키패드숨김
+     */
+    fun hideKeyboard(edt: EditText) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(edt.windowToken, 0)
+    }
 
     fun showNetworkErrDialog(mContext: Context) {
         val customDialog = CustomDialog(mContext)
         customDialog.setBottomDialog(
                 getString(R.string.network_Err),
-                getString(R.string.btnConfirm), View.OnClickListener {
-            exit()
-            customDialog.dismiss()
-        })
+                getString(R.string.btnConfirm),
+                View.OnClickListener {
+                    exit()
+                    customDialog.dismiss()
+                })
         customDialog.show()
     }
 
-    fun showsessionOutDialog(mContext: Context) {
+    fun showSessionOutDialog(mContext: Context) {
         val customDialog = CustomDialog(mContext)
         customDialog.setBottomDialog(
                 getString(R.string.session_Err),
-                getString(R.string.btnConfirm), View.OnClickListener {
-            exit()
-            customDialog.dismiss()
-        })
+                getString(R.string.btnConfirm),
+                View.OnClickListener {
+                    exit()
+                    customDialog.dismiss()
+                })
         customDialog.show()
     }
 

@@ -52,8 +52,10 @@
         <activity android:name=".ui.setting.SettingActivity" />
         <activity android:name=".ui.setting.PasswordSettingActivity" />
         <activity android:name=".ui.setting.PasswordCheckActivity" />
+        <activity android:name=".ui.vacation.VacationActivity" />
         <activity
-            android:name=".ui.vacation.VacationActivity" />
+            android:name=".ui.vacation.VacationRegisterActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".base.BlankActivity" />
     </application>
 

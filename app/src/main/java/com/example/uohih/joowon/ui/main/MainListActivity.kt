@@ -1,24 +1,17 @@
 package com.example.uohih.joowon.ui.main
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Paint
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uohih.joowon.Constants
@@ -35,7 +28,6 @@ import com.example.uohih.joowon.ui.worker.WorkerInsertActivity
 import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.list_item_main_list.view.*
-import org.apache.poi.ss.formula.functions.T
 import ru.rambler.libs.swipe_layout.SwipeLayout
 
 
@@ -154,7 +146,7 @@ class MainListActivity : JWBaseActivity() {
         mainListViewModel.jw3001Data.observe(thisActivity, Observer {
             val jw3001Data = it ?: return@Observer
             if("ZZZZ".equals(jw3001Data.errCode)){
-                showsessionOutDialog(thisActivity)
+                showSessionOutDialog(thisActivity)
             }
             setData()
         })

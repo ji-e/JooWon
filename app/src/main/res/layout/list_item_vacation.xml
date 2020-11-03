@@ -17,9 +17,7 @@
         android:background="@color/c_ffffff"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingStart="@dimen/dp20"
         android:paddingTop="@dimen/dp05"
-        android:paddingEnd="@dimen/dp20"
         android:paddingBottom="@dimen/dp05">
 
         <ImageButton
@@ -35,7 +33,7 @@
             style="@style/Font_12_4a4a4a"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:text="@{vacationRItem.vacation_date}"
             tools:text="2020-10-10" />
 
@@ -53,7 +51,8 @@
             style="@style/Font_12_4a4a4a"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
+            android:textAlignment="textEnd"
             android:text="@{vacationRItem.vacation_cnt}"
             tools:text="1.0" />
 

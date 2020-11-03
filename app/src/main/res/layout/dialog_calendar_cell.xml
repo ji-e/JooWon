@@ -3,8 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp20"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/calendar_ranges"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/c_aaf7b52c"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/calendar_ranges2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/c_aaf7b52c"
+            android:visibility="gone" />
+    </LinearLayout>
+
     <ImageView
-        android:id="@+id/calendar_today"
+        android:id="@+id/calendar_selected"
         android:layout_width="@dimen/dp30"
         android:layout_height="@dimen/dp30"
         android:layout_centerInParent="true"

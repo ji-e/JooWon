@@ -66,10 +66,12 @@ class SignUpViewModel(application: JWBaseApplication, private val jwBaseReposito
 
             override fun onFailure(code: Int) {
                 _isLoding.value = false
+                _isNetworkErr.value = true
             }
 
             override fun onError(throwable: Throwable) {
                 _isLoding.value = false
+                _isNetworkErr.value = true
             }
         })
     }
@@ -144,10 +146,12 @@ class SignUpViewModel(application: JWBaseApplication, private val jwBaseReposito
 
             override fun onFailure(code: Int) {
                 _isLoding.value = false
+                _isNetworkErr.value = true
             }
 
             override fun onError(throwable: Throwable) {
                 _isLoding.value = false
+                _isNetworkErr.value = true
             }
 
 

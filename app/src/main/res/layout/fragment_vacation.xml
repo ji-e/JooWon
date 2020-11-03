@@ -1,16 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<layout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools">-->
 
-    <data>
+<!--    <data>-->
 
-        <variable
-            name="vacationEVm"
-            type="com.example.uohih.joowon.ui.vacation.VacationViewModel" />
-    </data>
+<!--        <variable-->
+<!--            name="vacationEVm"-->
+<!--            type="com.example.uohih.joowon.ui.vacation.VacationViewModel" />-->
+<!--    </data>-->
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/vacation_layVacationE"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,196 +21,165 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:fillViewport="true"
-            android:scrollbars="none"
-            app:layout_constraintBottom_toTopOf="@id/vacation_btnRegister"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/dp20"
-                android:orientation="vertical">
-
-                <!--Image-->
-                <ImageView
-                    android:id="@+id/vacation_imgPeople"
-                    android:layout_width="@dimen/dp55"
-                    android:layout_height="@dimen/dp55"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/img_people"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <!--이름-->
-                <TextView
-                    android:id="@+id/vacation_tvName"
-                    style="@style/Font_17_000000"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp16"
-                    android:text="@{vacationEVm.liveEmployeeInfo.name}"
-                    app:layout_constraintStart_toEndOf="@id/vacation_imgPeople"
-                    app:layout_constraintTop_toTopOf="@id/vacation_imgPeople"
-                    tools:text="@string/mainList_name" />
-
-                <!--휴대폰번호-->
-                <TextView
-                    android:id="@+id/vacation_tvPhone"
-                    style="@style/Font_13_4a4a4a"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp16"
-                    android:layout_marginTop="@dimen/dp02"
-                    android:text="@{vacationEVm.liveEmployeeInfo.phone_number.empty?@string/mainList_ph:vacationEVm.liveEmployeeInfo.phone_number}"
-                    app:layout_constraintBottom_toTopOf="@id/vacation_tvVacation"
-                    app:layout_constraintStart_toEndOf="@id/vacation_imgPeople"
-                    tools:text="@string/mainList_phone" />
-
-                <!--휴가일수-->
-                <TextView
-                    android:id="@+id/vacation_tvVacation"
-                    style="@style/Font_13_4a4a4a"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp16"
-                    android:text="@{@string/mainList_vacation+vacationEVm.liveEmployeeInfo.use_vacation_cnt+&quot;/&quot;+vacationEVm.liveEmployeeInfo.total_vacation_cnt}"
-                    app:layout_constraintBottom_toBottomOf="@id/vacation_imgPeople"
-                    app:layout_constraintStart_toEndOf="@id/vacation_imgPeople"
-                    tools:text="@string/mainList_vacation" />
-
-                <LinearLayout
-                    android:id="@+id/vacation_layCalendar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp25"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/vacation_imgPeople">
-
-                    <ImageButton
-                        android:layout_width="@dimen/dp36"
-                        android:layout_height="@dimen/dp36"
-                        android:background="@drawable/btn_calendar_selector" />
-
-                    <TextView
-                        style="@style/Font_15_000000"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="2020-10-10" />
-                </LinearLayout>
-
-
-                <CheckBox
-                    android:id="@+id/vacation_ckbHalf"
-                    android:layout_width="@dimen/dp16"
-                    android:layout_height="@dimen/dp16"
-                    android:layout_marginEnd="@dimen/dp05"
-                    android:background="@drawable/btn_ckb_selector"
-                    android:button="@null"
-                    app:layout_constraintBottom_toBottomOf="@id/vacation_layCalendar"
-                    app:layout_constraintEnd_toStartOf="@id/vacation_tvHalf"
-                    app:layout_constraintTop_toTopOf="@id/vacation_layCalendar" />
-
-
-                <TextView
-                    android:id="@+id/vacation_tvHalf"
-                    style="@style/Font_15_4a4a4a"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onClickVacation"
-                    android:text="@string/vacation_half"
-                    app:layout_constraintBottom_toBottomOf="@id/vacation_layCalendar"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/vacation_layCalendar" />
-
-                <EditText
-                    android:id="@+id/vacation_edtVacation"
-                    style="@style/Font_15_000000"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp75"
-                    android:layout_marginTop="@dimen/dp08"
-                    android:background="@drawable/input_selector"
-                    android:hint="@string/vacation_content2"
-                    android:maxLength="40"
-                    android:paddingStart="@dimen/dp10"
-                    android:paddingEnd="@dimen/dp10"
-                    app:layout_constraintTop_toBottomOf="@id/vacation_layCalendar" />
-
-                <TextView
-                    style="@style/Font_10_4a4a4a"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dp10"
-                    android:layout_marginBottom="@dimen/dp10"
-                    app:layout_constraintBottom_toBottomOf="@id/vacation_edtVacation"
-                    app:layout_constraintEnd_toEndOf="@id/vacation_edtVacation"
-                    tools:text="0/40" />
-
-
-                <include
-                    android:id="@+id/vacation_btnRegisterV"
-                    layout="@layout/btn_white"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp51"
-                    android:layout_marginTop="@dimen/dp10"
-                    app:layout_constraintTop_toBottomOf="@id/vacation_edtVacation" />
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/vacation_recyclerViewE"
-                    replaceAll="@{vacationEVm.liveVacationList}"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/dp30"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/vacation_btnRegisterV"
-                    tools:listitem="@layout/list_item_main_list" />
-
-                <!--                <LinearLayout-->
-                <!--                    android:id="@+id/vacation_ly"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginTop="@dimen/dp20"-->
-                <!--                    android:layout_marginBottom="@dimen/dp10"-->
-                <!--                    android:background="@drawable/rectangle_r4_aaaaaa"-->
-                <!--                    android:orientation="vertical"-->
-                <!--                    android:padding="@dimen/dp02">-->
-
-
-                <!--                    <ListView-->
-                <!--                        android:id="@+id/vacation_listview"-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:divider="@null"-->
-                <!--                        android:dividerHeight="0dp"-->
-                <!--                        tools:listitem="@layout/list_item_vacation" />-->
-                <!--                </LinearLayout>-->
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </ScrollView>
-
-        <!--확인버튼-->
-        <!--        <Button-->
-        <!--            android:id="@+id/vacation_btn_bottom"-->
+        <!--        <ScrollView-->
         <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="@dimen/dp50"-->
-        <!--            android:background="@drawable/btn_bottom_selector"-->
-        <!--            android:text="@string/btnRegistration"-->
-        <!--            android:textColor="@color/c_ffffff"-->
-        <!--            android:textSize="@dimen/dp20" />-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:fillViewport="true"-->
+        <!--            android:scrollbars="none"-->
+        <!--            app:layout_constraintBottom_toTopOf="@id/vacation_btnRegister"-->
+        <!--            app:layout_constraintTop_toTopOf="parent">-->
 
-        <include
-            android:id="@+id/vacation_btnRegister"
-            layout="@layout/btn_positive"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp60"
-            android:layout_marginTop="@dimen/dp75"
-            app:layout_constraintBottom_toBottomOf="parent" />
+        <!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:orientation="vertical"-->
+        <!--                android:padding="@dimen/dp20">-->
+
+        <!--                &lt;!&ndash;Image&ndash;&gt;-->
+        <!--                <ImageView-->
+        <!--                    android:id="@+id/vacation_imgPeople"-->
+        <!--                    android:layout_width="@dimen/dp55"-->
+        <!--                    android:layout_height="@dimen/dp55"-->
+        <!--                    android:layout_gravity="center_vertical"-->
+        <!--                    android:background="@drawable/img_people"-->
+        <!--                    app:layout_constraintStart_toStartOf="parent"-->
+        <!--                    app:layout_constraintTop_toTopOf="parent" />-->
+
+
+        <!--                &lt;!&ndash;이름&ndash;&gt;-->
+        <!--                <TextView-->
+        <!--                    android:id="@+id/vacation_tvName"-->
+        <!--                    style="@style/Font_17_000000"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_marginStart="@dimen/dp16"-->
+        <!--                    android:text="@{vacationEVm.liveEmployeeInfo.name}"-->
+        <!--                    app:layout_constraintStart_toEndOf="@id/vacation_imgPeople"-->
+        <!--                    app:layout_constraintTop_toTopOf="@id/vacation_imgPeople"-->
+        <!--                    tools:text="@string/mainList_name" />-->
+
+        <!--                &lt;!&ndash;휴대폰번호&ndash;&gt;-->
+        <!--                <TextView-->
+        <!--                    android:id="@+id/vacation_tvPhone"-->
+        <!--                    style="@style/Font_13_4a4a4a"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_marginStart="@dimen/dp16"-->
+        <!--                    android:layout_marginTop="@dimen/dp02"-->
+        <!--                    android:text="@{vacationEVm.liveEmployeeInfo.phone_number.empty?@string/mainList_ph:vacationEVm.liveEmployeeInfo.phone_number}"-->
+        <!--                    app:layout_constraintBottom_toTopOf="@id/vacation_tvVacation"-->
+        <!--                    app:layout_constraintStart_toEndOf="@id/vacation_imgPeople"-->
+        <!--                    tools:text="@string/mainList_phone" />-->
+
+        <!--                &lt;!&ndash;휴가일수&ndash;&gt;-->
+        <!--                <TextView-->
+        <!--                    android:id="@+id/vacation_tvVacation"-->
+        <!--                    style="@style/Font_13_4a4a4a"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_marginStart="@dimen/dp16"-->
+        <!--                    android:text="@{@string/mainList_vacation+vacationEVm.liveEmployeeInfo.use_vacation_cnt+&quot;/&quot;+vacationEVm.liveEmployeeInfo.total_vacation_cnt}"-->
+        <!--                    app:layout_constraintBottom_toBottomOf="@id/vacation_imgPeople"-->
+        <!--                    app:layout_constraintStart_toEndOf="@id/vacation_imgPeople"-->
+        <!--                    tools:text="@string/mainList_vacation" />-->
+
+        <!--                <ImageButton-->
+        <!--                    android:id="@+id/vacation_btnCalendar"-->
+        <!--                    android:layout_width="@dimen/dp36"-->
+
+        <!--                    android:layout_height="@dimen/dp36"-->
+        <!--                    android:layout_marginTop="@dimen/dp25"-->
+        <!--                    android:background="@drawable/btn_calendar_selector"-->
+        <!--                    app:layout_constraintStart_toStartOf="parent"-->
+        <!--                    app:layout_constraintTop_toBottomOf="@id/vacation_imgPeople" />-->
+
+        <!--                <TextView-->
+        <!--                    android:id="@+id/vacation_tvDate"-->
+        <!--                    style="@style/Font_15_000000"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    app:layout_constraintBottom_toBottomOf="@id/vacation_btnCalendar"-->
+        <!--                    app:layout_constraintStart_toEndOf="@id/vacation_btnCalendar"-->
+        <!--                    app:layout_constraintTop_toTopOf="@id/vacation_btnCalendar"-->
+        <!--                    tools:text="2020-10-10" />-->
+
+        <!--                <CheckBox-->
+        <!--                    android:id="@+id/vacation_ckbHalf"-->
+        <!--                    android:layout_width="@dimen/dp16"-->
+        <!--                    android:layout_height="@dimen/dp16"-->
+        <!--                    android:layout_marginEnd="@dimen/dp05"-->
+        <!--                    android:background="@drawable/btn_ckb_selector"-->
+        <!--                    android:button="@null"-->
+        <!--                    app:layout_constraintBottom_toBottomOf="@id/vacation_btnCalendar"-->
+        <!--                    app:layout_constraintEnd_toStartOf="@id/vacation_tvHalf"-->
+        <!--                    app:layout_constraintTop_toTopOf="@id/vacation_btnCalendar" />-->
+
+
+        <!--                <TextView-->
+        <!--                    android:id="@+id/vacation_tvHalf"-->
+        <!--                    style="@style/Font_15_4a4a4a"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:onClick="onClickVacation"-->
+        <!--                    android:text="@string/vacation_half"-->
+        <!--                    app:layout_constraintBottom_toBottomOf="@id/vacation_btnCalendar"-->
+        <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                    app:layout_constraintTop_toTopOf="@id/vacation_btnCalendar" />-->
+
+        <!--                <EditText-->
+        <!--                    android:id="@+id/vacation_edtContent"-->
+        <!--                    style="@style/Font_15_000000"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="@dimen/dp75"-->
+        <!--                    android:layout_marginTop="@dimen/dp08"-->
+        <!--                    android:background="@drawable/input_selector"-->
+        <!--                    android:hint="@string/vacation_content2"-->
+        <!--                    android:maxLength="40"-->
+        <!--                    android:paddingStart="@dimen/dp10"-->
+        <!--                    android:paddingEnd="@dimen/dp10"-->
+        <!--                    app:layout_constraintTop_toBottomOf="@id/vacation_btnCalendar" />-->
+
+        <!--                <TextView-->
+        <!--                    style="@style/Font_10_4a4a4a"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_marginEnd="@dimen/dp10"-->
+        <!--                    android:layout_marginBottom="@dimen/dp10"-->
+        <!--                    app:layout_constraintBottom_toBottomOf="@id/vacation_edtContent"-->
+        <!--                    app:layout_constraintEnd_toEndOf="@id/vacation_edtContent"-->
+        <!--                    tools:text="0/40" />-->
+
+
+        <!--                <include-->
+        <!--                    android:id="@+id/vacation_btnRegisterV"-->
+        <!--                    layout="@layout/btn_white"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="@dimen/dp51"-->
+        <!--                    android:layout_marginTop="@dimen/dp10"-->
+        <!--                    app:layout_constraintTop_toBottomOf="@id/vacation_edtContent" />-->
+
+
+        <!--                <androidx.recyclerview.widget.RecyclerView-->
+        <!--                    android:id="@+id/vacation_recyclerViewE"-->
+        <!--                    replaceAll="@{vacationEVm.liveVacationList}"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="0dp"-->
+        <!--                    android:layout_marginTop="@dimen/dp10"-->
+        <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                    app:layout_constraintTop_toBottomOf="@id/vacation_btnRegisterV"-->
+        <!--                    tools:listitem="@layout/list_item_main_list" />-->
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+
+    <!--        </ScrollView>-->
+
+    <!--        <include-->
+    <!--            android:id="@+id/vacation_btnRegister"-->
+    <!--            layout="@layout/btn_positive"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="@dimen/dp60"-->
+    <!--            android:layout_marginTop="@dimen/dp75"-->
+    <!--            android:enabled="@{vacationEVm.isBtnRegisterState}"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent" />-->
+    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+    <!--</layout>-->

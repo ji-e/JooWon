@@ -1,11 +1,15 @@
 package com.example.uohih.joowon.ui.vacation
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
@@ -74,6 +78,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
         super.onResume()
 
         vacationViewModel.setEmployeeList()
+
     }
 
     private fun initView() {
@@ -85,43 +90,16 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
         tvEmpty = binding.vacationTvEmpty
 
         edtSearch.addTextChangedListener(VacationTextWatcher())
-        edtSearch.setOnTouchListener { view, motionEvent ->
-
-            if (motionEvent.action == MotionEvent.ACTION_UP) {
-                recyclerView.visibility = View.VISIBLE
-                layVacationFram.visibility = View.GONE
-            }
-            false
-        }
+//        edtSearch.setOnTouchListener { view, motionEvent ->
+//
+//            if (motionEvent.action == MotionEvent.ACTION_UP) {
+//                recyclerView.visibility = View.VISIBLE
+//                layVacationFram.visibility = View.GONE
+//            }
+//            false
+//        }
 
         setObserve()
-
-//
-//        // 검색 창 delete 버튼
-//        vacation_btn_delete1.setOnClickListener(this)
-//
-//        // 검색 버튼
-//        vacation_btn_search.setOnClickListener(this)
-//
-//        // 검색결과 리스트뷰
-//        vacation_listview_search.onItemClickListener = VacationListItemClickListener()
-
-//
-//        // 휴가 시작 기간
-//        vacation_tv_startD.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(todayJson, "$1-$2-$3")
-//        vacation_btn_startC.setOnClickListener(this)
-//
-//        // 휴가 마지막 기간
-//        vacation_tv_endD.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(todayJson, "$1-$2-$3")
-//        vacation_btn_endC.setOnClickListener(this)
-//
-//        cntSchedule = (calDateBetweenAandB(vacation_tv_startD.text.toString(), vacation_tv_endD.text.toString()))
-//        vacation_tv_use_vc.text = String.format(getString(R.string.vacation_use_vacation), cntSchedule)
-//
-//        // 하단 등록 버튼
-//        vacation_btn_bottom.setOnClickListener(this)
-//        replaceContainerFragment(R.id.vacation_frame_ly, BlankFragment.newInstance())
-
     }
 
     private fun setObserve() {
@@ -155,12 +133,17 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
                 super.onBindViewHolder(holder, position)
 
                 holder.itemView.setOnClickListener {
-                    layVacationFram.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
+                    hideKeyboard(edtSearch)
 
-                    val bundle = Bundle()
-                    bundle.putString("_id", vacationViewModel.searchEmployeeList[position]._id)
-                    replaceContainerFragment(R.id.vacation_layFrame, VacationFragment.newInstance(bundle), position)
+//                    layVacationFram.visibility = View.VISIBLE
+//                    recyclerView.visibility = View.GONE
+
+//                    val bundle = Bundle()
+//                    bundle.putString("_id", vacationViewModel.searchEmployeeList[position]._id)
+                    val intent = Intent(mContext, VacationRegisterActivity::class.java)
+                    intent.putExtra("_id", vacationViewModel.searchEmployeeList[position]._id)
+                    startActivity(intent)
+//                    replaceContainerFragment(R.id.vacation_layFrame, VacationFragment.newInstance(bundle), position)
 
                 }
 
@@ -179,10 +162,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
 
     }
 
-
     private inner class VacationTextWatcher : TextWatcher {
-
-
         override fun beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
 
         }
@@ -195,23 +175,6 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
 
         override fun afterTextChanged(s: Editable) {
             vacationViewModel.getSearchResultList(edtSearch.text.toString())
-
-//            vacation_tv_nothing.visibility = View.VISIBLE
-//            vacation_listview_search.visibility = View.GONE
-//
-//            if (s.isNotEmpty()) {
-//                vacation_btn_delete1.visibility = View.VISIBLE
-//                setSearch(vacation_edt_name.text.toString())
-//
-//            } else {
-//                subList.clear()
-//                vacation_btn_delete1.visibility = View.GONE
-//                vacation_frame_ly.visibility = View.GONE
-//                vacation_ly_search.visibility = View.VISIBLE
-////                vacation_btn_bottom.visibility = View.GONE
-//            }
-//
-//            vacation_edt_name.setSelection(vacation_edt_name.text.length)
         }
 
 
@@ -305,5 +268,9 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
 //        vacation_edt_name.setText("")
 //    }
 
+    override fun onStop() {
+        super.onStop()
+        hideKeyboard(edtSearch)
+    }
 }
 

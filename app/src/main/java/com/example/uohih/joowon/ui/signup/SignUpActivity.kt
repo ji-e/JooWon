@@ -169,6 +169,9 @@ class SignUpActivity : JWBaseActivity() {
      */
     private inner class SignUpFocusChangeListner : View.OnFocusChangeListener {
         override fun onFocusChange(v: View?, hasFocus: Boolean) {
+            chkPwVisible.isChecked = false
+            chkPw2Visible.isChecked = false
+
             if (hasFocus) {
                 when (v) {
                     edtPW -> chkPwVisible.visibility = View.VISIBLE
