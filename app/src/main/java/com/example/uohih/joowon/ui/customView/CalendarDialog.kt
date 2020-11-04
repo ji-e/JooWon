@@ -111,7 +111,6 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                     layoutResId = R.layout.dialog_calendar_grid,
                     bindingVariableId = BR.calendarInfo
             ) {
-
                 override fun onBindViewHolder(holder: BaseRecyclerView.ViewHolder<DialogCalendarGridBinding>, position: Int) {
                     super.onBindViewHolder(holder, position)
                     val gridview = holder.itemView.calendar_gridview
@@ -232,7 +231,7 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                     calendar = (liveCalendarList[position])[20].getDate()
                     previousPosition = position
                     calendarAdapter?.setSelectedDate(selectedDate)
-                    tvDate.text = calendar.year.toString() + "." + String.format("%02d", calendar.monthValue)
+                    tvDate.text = calendar.year.toString() + "-" + String.format("%02d", calendar.monthValue)
 
                 }
             })
@@ -255,21 +254,21 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
         pickerY.minValue = 1900
         pickerM.minValue = 1
 
-        pickerY.maxValue = year
+        pickerY.maxValue = 2100
         pickerM.maxValue = 12
 
         pickerY.value = year
         pickerM.value = month
 
 
-        tvDate.text = year.toString() + "." + String.format("%02d", month)
+        tvDate.text = year.toString() + "-" + String.format("%02d", month)
 
         pickerY.setOnValueChangedListener { picker, oldVal, newVal ->
-            tvDate.text = newVal.toString() + "." + String.format("%02d", pickerM.value)
+            tvDate.text = newVal.toString() + "-" + String.format("%02d", pickerM.value)
         }
 
         pickerM.setOnValueChangedListener { picker, oldVal, newVal ->
-            tvDate.text = pickerY.value.toString() + "." + String.format("%02d", newVal)
+            tvDate.text = pickerY.value.toString() + "-" + String.format("%02d", newVal)
         }
 //        year.setDisplayedValues(arrayOf("2019년", "2020년"))
     }
@@ -287,19 +286,21 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
         val year = dateArr[0].toInt()
         val month = dateArr[1].toInt() - 1
         val day = dateArr[2].toInt()
-        tvDate.text = dateArr[0] + "." + dateArr[1] + "." + dateArr[2]
-
-        pickerDate.init(year, month, day) { p0, year, monthOfYear, dayOfMonth ->
-            val m = String.format("%02d", monthOfYear + 1)
-            val d = String.format("%02d", dayOfMonth)
-            val selectDate = "$year.$m.$d"
-            tvDate.text = selectDate
-//            datePickerDate = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
-        }
+        tvDate.text = date
 
         if (!isFutureSelect) {
             pickerDate.maxDate = System.currentTimeMillis()
         }
+
+        pickerDate.init(year, month, day) { p0, year, monthOfYear, dayOfMonth ->
+            val m = String.format("%02d", monthOfYear + 1)
+            val d = String.format("%02d", dayOfMonth)
+            val selectDate = "$year-$m-$d"
+            tvDate.text = selectDate
+//            datePickerDate = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
+        }
+
+
     }
 
     /**
@@ -408,8 +409,9 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                 // 확인버튼
                 mConfirmBtnClickListener?.run {
                     if (!isVisibleCalendar) {
-                        val dateArr = tvDate.text.split(".")
-                        datePickerDate = LocalDate.of(dateArr[0].toInt(), dateArr[1].toInt(), dateArr[2].toInt())
+                        datePickerDate = LocalDate.parse(tvDate.text.toString())
+//                        val dateArr = tvDate.text.split("-")
+//                        datePickerDate = LocalDate.of(dateArr[0].toInt(), dateArr[1].toInt(), dateArr[2].toInt())
                     }
                     datePickerDate?.let { selectedDate.add(it) }
                     onConfirmClick(selectedDate)

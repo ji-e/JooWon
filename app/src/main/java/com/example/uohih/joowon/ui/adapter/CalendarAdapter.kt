@@ -8,11 +8,12 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.example.uohih.joowon.database.VacationData
 import com.example.uohih.joowon.model.CalendarDayInfo
-//import kotlinx.android.synthetic.main.grid_item_worker_main.view.*
+import kotlinx.android.synthetic.main.viewpager_worker_main_calendar_cell.view.*
 import kotlinx.android.synthetic.main.dialog_calendar_cell.view.*
 import java.time.LocalDate
 import java.util.*
 import android.graphics.Paint.UNDERLINE_TEXT_FLAG
+import com.example.uohih.joowon.R
 import kotlin.math.max
 import kotlin.math.min
 
@@ -64,41 +65,40 @@ class CalendarAdapter(private val mContext: Context, val layout: Int, private va
             convertView = LayoutInflater.from(mContext).inflate(layout, parent, false)
         }
 
-        val cell = convertView?.calendar_cell
-        val selectedCell = convertView?.calendar_selected
-        val rangesCell = convertView?.calendar_ranges
-        val rangesCell2 = convertView?.calendar_ranges2
 
-//        val halfV = convertView?.calendar_half_v
-//        val allV = convertView?.calendar_all_v
+        if (layout == R.layout.dialog_calendar_cell) {
 
+            val cell = convertView?.calendar_cell
+            val selectedCell = convertView?.calendar_selected
+            val rangesCell = convertView?.calendar_ranges
+            val rangesCell2 = convertView?.calendar_ranges2
 
-        selectedCell?.visibility = View.GONE
-        rangesCell?.visibility = View.GONE
-        rangesCell2?.visibility = View.GONE
+            selectedCell?.visibility = View.GONE
+            rangesCell?.visibility = View.GONE
+            rangesCell2?.visibility = View.GONE
 
-        cell?.text = day.getDay()
+            cell?.text = day.getDay()
 //        val now = (LocalDate.now().toString().replace("-", "")).toInt()
 //        val selected = (day.getDate().toString().replace("-", "")).toInt()
 //        if (isFutureSelect || now >= selected) {
-        if (isSelectedRanges && firstPosition != -1 && lastPosition != -1) {
-            val fP = min(firstPosition, lastPosition)
-            val lP = max(firstPosition, lastPosition)
-            if (position in fP..lP) {
-                if (position == fP) {
-                    rangesCell?.visibility = View.INVISIBLE
-                    rangesCell2?.visibility = View.VISIBLE
-                    selectedCell?.visibility = View.VISIBLE
-                } else if (position == lP) {
-                    rangesCell?.visibility = View.VISIBLE
-                    rangesCell2?.visibility = View.INVISIBLE
-                    selectedCell?.visibility = View.VISIBLE
-                } else {
-                    rangesCell?.visibility = View.VISIBLE
-                    rangesCell2?.visibility = View.GONE
+            if (isSelectedRanges && firstPosition != -1 && lastPosition != -1) {
+                val fP = min(firstPosition, lastPosition)
+                val lP = max(firstPosition, lastPosition)
+                if (position in fP..lP) {
+                    if (position == fP) {
+                        rangesCell?.visibility = View.INVISIBLE
+                        rangesCell2?.visibility = View.VISIBLE
+                        selectedCell?.visibility = View.VISIBLE
+                    } else if (position == lP) {
+                        rangesCell?.visibility = View.VISIBLE
+                        rangesCell2?.visibility = View.INVISIBLE
+                        selectedCell?.visibility = View.VISIBLE
+                    } else {
+                        rangesCell?.visibility = View.VISIBLE
+                        rangesCell2?.visibility = View.GONE
+                    }
                 }
             }
-        }
 
 //            else {
 //                cell?.setOnClickListener {
@@ -127,56 +127,44 @@ class CalendarAdapter(private val mContext: Context, val layout: Int, private va
 //            selectedCell?.visibility = if (day.isSameDay(selectedDateArray)) View.VISIBLE else View.INVISIBLE
 //        }
 
-        if (firstPosition == -1 && lastPosition == -1
-                && day.isSameDay(selectedDateArray)) {
+            if (firstPosition == -1 && lastPosition == -1
+                    && day.isSameDay(selectedDateArray)) {
 
-            selectedCell?.visibility = View.VISIBLE
+                selectedCell?.visibility = View.VISIBLE
 
-            if (selectedDateArray.size > 1 && isSelectedRanges) {
-                if (day.getDate()?.equals(selectedDateArray[0]) == true) {
-                    rangesCell?.visibility = View.INVISIBLE
-                    rangesCell2?.visibility = View.VISIBLE
-                } else if (day.getDate()?.equals(selectedDateArray[selectedDateArray.size - 1]) == true) {
-                    rangesCell?.visibility = View.VISIBLE
-                    rangesCell2?.visibility = View.INVISIBLE
-                } else {
-                    rangesCell?.visibility = View.VISIBLE
-                    rangesCell2?.visibility = View.GONE
-                    selectedCell?.visibility = View.GONE
+                if (selectedDateArray.size > 1 && isSelectedRanges) {
+                    if (day.getDate()?.equals(selectedDateArray[0]) == true) {
+                        rangesCell?.visibility = View.INVISIBLE
+                        rangesCell2?.visibility = View.VISIBLE
+                    } else if (day.getDate()?.equals(selectedDateArray[selectedDateArray.size - 1]) == true) {
+                        rangesCell?.visibility = View.VISIBLE
+                        rangesCell2?.visibility = View.INVISIBLE
+                    } else {
+                        rangesCell?.visibility = View.VISIBLE
+                        rangesCell2?.visibility = View.GONE
+                        selectedCell?.visibility = View.GONE
+                    }
                 }
             }
-        }
 
-
-//        halfV?.visibility = View.INVISIBLE
-//        allV?.visibility = View.INVISIBLE
-
-//        for (i in vacationList.indices) {
-//            if (((vacationList[i].date).toString()) == (day.getDate()).toString().replace("-", "")) {
-//                if ((vacationList[i].use).toString() == "0.5") {
-//                    halfV?.visibility = View.VISIBLE
-//                    allV?.visibility = View.INVISIBLE
-//                } else {
-//                    halfV?.visibility = View.GONE
-//                    allV?.visibility = View.VISIBLE
-//                }
-//            }
-//        }
-
-        if (day.isSameDay(LocalDate.now())) {
-            cell?.paintFlags = UNDERLINE_TEXT_FLAG
-//            cell?.setTextColor(mContext.getColor(R.color.c_cee59a))
-            currentPosition = position
-        } else {
-            if (day.isInMonth()) {
-                when {
-                    position % 7 + 1 == Calendar.SUNDAY -> cell?.setTextColor(Color.RED)
-                    position % 7 + 1 == Calendar.SATURDAY -> cell?.setTextColor(Color.BLUE)
-                    else -> cell?.setTextColor(Color.BLACK)
-                }
+            if (day.isSameDay(LocalDate.now())) {
+                cell?.paintFlags = UNDERLINE_TEXT_FLAG
+                currentPosition = position
             } else {
-                cell?.setTextColor(Color.GRAY)
+                if (day.isInMonth()) {
+                    when {
+                        position % 7 + 1 == Calendar.SUNDAY -> cell?.setTextColor(Color.RED)
+                        position % 7 + 1 == Calendar.SATURDAY -> cell?.setTextColor(Color.BLUE)
+                        else -> cell?.setTextColor(Color.BLACK)
+                    }
+                } else {
+                    cell?.setTextColor(Color.GRAY)
+                }
             }
+        } else if (layout == R.layout.viewpager_worker_main_calendar_cell) {
+            val cell = convertView?.viewpagerWorkerMain_cell
+            cell?.text = day.getDay()
+
         }
 
         convertView?.tag = day

@@ -64,24 +64,7 @@ class VacationViewModel(application: JWBaseApplication, private val jwBaseReposi
 
 
     fun setEmployeeInfo(_id: String) {
-        for (i in 0 until initEmployeeList.size) {
-            val info = initEmployeeList[i]
-            if (info._id == _id) {
-                liveEmployeeInfo.value = JW3001ResBodyList(
-                        _id = info._id,
-                        profile_image = info.profile_image,
-                        name = info.name,
-                        phone_number = info.phone_number,
-                        birth = info.birth,
-                        entered_date = info.entered_date,
-                        total_vacation_cnt = info.total_vacation_cnt,
-                        use_vacation = info.use_vacation,
-                        use_vacation_cnt = info.use_vacation_cnt
-
-                )
-                return
-            }
-        }
+        liveEmployeeInfo.value = UICommonUtil.getEmployeeInfo(_id)
     }
 
     fun setInitVacationList() {

@@ -22,6 +22,7 @@ import com.example.uohih.joowon.model.VacationList
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CustomDialog
+import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.btn_positive_bottom.view.*
 import kotlinx.android.synthetic.main.btn_white.view.*
@@ -74,18 +75,14 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
         val args = intent
         if (args != null) {
             _id = args.getStringExtra("_id").toString()
+            vacationViewModel.setEmployeeInfo(_id)
         }
-
 
         initView()
 
     }
 
     fun initView() {
-        if (_id.isNotEmpty()) {
-            vacationViewModel.setEmployeeInfo(_id)
-        }
-
         btnCalendar = binding.vacationBtnCalendar
         tvDate = binding.vacationTvDate
         tvHalf = binding.vacationTvHalf

@@ -135,16 +135,9 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
                 holder.itemView.setOnClickListener {
                     hideKeyboard(edtSearch)
 
-//                    layVacationFram.visibility = View.VISIBLE
-//                    recyclerView.visibility = View.GONE
-
-//                    val bundle = Bundle()
-//                    bundle.putString("_id", vacationViewModel.searchEmployeeList[position]._id)
-                    val intent = Intent(mContext, VacationRegisterActivity::class.java)
+                    val intent = Intent(thisActivity, VacationRegisterActivity::class.java)
                     intent.putExtra("_id", vacationViewModel.searchEmployeeList[position]._id)
                     startActivity(intent)
-//                    replaceContainerFragment(R.id.vacation_layFrame, VacationFragment.newInstance(bundle), position)
-
                 }
 
 //               val imageBasicPath =  mainListViewModel.jw3001Data.value?.resbody?.employeeList?.get(position)?.profile_image

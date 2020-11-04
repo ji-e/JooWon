@@ -25,6 +25,7 @@ import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.customView.DraggableFloatingButton
 import com.example.uohih.joowon.ui.setting.SettingActivity
 import com.example.uohih.joowon.ui.worker.WorkerInsertActivity
+import com.example.uohih.joowon.ui.worker.WorkerMainActivity
 import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.list_item_main_list.view.*
@@ -195,8 +196,9 @@ class MainListActivity : JWBaseActivity() {
                 }
 
                 holder.itemView.mainList_item.setOnClickListener {
-                    //                    val intent = Intent(thisActivity, WorkerMainActivity::class.java)
-//                    thisActivity.startActivity(intent)
+                    val intent = Intent(thisActivity, WorkerMainActivity::class.java)
+                    intent.putExtra("_id", mainListViewModel.searchEmployeeList[position]._id)
+                    startActivity(intent)
                 }
 
                 holder.itemView.mainList_swipeLayout.setOnSwipeListener(

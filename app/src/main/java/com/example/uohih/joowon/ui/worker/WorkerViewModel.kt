@@ -4,20 +4,31 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.uohih.joowon.R
+import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.model.*
 import com.example.uohih.joowon.repository.JWBaseRepository
 import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.example.uohih.joowon.util.DateCommonUtil
+import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import org.json.JSONObject
+import java.time.LocalDate
 
 class WorkerViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : AndroidViewModel(application) {
     private val _isLoading = MutableLiveData<Boolean>()
     private val _workerInsertForm = MutableLiveData<WorkerInsrtFormState>()
     private val _jw3002Data = MutableLiveData<JW3002>()
+
+    val liveEmployeeInfo = MutableLiveData<JW3001ResBodyList>()
+    val liveVacationList = MutableLiveData<List<VacationList>>()
+    val liveViewPagerInfo = MutableLiveData<ArrayList<Int>>()
+
+    var liveCalendarList = ArrayList<CalendarDayInfo>()
+
+
 
     val isLoading: LiveData<Boolean> = _isLoading
     val workerInsertForm: LiveData<WorkerInsrtFormState> = _workerInsertForm
@@ -25,7 +36,21 @@ class WorkerViewModel(application: JWBaseApplication, private val jwBaseReposito
 
     val today = DateCommonUtil().setFormatHpDate(DateCommonUtil().getToday().get("yyyymmdd").toString())
 
-    fun isDataValidCheck() {
+
+    fun setEmployeeInfo(_id: String, date: LocalDate) {
+        liveEmployeeInfo.value = UICommonUtil.getEmployeeInfo(_id)
+        liveViewPagerInfo.postValue(arrayListOf(1, 2))
+        liveCalendarList = (JWBaseActivity().getCalendar(date))
+    }
+//
+//    fun setViewpager(date:LocalDate){
+//        liveCalendarList.postValue(JWBaseActivity().getCalendar(date))
+//        month.add(calendarInfo)
+//        liveViewPagerInfo.value = arrayListOf(1,2)
+//    }
+
+
+    private fun isDataValidCheck() {
         if (_workerInsertForm.value?.nameMsg == null) {
             _workerInsertForm.value = WorkerInsrtFormState(isDataValid = true)
         }

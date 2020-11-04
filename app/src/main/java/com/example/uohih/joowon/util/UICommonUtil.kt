@@ -72,13 +72,38 @@ class UICommonUtil {
             preferences.data = ""
         }
 
-        private var initEmployeeList =  mutableListOf<JW3001ResBodyList>()
-        fun setInitEmployeeList(initEmployeeList: MutableList<JW3001ResBodyList>){
+        private var initEmployeeList = mutableListOf<JW3001ResBodyList>()
+        fun setInitEmployeeList(initEmployeeList: MutableList<JW3001ResBodyList>) {
             this.initEmployeeList = initEmployeeList
         }
-        fun getInitEmployeeList():MutableList<JW3001ResBodyList>{
+
+        fun getInitEmployeeList(): MutableList<JW3001ResBodyList> {
             return initEmployeeList
         }
+
+        fun getEmployeeInfo(_id: String): JW3001ResBodyList? {
+            var employeeInfo: JW3001ResBodyList? = null
+            for (i in 0 until initEmployeeList.size) {
+                val info = initEmployeeList[i]
+                if (info._id == _id) {
+                    employeeInfo = (JW3001ResBodyList(
+                            _id = info._id,
+                            profile_image = info.profile_image,
+                            name = info.name,
+                            phone_number = info.phone_number,
+                            birth = info.birth,
+                            entered_date = info.entered_date,
+                            total_vacation_cnt = info.total_vacation_cnt,
+                            use_vacation = info.use_vacation,
+                            use_vacation_cnt = info.use_vacation_cnt
+
+                    ))
+                    return employeeInfo
+                }
+            }
+            return employeeInfo
+        }
+
     }
 
 

@@ -1,208 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/c_ffffff"
-    android:orientation="vertical"
-    tools:context=".ui.worker.WorkerMainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!--상단 타이틀 및 아이콘 바-->
-    <com.example.uohih.joowon.ui.customView.TopTitleView
-        android:id="@+id/worker_main_title_view"
+    <data>
+
+        <variable
+            name="workerMainVm"
+            type="com.example.uohih.joowon.ui.worker.WorkerViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp60"
-        android:gravity="center_vertical"
-        app:btnClose="true" />
+        android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
+        tools:context=".ui.worker.WorkerMainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <!--Image-->
-        <ImageView
-            android:id="@+id/img_worker_people"
-            android:layout_width="@dimen/dp90"
-            android:layout_height="@dimen/dp90"
-            android:layout_marginBottom="@dimen/dp10"
-            android:background="@drawable/img_people"
-            android:onClick="onClickWorkerMain" />
-
-        <TextView
-            android:id="@+id/tv_worker_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="이름 (2000.00.00)"
-            android:textColor="@color/c_333333"
-            android:textSize="@dimen/dp18"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_worker_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="P.H 010-000-000"
-            android:textColor="@color/c_333333"
-            android:textSize="@dimen/dp15" />
-
-        <TextView
-            android:id="@+id/tv_worker_vacation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="vacation 0/15"
-            android:textColor="@color/c_333333"
-            android:textSize="@dimen/dp15" />
+        <!--상단 타이틀 및 아이콘 바-->
+        <com.example.uohih.joowon.ui.customView.TopTitleView
+            android:id="@+id/workerMain_titleView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp60"
+            android:gravity="center_vertical"
+            app:btnBack="true"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp40"
-            android:layout_marginTop="@dimen/dp05"
-            android:layout_marginBottom="@dimen/dp05"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/btn_worker_write"
-                android:layout_width="@dimen/dp40"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_write_selector"
-                android:onClick="onClickWorkerMain" />
-
-            <ImageButton
-                android:id="@+id/btn_worker_list"
-                android:layout_width="@dimen/dp40"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_list_selector"
-                android:onClick="onClickWorkerMain"
-                android:visibility="gone" />
-
-            <ImageButton
-                android:id="@+id/btn_worker_calendar"
-                android:layout_width="@dimen/dp40"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_calendar_selector"
-                android:onClick="onClickWorkerMain" />
-
-            <ImageButton
-                android:id="@+id/btn_worker_call"
-                android:layout_width="@dimen/dp40"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_call_selector"
-                android:onClick="onClickWorkerMain" />
-
-            <ImageButton
-                android:id="@+id/btn_worker_setting"
-                android:layout_width="@dimen/dp40"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_setting_selector"
-                android:onClick="onClickWorkerMain" />
-        </LinearLayout>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/layout_indicator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp10"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp01"
-        android:layout_marginBottom="@dimen/dp02"
-        android:background="@color/c_e6e6e6" />
-
-
-    <!-- 년/월 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp03"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingRight="@dimen/dp16">
-
-
-        <!-- 월 -->
-        <TextView
-            android:id="@+id/tv_worker_month"
+            android:id="@+id/workerMain_layInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp16"
-            android:layout_marginRight="@dimen/dp05"
+            android:orientation="vertical"
             android:gravity="center"
-            android:textColor="@color/c_333333"
-            android:textSize="@dimen/dp20"
-            tools:text="12월" />
-
-        <ImageButton
-            android:id="@+id/btn_worker_nextm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_up_nor"
-            android:onClick="onClickWorkerMain" />
-
-        <ImageButton
-            android:id="@+id/btn_worker_backm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_down_nor"
-            android:onClick="onClickWorkerMain" />
+            android:paddingTop="@dimen/dp10"
+            android:paddingBottom="@dimen/dp10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/workerMain_titleView"
+            app:layout_constraintBottom_toTopOf="@id/workerMain_layIndicator">
 
 
-        <!-- 년 -->
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/edit_worker_year"
-                android:layout_width="@dimen/dp120"
-                android:layout_height="@dimen/dp50"
-                android:layout_alignParentRight="true"
-                android:backgroundTint="@color/c_e6e6e6"
-                android:hint="2020"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="4"
-                android:paddingLeft="@dimen/dp10"
-                android:singleLine="true"
-                android:textColor="@color/c_333333"
-                android:textSize="@dimen/dp20" />
+            <ImageView
+                android:id="@+id/workerMain_imgProfile"
+                android:layout_width="@dimen/dp60"
+                android:layout_height="@dimen/dp60"
+                android:background="@drawable/img_people"
+                android:onClick="onClickWorkerMain"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/workerMain_tvName" />
 
             <TextView
+                android:id="@+id/workerMain_tvName"
+                style="@style/Font_18_000000"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/btn_worker_search"
-                android:text="년"
-                android:textColor="@color/c_333333"
-                android:textSize="@dimen/dp15" />
+                android:layout_marginTop="@dimen/dp13"
+                android:text="@{workerMainVm.liveEmployeeInfo.name+&quot; (&quot;+workerMainVm.liveEmployeeInfo.birth+&quot;)&quot;}"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/workerMain_tvEnter"
+                tools:text="이름 (2000.00.00)" />
 
-            <ImageButton
-                android:id="@+id/btn_worker_search"
-                android:layout_width="@dimen/dp30"
-                android:layout_height="@dimen/dp30"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/dp05"
-                android:background="@drawable/btn_search_nor"
-                android:onClick="onClickWorkerMain" />
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/workerMain_tvEnter"
+                style="@style/Font_15_4a4a4a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp05"
+                android:text="@{workerMainVm.liveEmployeeInfo.entered_date}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/workerMain_tvPhone"
+                tools:text="2020-10-11" />
+
+            <TextView
+                android:id="@+id/workerMain_tvPhone"
+                style="@style/Font_15_4a4a4a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp02"
+                android:text="@{workerMainVm.liveEmployeeInfo.phone_number.empty?@string/mainList_ph:workerMainVm.liveEmployeeInfo.phone_number}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/workerMain_tvVacation"
+                tools:text="010-000-000" />
+
+            <TextView
+                android:id="@+id/workerMain_tvVacation"
+                style="@style/Font_15_4a4a4a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp02"
+                android:text="@{@string/mainList_vacation+workerMainVm.liveEmployeeInfo.use_vacation_cnt+&quot;/&quot;+workerMainVm.liveEmployeeInfo.total_vacation_cnt}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/workerMain_layBtn"
+                tools:text="@string/mainList_vacation" />
 
 
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/workerMain_layBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/workerMain_layIndicator">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewpager_worker"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+                <ImageButton
+                    android:id="@+id/workerMain_btnWrite"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp10"
+                    android:background="@drawable/btn_write_selector"
+                    android:onClick="onClickWorkerMain" />
+
+                <ImageButton
+                    android:id="@+id/workerMain_btnList"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_list_selector"
+                    android:onClick="onClickWorkerMain"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/workerMain_btnCalendar"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_calendar_selector"
+                    android:onClick="onClickWorkerMain" />
+
+                <ImageButton
+                    android:id="@+id/workerMain_btnCall"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp10"
+                    android:background="@drawable/btn_call_selector"
+                    android:onClick="onClickWorkerMain" />
+
+                <ImageButton
+                    android:id="@+id/workerMain_btnSetting"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp10"
+                    android:background="@drawable/btn_setting_selector"
+                    android:onClick="onClickWorkerMain" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/workerMain_layIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp05"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/workerMain_line">
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/workerMain_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp01"
+            android:background="@color/c_e6e6e6"
+            app:layout_constraintBottom_toTopOf="@id/workerMain_tvDate" />
 
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/workerMain_tvDate"
+            style="@style/Font_18_000000"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp45"
+            android:layout_marginStart="@dimen/dp30"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/workerMain_viewpager"
+            tools:text="2020.10" />
+
+        <ImageView
+            android:id="@+id/workerMain_imgTri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_dropdown_tri"
+            app:layout_constraintBottom_toBottomOf="@id/workerMain_tvDate"
+            app:layout_constraintStart_toEndOf="@id/workerMain_tvDate"
+            app:layout_constraintTop_toTopOf="@id/workerMain_tvDate" />
+
+
+        <!--        <androidx.viewpager.widget.ViewPager-->
+        <!--            android:id="@+id/viewpager_worker"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent" />-->
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/workerMain_viewpager"
+            replaceAll="@{workerMainVm.liveViewPagerInfo}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

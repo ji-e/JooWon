@@ -59,7 +59,7 @@ class MainListViewModel(application: JWBaseApplication, private val jwBaseReposi
                     val profileImage = item?.profile_image
                     val name = item?.name
                     val phoneNumber = (Constants.PHONE_NUM_PATTERN).toRegex().replace(item?.phone_number.toString(), "$1-$2-$3")
-                    val birth = item?.birth
+                    val birth = (Constants.YYYYMMDD_PATTERN).toRegex().replace((item?.birth)?.substring(0, 8).toString(), "$1-$2-$3")
                     val enteredDate = (Constants.YYYYMMDD_PATTERN).toRegex().replace((item?.entered_date)?.substring(0, 8).toString(), "$1-$2-$3")
                     val totalVacationCnt = item?.total_vacation_cnt?.toInt() ?: 0
                     val useVacation = item?.use_vacation
