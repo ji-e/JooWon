@@ -5,10 +5,12 @@ import android.os.Handler
 import android.view.View
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.model.JW3001ResBodyList
+import com.example.uohih.joowon.model.VacationList
 import java.io.Serializable
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class UICommonUtil {
     companion object {
@@ -102,6 +104,16 @@ class UICommonUtil {
                 }
             }
             return employeeInfo
+        }
+
+        fun getVacationInfo(calendarDate: String, vacationList: ArrayList<VacationList>): VacationList? {
+//            LogUtil.e(calendarDate, vacationList[0].vacation_date.toString())
+            for (i in vacationList.indices) {
+                if (calendarDate == vacationList[i].vacation_date.toString()) {
+                    return VacationList(vacationList[i].vacation_date, vacationList[i].vacation_content, vacationList[i].vacation_cnt)
+                }
+            }
+            return null
         }
 
     }

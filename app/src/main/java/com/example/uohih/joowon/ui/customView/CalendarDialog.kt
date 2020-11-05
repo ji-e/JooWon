@@ -120,8 +120,6 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                             R.layout.dialog_calendar_cell,
                             liveCalendarList[position],
                             selectedDate,
-                            isFutureSelect,
-                            isSelectedMulti,
                             isSelectedRang
                     )
                     gridview.adapter = calendarAdapter
@@ -410,8 +408,6 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
                 mConfirmBtnClickListener?.run {
                     if (!isVisibleCalendar) {
                         datePickerDate = LocalDate.parse(tvDate.text.toString())
-//                        val dateArr = tvDate.text.split("-")
-//                        datePickerDate = LocalDate.of(dateArr[0].toInt(), dateArr[1].toInt(), dateArr[2].toInt())
                     }
                     datePickerDate?.let { selectedDate.add(it) }
                     onConfirmClick(selectedDate)

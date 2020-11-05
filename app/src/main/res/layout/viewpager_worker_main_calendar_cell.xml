@@ -1,45 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="@dimen/dp45"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="@dimen/dp20"-->
-    <!--        android:layout_centerInParent="true"-->
-    <!--        android:orientation="horizontal">-->
-
-    <!--        <View-->
-    <!--            android:id="@+id/calendar_ranges"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:background="@color/c_aaf7b52c"-->
-    <!--            android:visibility="gone" />-->
-
-    <!--        <View-->
-    <!--            android:id="@+id/calendar_ranges2"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:background="@color/c_aaf7b52c"-->
-    <!--            android:visibility="gone" />-->
-    <!--    </LinearLayout>-->
-
-    <!--    <ImageView-->
-    <!--        android:id="@+id/calendar_selected"-->
-    <!--        android:layout_width="@dimen/dp30"-->
-    <!--        android:layout_height="@dimen/dp30"-->
-    <!--        android:layout_centerInParent="true"-->
-    <!--        android:layout_margin="@dimen/dp05"-->
-    <!--        android:background="@drawable/circle" />-->
 
     <TextView
         android:id="@+id/viewpagerWorkerMain_cell"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp30"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/dp10"
-        android:text="11"
-        android:textSize="@dimen/dp15" />
-</RelativeLayout>
+        style="@style/Font_15_4a4a4a"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp03"
+        tools:text="11"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/viewpagerWorkerMain_imgVacation"
+        android:layout_width="@dimen/dp10"
+        android:layout_height="@dimen/dp10"
+        android:background="@drawable/circle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewpagerWorkerMain_cell" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

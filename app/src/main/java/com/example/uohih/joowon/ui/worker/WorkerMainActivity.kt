@@ -2,6 +2,8 @@ package com.example.uohih.joowon.ui.worker
 
 
 import android.os.Bundle
+import android.view.View
+import android.widget.GridView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -16,16 +18,13 @@ import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.database.VacationData
 import com.example.uohih.joowon.databinding.ActivityWorkerMainBinding
-import com.example.uohih.joowon.databinding.DialogCalendarGridBinding
-import com.example.uohih.joowon.databinding.ViewpaterWorkerMainBinding
-import com.example.uohih.joowon.model.CalendarDayInfo
+import com.example.uohih.joowon.databinding.ViewpagerWorkerMainBinding
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.adapter.CalendarAdapter
-import com.example.uohih.joowon.ui.adapter.WorkerMainAdapter
 import com.example.uohih.joowon.util.DateCommonUtil
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.SizeConverterUtil
-import kotlinx.android.synthetic.main.viewpater_worker_main.view.*
+import kotlinx.android.synthetic.main.viewpager_worker_main.view.*
 import java.time.LocalDate
 
 
@@ -117,31 +116,38 @@ class WorkerMainActivity : JWBaseActivity() {
     }
 
     private fun setViewpager() {
-
+        var viewpagerAdapter: BaseRecyclerView.Adapter<ArrayList<Int>, ViewpagerWorkerMainBinding>? = null
+        lateinit var gridview: GridView
         val liveCalendarList = workerViewModel.liveCalendarList
-        workerViewModel.liveViewPagerInfo.observe(thisActivity as LifecycleOwner, Observer {
-            val liveViewPagerInfo = it ?: return@Observer
-            viewPager.adapter = object : BaseRecyclerView.Adapter<ArrayList<Int>, ViewpaterWorkerMainBinding>(
-                    layoutResId = R.layout.viewpater_worker_main,
+        workerViewModel.liveVacationList.observe(thisActivity as LifecycleOwner, Observer {
+            val liveVacationList = it ?: return@Observer
+//            viewPager.adapter
+
+            viewpagerAdapter = object : BaseRecyclerView.Adapter<ArrayList<Int>, ViewpagerWorkerMainBinding>(
+                    layoutResId = R.layout.viewpager_worker_main,
                     bindingVariableId = BR.workerMainViewPagerVm
             ) {
-                override fun onBindViewHolder(holder: BaseRecyclerView.ViewHolder<ViewpaterWorkerMainBinding>, position: Int) {
+
+                fun afdfdfdfd() {
+
+                }
+
+                override fun onBindViewHolder(holder: BaseRecyclerView.ViewHolder<ViewpagerWorkerMainBinding>, position: Int) {
                     super.onBindViewHolder(holder, position)
-                    val gridview = holder.itemView.viewpagerWorkerMain_gridview
+                    gridview = holder.itemView.viewpagerWorkerMain_gridview
 
                     var calendarAdapter = CalendarAdapter(
                             mContext,
                             R.layout.viewpager_worker_main_calendar_cell,
                             liveCalendarList,
-                            null,
-                            false,
-                            false,
-                            false
+                            liveVacationList
                     )
                     gridview.adapter = calendarAdapter
                 }
 
             }
+
+            viewPager.adapter = viewpagerAdapter
 
         })
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -164,8 +170,12 @@ class WorkerMainActivity : JWBaseActivity() {
                     }
                 }
                 if (position == 0) {
+                    viewPager.viewpagerWorkerMain_gridview.visibility = View.VISIBLE
+                    viewPager.viewpagerWorkerMain_gridviewDay.visibility = View.VISIBLE
                     tvDate.text = dateTxt.toString().substring(0, 7)
                 } else {
+                    viewPager.viewpagerWorkerMain_gridview.visibility = View.INVISIBLE
+                    viewPager.viewpagerWorkerMain_gridviewDay.visibility = View.INVISIBLE
                     tvDate.text = dateTxt.toString().substring(0, 4)
                 }
 
@@ -320,11 +330,11 @@ class WorkerMainActivity : JWBaseActivity() {
         layIndicator.removeAllViews()
 
         val layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                SizeConverterUtil(this).dp(20F), SizeConverterUtil(this).dp(20F))
+                SizeConverterUtil(this).dp(15F), SizeConverterUtil(this).dp(20F))
 
         for (index in mIvDot.indices) {
             val ivDot = ImageView(mContext)
-            ivDot.setPadding(10, 0, 10, 0)
+            ivDot.setPadding(8, 0, 8, 0)
             ivDot.layoutParams = layoutParams
             if (index == viewPager.currentItem)
                 ivDot.setImageResource(R.drawable.indicator_on)

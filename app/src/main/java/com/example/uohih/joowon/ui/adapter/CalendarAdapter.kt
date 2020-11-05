@@ -13,9 +13,17 @@ import kotlinx.android.synthetic.main.dialog_calendar_cell.view.*
 import java.time.LocalDate
 import java.util.*
 import android.graphics.Paint.UNDERLINE_TEXT_FLAG
+import android.util.AttributeSet
+import android.widget.TextView
 import com.example.uohih.joowon.R
+import com.example.uohih.joowon.model.VacationList
+import com.example.uohih.joowon.util.LogUtil
+import com.example.uohih.joowon.util.SizeConverterUtil
+import com.example.uohih.joowon.util.UICommonUtil
+import kotlin.collections.ArrayList
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.properties.Delegates
 
 
 /**
@@ -24,22 +32,42 @@ import kotlin.math.min
  * listCalendarDayInfo: ArrayList<CalendarDayInfo>: 캘린더 날짜 정보 리스트
  * selectedDate: Date: 선택된 날짜
  */
-class CalendarAdapter(private val mContext: Context, val layout: Int, private val listCalendarDayInfo: ArrayList<CalendarDayInfo>,
-                      selectedDate: ArrayList<LocalDate>?,
-                      private val isFutureSelect: Boolean, private val isSelectedMulti: Boolean, private val isSelectedRanges: Boolean) : BaseAdapter() {
+class CalendarAdapter() : BaseAdapter() {
 
-    private var vacationList = arrayListOf<VacationData>()
-    private var selectedDateArray = arrayListOf<LocalDate>()
+    private lateinit var mContext: Context
+    private lateinit var listCalendarDayInfo: ArrayList<CalendarDayInfo>        // 월간날짜정보
+    private lateinit var vacationList: ArrayList<VacationList>                  // 휴가리스트
+    private var selectedDateArray = arrayListOf<LocalDate>() // 선택날짜리스트
+    private var isSelectedRanges: Boolean = false                               // 범위선택가능여부
+    private var layout by Delegates.notNull<Int>()
 
-    private var firstPosition = -1
-    private var lastPosition = -1
-    private var currentPosition = -1
+    private var firstPosition = -1  // 첫번째선택날짜포지션
+    private var lastPosition = -1   // 마지막선택날짜포지션
+    private var currentPosition = -1// 현재날짜포지션
 
     var selectedDateClickListener: SelectedDateClickListener? = null
 
     interface SelectedDateClickListener {
         fun onSelectedDateClick(date: ArrayList<LocalDate>)
     }
+
+
+    constructor(mContext: Context, layout: Int, listCalendarDayInfo: ArrayList<CalendarDayInfo>,
+                selectedDate: ArrayList<LocalDate>?, isSelectedRanges: Boolean) : this() {
+        this.mContext = mContext
+        this.layout = layout
+        this.listCalendarDayInfo = listCalendarDayInfo
+        this.isSelectedRanges = isSelectedRanges
+        selectedDate?.let { selectedDateArray = selectedDate }
+    }
+
+    constructor(mContext: Context, layout: Int, listCalendarDayInfo: ArrayList<CalendarDayInfo>, vacationList: ArrayList<VacationList>) : this() {
+        this.mContext = mContext
+        this.layout = layout
+        this.listCalendarDayInfo = listCalendarDayInfo
+        this.vacationList = vacationList
+    }
+
 
     override fun getCount(): Int {
         return listCalendarDayInfo.size
@@ -53,10 +81,6 @@ class CalendarAdapter(private val mContext: Context, val layout: Int, private va
         return position.toLong()
     }
 
-    init {
-        selectedDate?.let { selectedDateArray = selectedDate }
-    }
-
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
         val day = listCalendarDayInfo[position]
         var convertView = view
@@ -65,10 +89,10 @@ class CalendarAdapter(private val mContext: Context, val layout: Int, private va
             convertView = LayoutInflater.from(mContext).inflate(layout, parent, false)
         }
 
-
+        var cell: TextView?
         if (layout == R.layout.dialog_calendar_cell) {
 
-            val cell = convertView?.calendar_cell
+            cell = convertView?.calendar_cell
             val selectedCell = convertView?.calendar_selected
             val rangesCell = convertView?.calendar_ranges
             val rangesCell2 = convertView?.calendar_ranges2
@@ -147,24 +171,36 @@ class CalendarAdapter(private val mContext: Context, val layout: Int, private va
                 }
             }
 
-            if (day.isSameDay(LocalDate.now())) {
-                cell?.paintFlags = UNDERLINE_TEXT_FLAG
-                currentPosition = position
-            } else {
-                if (day.isInMonth()) {
-                    when {
-                        position % 7 + 1 == Calendar.SUNDAY -> cell?.setTextColor(Color.RED)
-                        position % 7 + 1 == Calendar.SATURDAY -> cell?.setTextColor(Color.BLUE)
-                        else -> cell?.setTextColor(Color.BLACK)
-                    }
-                } else {
-                    cell?.setTextColor(Color.GRAY)
-                }
-            }
-        } else if (layout == R.layout.viewpager_worker_main_calendar_cell) {
-            val cell = convertView?.viewpagerWorkerMain_cell
-            cell?.text = day.getDay()
 
+        } else
+//            if (layout == R.layout.viewpager_worker_main_calendar_cell)
+        {
+            cell = convertView?.viewpagerWorkerMain_cell
+            val imgVacation = convertView?.viewpagerWorkerMain_imgVacation
+            val vacationInfo = UICommonUtil.getVacationInfo(day.getDate().toString(), vacationList)
+
+            if (vacationInfo != null) {
+                imgVacation?.visibility = View.VISIBLE
+            } else {
+                imgVacation?.visibility = View.GONE
+            }
+
+
+        }
+        cell?.text = day.getDay()
+        if (day.isSameDay(LocalDate.now())) {
+            cell?.paintFlags = UNDERLINE_TEXT_FLAG
+            currentPosition = position
+        } else {
+            if (day.isInMonth()) {
+                when {
+                    position % 7 + 1 == Calendar.SUNDAY -> cell?.setTextColor(Color.RED)
+                    position % 7 + 1 == Calendar.SATURDAY -> cell?.setTextColor(Color.BLUE)
+                    else -> cell?.setTextColor(Color.BLACK)
+                }
+            } else {
+                cell?.setTextColor(Color.GRAY)
+            }
         }
 
         convertView?.tag = day
@@ -174,17 +210,26 @@ class CalendarAdapter(private val mContext: Context, val layout: Int, private va
     }
 
 
+    /**
+     * 날짜선택
+     */
     fun setSelectedDate(selectedDateArray: ArrayList<LocalDate>) {
         this.selectedDateArray = selectedDateArray
         notifyDataSetChanged()
     }
 
+    /**
+     * 날짜범위선택
+     */
     fun setRangesPosition(firstPosition: Int, lastPosition: Int) {
         this.firstPosition = firstPosition
         this.lastPosition = lastPosition
         notifyDataSetChanged()
     }
 
+    /**
+     * 현재날짜포지션
+     */
     fun getCurrentDatePosition(): Int {
         return currentPosition
     }

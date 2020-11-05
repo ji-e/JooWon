@@ -36,7 +36,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/workerMain_titleView"
-            app:layout_constraintBottom_toTopOf="@id/workerMain_layIndicator">
+            app:layout_constraintBottom_toTopOf="@id/workerMain_line">
 
 
             <ImageView
@@ -44,10 +44,7 @@
                 android:layout_width="@dimen/dp60"
                 android:layout_height="@dimen/dp60"
                 android:background="@drawable/img_people"
-                android:onClick="onClickWorkerMain"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/workerMain_tvName" />
+                android:onClick="onClickWorkerMain" />
 
             <TextView
                 android:id="@+id/workerMain_tvName"
@@ -57,9 +54,6 @@
                 android:layout_marginTop="@dimen/dp13"
                 android:text="@{workerMainVm.liveEmployeeInfo.name+&quot; (&quot;+workerMainVm.liveEmployeeInfo.birth+&quot;)&quot;}"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/workerMain_tvEnter"
                 tools:text="이름 (2000.00.00)" />
 
             <TextView
@@ -69,9 +63,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp05"
                 android:text="@{workerMainVm.liveEmployeeInfo.entered_date}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/workerMain_tvPhone"
                 tools:text="2020-10-11" />
 
             <TextView
@@ -81,9 +72,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp02"
                 android:text="@{workerMainVm.liveEmployeeInfo.phone_number.empty?@string/mainList_ph:workerMainVm.liveEmployeeInfo.phone_number}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/workerMain_tvVacation"
                 tools:text="010-000-000" />
 
             <TextView
@@ -93,9 +81,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp02"
                 android:text="@{@string/mainList_vacation+workerMainVm.liveEmployeeInfo.use_vacation_cnt+&quot;/&quot;+workerMainVm.liveEmployeeInfo.total_vacation_cnt}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/workerMain_layBtn"
                 tools:text="@string/mainList_vacation" />
 
 
@@ -103,10 +88,7 @@
                 android:id="@+id/workerMain_layBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/workerMain_layIndicator">
+                android:orientation="horizontal">
 
                 <ImageButton
                     android:id="@+id/workerMain_btnWrite"
@@ -150,18 +132,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/workerMain_layIndicator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp05"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/workerMain_line">
-
-        </LinearLayout>
 
         <View
             android:id="@+id/workerMain_line"
@@ -170,6 +140,18 @@
             android:background="@color/c_e6e6e6"
             app:layout_constraintBottom_toTopOf="@id/workerMain_tvDate" />
 
+        <LinearLayout
+            android:id="@+id/workerMain_layIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/workerMain_tvDate"
+            app:layout_constraintBottom_toBottomOf="@id/workerMain_tvDate">
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/workerMain_tvDate"
@@ -191,19 +173,12 @@
             app:layout_constraintStart_toEndOf="@id/workerMain_tvDate"
             app:layout_constraintTop_toTopOf="@id/workerMain_tvDate" />
 
-
-        <!--        <androidx.viewpager.widget.ViewPager-->
-        <!--            android:id="@+id/viewpager_worker"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent" />-->
-
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/workerMain_viewpager"
             replaceAll="@{workerMainVm.liveViewPagerInfo}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

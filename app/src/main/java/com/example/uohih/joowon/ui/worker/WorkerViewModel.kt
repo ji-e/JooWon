@@ -23,7 +23,7 @@ class WorkerViewModel(application: JWBaseApplication, private val jwBaseReposito
     private val _jw3002Data = MutableLiveData<JW3002>()
 
     val liveEmployeeInfo = MutableLiveData<JW3001ResBodyList>()
-    val liveVacationList = MutableLiveData<List<VacationList>>()
+    val liveVacationList = MutableLiveData<ArrayList<VacationList>>()
     val liveViewPagerInfo = MutableLiveData<ArrayList<Int>>()
 
     var liveCalendarList = ArrayList<CalendarDayInfo>()
@@ -41,6 +41,7 @@ class WorkerViewModel(application: JWBaseApplication, private val jwBaseReposito
         liveEmployeeInfo.value = UICommonUtil.getEmployeeInfo(_id)
         liveViewPagerInfo.postValue(arrayListOf(1, 2))
         liveCalendarList = (JWBaseActivity().getCalendar(date))
+        liveVacationList.value = liveEmployeeInfo.value?.use_vacation
     }
 //
 //    fun setViewpager(date:LocalDate){
