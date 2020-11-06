@@ -172,9 +172,7 @@ class CalendarAdapter() : BaseAdapter() {
             }
 
 
-        } else
-//            if (layout == R.layout.viewpager_worker_main_calendar_cell)
-        {
+        } else {
             cell = convertView?.viewpagerWorkerMain_cell
             val imgVacation = convertView?.viewpagerWorkerMain_imgVacation
             val vacationInfo = UICommonUtil.getVacationInfo(day.getDate().toString(), vacationList)
@@ -187,7 +185,9 @@ class CalendarAdapter() : BaseAdapter() {
 
 
         }
+
         cell?.text = day.getDay()
+
         if (day.isSameDay(LocalDate.now())) {
             cell?.paintFlags = UNDERLINE_TEXT_FLAG
             currentPosition = position

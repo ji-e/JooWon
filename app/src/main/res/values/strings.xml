@@ -108,7 +108,7 @@
     <string name="vacation_dialog_msg2">이미 등록된 휴가입니다.</string>
     <string name="vacation_dialog_msg3">휴가 시작 날짜 이후로 선택해주세요.</string>
     <string name="vacation_dialog_msg4">휴가 날짜를 확인해주세요.</string>
-    <string name="vacation_date">휴가사용일자</string>
+    <string name="vacation_date">사용일자</string>
     <string name="vacation_use_cnt">근태일수</string>
     <string name="vacation_half">반차</string>
     <string name="vacation_no">No.</string>

@@ -2,29 +2,28 @@ package com.example.uohih.joowon.ui.worker
 
 
 import android.os.Bundle
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.view.View
-import android.widget.GridView
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.uohih.joowon.BR
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.database.DBHelper
-import com.example.uohih.joowon.database.VacationData
 import com.example.uohih.joowon.databinding.ActivityWorkerMainBinding
 import com.example.uohih.joowon.databinding.ViewpagerWorkerMainBinding
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.adapter.CalendarAdapter
-import com.example.uohih.joowon.util.DateCommonUtil
-import com.example.uohih.joowon.util.LogUtil
+import com.example.uohih.joowon.ui.adapter.WorkerVacationListAdapter
 import com.example.uohih.joowon.util.SizeConverterUtil
 import kotlinx.android.synthetic.main.viewpager_worker_main.view.*
+import kotlinx.android.synthetic.main.viewpager_worker_main_calendar_cell.view.*
 import java.time.LocalDate
 
 
@@ -38,32 +37,13 @@ class WorkerMainActivity : JWBaseActivity() {
     private var dateTxt = LocalDate.now()
 
     private lateinit var tvDate: TextView
+    private lateinit var ckbTri: CheckBox
     private lateinit var layIndicator: LinearLayout
     private lateinit var viewPager: ViewPager2
+    private lateinit var pickerY: NumberPicker
+    private lateinit var pickerM: NumberPicker
 
-    private lateinit var name: String
-    private lateinit var bitmap: String
-    private lateinit var phoneNum: String
-    private lateinit var use: String
-    private lateinit var total: String
-    private lateinit var joinDate: String
-    private var no = ""
-
-    private var tempYear = ""
-
-    private var getBundle = Bundle()
-    private val dbHelper = DBHelper(this)
-
-    private val todayJson = DateCommonUtil().getToday()
-
-    //    private val workerMainAdapter by lazy { WorkerMainAdapter(supportFragmentManager, vacationList) }
     private val mIvDot by lazy { arrayOfNulls<ImageView>(2) }
-
-    // 리스트 뷰
-    private var vacationList = arrayListOf<VacationData>()
-
-    private var localdate = LocalDate.now()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,65 +64,60 @@ class WorkerMainActivity : JWBaseActivity() {
         }
 
         initView()
-//        hideLoading()
 
     }
 
     private fun initView() {
-
-
         tvDate = binding.workerMainTvDate
+        ckbTri = binding.workerMainImgTri
         layIndicator = binding.workerMainLayIndicator
         viewPager = binding.workerMainViewpager
-
+        pickerY = binding.workerMainPickerY
+        pickerM = binding.workerMainPickerM
 
         tvDate.text = dateTxt.toString().substring(0, 7)
 
+        ckbTri.setOnCheckedChangeListener(WorkerMainCheckChangeListener())
+
         setViewpager()
-
-
-        //현재 날짜 세팅
-//        tv_worker_month.text = todayJson.getString("month")
-//        edit_worker_year.setText(todayJson.getString("year"))
-//        tempYear = edit_worker_year.text.toString()
-//
-//        //뷰페이저
-//        //뷰페이저 화면전환 리스너
-//        viewpager_worker.adapter = workerMainAdapter
-//        viewpager_worker.addOnPageChangeListener(ViewpagerChangeListener())
-//
-        setIndicator() //뷰페이저 인디케이터 설정
-
+        setIndicator()      // 뷰페이저 인디케이터 설정
+        setNumberPicker()   // 피커설정
     }
 
     private fun setViewpager() {
-        var viewpagerAdapter: BaseRecyclerView.Adapter<ArrayList<Int>, ViewpagerWorkerMainBinding>? = null
-        lateinit var gridview: GridView
+        var viewpagerAdapter: BaseRecyclerView.Adapter<String, ViewpagerWorkerMainBinding>? = null
+
         val liveCalendarList = workerViewModel.liveCalendarList
         workerViewModel.liveVacationList.observe(thisActivity as LifecycleOwner, Observer {
             val liveVacationList = it ?: return@Observer
-//            viewPager.adapter
-
-            viewpagerAdapter = object : BaseRecyclerView.Adapter<ArrayList<Int>, ViewpagerWorkerMainBinding>(
+            viewpagerAdapter = object : BaseRecyclerView.Adapter<String, ViewpagerWorkerMainBinding>(
                     layoutResId = R.layout.viewpager_worker_main,
-                    bindingVariableId = BR.workerMainViewPagerVm
+                    bindingVariableId = BR.workerMainViewpagerVal
             ) {
-
-                fun afdfdfdfd() {
-
-                }
-
                 override fun onBindViewHolder(holder: BaseRecyclerView.ViewHolder<ViewpagerWorkerMainBinding>, position: Int) {
                     super.onBindViewHolder(holder, position)
-                    gridview = holder.itemView.viewpagerWorkerMain_gridview
-
-                    var calendarAdapter = CalendarAdapter(
+                    // 그리드뷰
+                    val gridview = holder.itemView.viewpagerWorkerMain_gridview
+                    val calendarAdapter = CalendarAdapter(
                             mContext,
                             R.layout.viewpager_worker_main_calendar_cell,
                             liveCalendarList,
                             liveVacationList
                     )
                     gridview.adapter = calendarAdapter
+                    gridview.setOnItemClickListener { parent, view, position, id ->
+
+                        if (view.viewpagerWorkerMain_imgVacation.isVisible) {
+
+                        }
+
+                    }
+
+                    // 리사이클러뷰
+                    val recyclerview = holder.itemView.viewpagerWorkerMain_recyclerview
+                    recyclerview.setHasFixedSize(true)
+                    recyclerview.layoutManager = LinearLayoutManager(thisActivity)
+                    recyclerview.adapter = WorkerVacationListAdapter(liveVacationList, thisActivity)
                 }
 
             }
@@ -150,16 +125,8 @@ class WorkerMainActivity : JWBaseActivity() {
             viewPager.adapter = viewpagerAdapter
 
         })
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-//            override fun onPageScrollStateChanged(state: Int) {
-//                if (state == ViewPager.SCROLL_STATE_DRAGGING) {
-//                    previousPosition = viewPager.currentItem
-//                }
-//                viewPager.post {
-//                    viewPagerAdapter.notifyDataSetChanged()
-//                }
-//            }
 
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
 
                 for (index in mIvDot.indices) {
@@ -172,156 +139,22 @@ class WorkerMainActivity : JWBaseActivity() {
                 if (position == 0) {
                     viewPager.viewpagerWorkerMain_gridview.visibility = View.VISIBLE
                     viewPager.viewpagerWorkerMain_gridviewDay.visibility = View.VISIBLE
+                    viewPager.viewpagerWorkerMain_recyclerview.visibility = View.INVISIBLE
+                    viewPager.viewpagerWorkerMain_listTitle.visibility = View.INVISIBLE
                     tvDate.text = dateTxt.toString().substring(0, 7)
                 } else {
                     viewPager.viewpagerWorkerMain_gridview.visibility = View.INVISIBLE
                     viewPager.viewpagerWorkerMain_gridviewDay.visibility = View.INVISIBLE
+                    viewPager.viewpagerWorkerMain_recyclerview.visibility = View.VISIBLE
+                    viewPager.viewpagerWorkerMain_listTitle.visibility = View.VISIBLE
                     tvDate.text = dateTxt.toString().substring(0, 4)
                 }
 
             }
         })
 
-//        viewPager.adapter = workerMainAdapter
     }
 
-    /**
-     * 뷰페이저 화면전환 리스너
-     */
-//    private inner class ViewpagerChangeListener : OnPageChangeListener {
-//        override fun onPageScrollStateChanged(state: Int) {
-//        }
-//
-//        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-//        }
-//
-//        override fun onPageSelected(position: Int) {
-//            for (index in 0 until workerMainAdapter.count) {
-//                if (index == position) {
-//                    mIvDot[index]?.setImageResource(R.drawable.indicator_on)
-//                } else {
-//                    mIvDot[index]?.setImageResource(R.drawable.indicator_nor)
-//                }
-//            }
-//
-//            if (position == 0) {
-//                // 캘린더 형
-//                btn_worker_calendar.visibility = View.VISIBLE
-//                btn_worker_list.visibility = View.GONE
-//                tv_worker_month.visibility = View.VISIBLE
-//                btn_worker_nextm.visibility = View.VISIBLE
-//                btn_worker_backm.visibility = View.VISIBLE
-//                val fragment = findFragmentByPosition() as GridWorkerMainFragment
-//                fragment.setCalendarView(localdate)
-//            } else {
-//                // 리스트 형
-//                btn_worker_calendar.visibility = View.GONE
-//                btn_worker_list.visibility = View.VISIBLE
-//                tv_worker_month.visibility = View.INVISIBLE
-//                btn_worker_nextm.visibility = View.INVISIBLE
-//                btn_worker_backm.visibility = View.INVISIBLE
-//                val fragment = findFragmentByPosition() as ListWorkerMainFragment
-//                fragment.setNotify()
-//            }
-//
-//            edit_worker_year.setText(tempYear)
-//        }
-//    }
-
-
-//    fun onClickWorkerMain(v: View) {
-//        edit_worker_year.clearFocus() //년도 포커스 제거
-//
-//        when (v) {
-//            img_worker_people -> {
-//                // 프로필 사진 보기
-//                val intent = Intent(this, PictureActivity::class.java)
-//                intent.putExtra("picture", bitmap)
-//                startActivity(intent)
-//            }
-//            btn_worker_write -> {
-//                // 휴가 등록하기
-//                val bundle = Bundle()
-//                bundle.putString("name", name)
-//                bundle.putString("join", joinDate)
-//                bundle.putString("phone", phoneNum)
-//                bundle.putString("vacation", """$use/$total""")
-//                bundle.putString("bitmap", bitmap)
-//
-//                val cntRemain = (total.toDouble() - use.toDouble())
-//                val cntTotal = total
-//
-//                bundle.putDouble("cntRemain", cntRemain)
-//                bundle.putString("cntTotal", cntTotal)
-//
-//                val intent = Intent(this, BlankActivity::class.java)
-//                intent.putExtra("fragmentFlag", "vacation")
-//                intent.putExtra("fragmentBundle", bundle)
-//
-//                startActivity(intent)
-//
-//            }
-//            btn_worker_list -> {
-//                btn_worker_calendar.visibility = View.VISIBLE
-//                btn_worker_list.visibility = View.GONE
-//
-//                viewpager_worker.currentItem = 0
-//            }
-//            btn_worker_calendar -> {
-//                btn_worker_calendar.visibility = View.GONE
-//                btn_worker_list.visibility = View.VISIBLE
-//
-//                viewpager_worker.currentItem = 1
-//            }
-//            btn_worker_call -> {
-//                // 전화걸기
-//                val intentCall = Intent(Intent.ACTION_DIAL)
-//                intentCall.data = Uri.parse("tel:$phoneNum")
-//                startActivity(intentCall)
-//            }
-//            btn_worker_setting -> {
-//                // 직원정보 수정하기
-//                val intentSetting = Intent(this, WorkerInsertActivity::class.java)
-//                intentSetting.putExtra("workerUpdate", "Y")
-//                intentSetting.putExtra("workerBundle", getBundle)
-//                startActivity(intentSetting)
-//            }
-//            btn_worker_backm -> {
-//                localdate = localdate.minusMonths(1)
-//                edit_worker_year.setText(localdate.year.toString())
-//                tv_worker_month.text = String.format("%02d", localdate.monthValue)
-//            }
-//            btn_worker_nextm -> {
-//                localdate = localdate.plusMonths(1)
-//                edit_worker_year.setText(localdate.year.toString())
-//                tv_worker_month.text = String.format("%02d", localdate.monthValue)
-//            }
-//            btn_worker_search -> {
-//                localdate = localdate.withYear(Integer.parseInt(edit_worker_year.text.toString()))
-//
-//                setVacationData()
-//                tempYear = edit_worker_year.text.toString()
-//            }
-//
-//        }
-//
-//        if (viewpager_worker.currentItem == 0) {
-//            val fragment = findFragmentByPosition() as GridWorkerMainFragment
-//            fragment.setCalendarView(localdate)
-//        } else {
-//            val fragment = findFragmentByPosition() as ListWorkerMainFragment
-//            fragment.setNotify()
-//        }
-//
-//    }
-
-    /**
-     * 뷰페이저 프래그먼트 가져오기
-     */
-//    private fun findFragmentByPosition(): Fragment? {
-//        return supportFragmentManager.findFragmentByTag(
-//                workerMainAdapter.getItem(viewpager_worker.currentItem).tag)
-//    }
 
     /**
      * 뷰페이저 인디케이터 설정
@@ -347,62 +180,73 @@ class WorkerMainActivity : JWBaseActivity() {
     }
 
     /**
-     * db에서 데이터 가져온 후 set
+     * picker 설정
      */
-//    private fun setVacationData() {
-//        val cursor = dbHelper.selectVacation(phoneNum.replace("-", ""), name, edit_worker_year.text.toString())
-//        vacationList.clear()
-//
-//        while (cursor.moveToNext()) {
-//            vacationList.add(VacationData(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4), cursor.getDouble(5), cursor.getDouble(6)))
-//        }
-//
-//    }
+    private fun setNumberPicker() {
+        val today = LocalDate.now()
+        val year = today.year
+        val month = today.monthValue
 
-//    private fun setWorkerData() {
-//        var cursor = dbHelper.selectWorker(name, phoneNum.replace("-", ""))
-//
-//        if (!no.isEmpty()) {
-//            cursor = dbHelper.selectWorker(no)
-//        }
-//        cursor.moveToFirst()
-//        name = cursor.getString(1)
-//        bitmap = cursor.getString(6)
-//        phoneNum = (Constants.PHONE_NUM_PATTERN).toRegex().replace(cursor.getString(3).toString(), "$1-$2-$3")
-//        use = cursor.getString(4).toString()
-//        total = cursor.getString(5).toString()
-//        joinDate = (Constants.YYYYMMDD_PATTERN).toRegex().replace(cursor.getInt(2).toString(), "$1-$2-$3")
-//        no = cursor.getInt(0).toString()
-//
-//        tv_worker_name.text = "$name ($joinDate)"
-//        tv_worker_phone.text = "P.H $phoneNum"
-//        tv_worker_vacation.text = "Vacation $use / $total"
-//
-//        if (bitmap != "") {
-//            val file = BitmapFactory.decodeFile(bitmap)
-//            lateinit var exif: ExifInterface
-//
-//            try {
-//                exif = ExifInterface(bitmap)
-//            } catch (e: IOException) {
-//                e.printStackTrace()
-//            }
-//
-//            val exifOrientation: Int
-//            val exifDegree: Int
-//
-//            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-//            exifDegree = exifOrientationToDegrees(exifOrientation)
-//
-//            Glide.with(this).load(rotate(file, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(img_worker_people)
-//
-//        }
-//
-//        getBundle.putString("use", use)
-//        getBundle.putString("total", total)
-//        getBundle.putString("joinDate", joinDate)
-//        getBundle.putString("no", no)
-//        getBundle.putString("picture", bitmap)
-//    }
+        pickerY.wrapSelectorWheel = false
+        pickerM.wrapSelectorWheel = false
 
+        pickerY.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+        pickerM.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+
+        pickerY.minValue = 1900
+        pickerM.minValue = 1
+
+        pickerY.maxValue = 2100
+        pickerM.maxValue = 12
+
+        pickerY.value = year
+        pickerM.value = month
+
+
+        tvDate.text = year.toString() + "-" + String.format("%02d", month)
+
+        pickerY.setOnValueChangedListener { picker, oldVal, newVal ->
+            if (viewPager.currentItem == 0) {
+                tvDate.text = newVal.toString() + "-" + String.format("%02d", pickerM.value)
+            } else {
+                tvDate.text = newVal.toString()
+            }
+        }
+
+        pickerM.setOnValueChangedListener { picker, oldVal, newVal ->
+            tvDate.text = pickerY.value.toString() + "-" + String.format("%02d", newVal)
+
+        }
+    }
+
+    /**
+     * 체크박스 체크 리스너
+     */
+    private inner class WorkerMainCheckChangeListener : CompoundButton.OnCheckedChangeListener {
+        override fun onCheckedChanged(view: CompoundButton?, isChecked: Boolean) {
+            if (isChecked) {
+                viewPager.visibility = View.INVISIBLE
+                pickerY.visibility = View.VISIBLE
+
+                pickerY.value = tvDate.text.toString().substring(0, 4).toInt()
+                if (viewPager.currentItem == 0) {
+                    pickerM.value = tvDate.text.toString().substring(5, 7).toInt()
+                    pickerM.visibility = View.VISIBLE
+                }
+            } else {
+                pickerY.visibility = View.INVISIBLE
+                pickerM.visibility = View.GONE
+                viewPager.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    fun onClickWorkerMain(view: View) {
+        when (view) {
+            tvDate -> {
+                ckbTri.isChecked = !ckbTri.isChecked
+            }
+        }
+
+    }
 }

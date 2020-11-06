@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="workerMainViewpagerListVal"
+            type="com.example.uohih.joowon.model.VacationList" />
+    </data>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/dp30"
+        android:paddingTop="@dimen/dp05"
+        android:paddingEnd="@dimen/dp30"
+        android:paddingBottom="@dimen/dp05">
+
+
+        <!--        <ImageView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:layout_marginEnd="@dimen/dp15"-->
+        <!--            android:src="@drawable/indicator_nor" />-->
+        <TextView
+            android:id="@+id/viewpagerWorkerMain_no"
+            style="@style/Font_15_4a4a4a"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:text="1" />
+
+
+        <TextView
+            android:id="@+id/viewpagerWorkerMain_date"
+            style="@style/Font_15_4a4a4a"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="@{workerMainViewpagerListVal.vacation_date}"
+            tools:text="2020-10-10" />
+
+        <TextView
+            android:id="@+id/viewpagerWorkerMain_content"
+            style="@style/Font_15_4a4a4a"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="@{workerMainViewpagerListVal.vacation_content}"
+            tools:text="연/월차 사용" />
+
+        <TextView
+            android:id="@+id/viewpagerWorkerMain_cnt"
+            style="@style/Font_15_4a4a4a"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@{workerMainViewpagerListVal.vacation_cnt}"
+            android:textAlignment="textEnd"
+            tools:text="1.0" />
+
+    </LinearLayout>
+</layout>

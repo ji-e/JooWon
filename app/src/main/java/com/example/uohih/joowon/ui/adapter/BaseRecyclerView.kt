@@ -6,6 +6,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.example.uohih.joowon.util.LogUtil
 import java.lang.Exception
 
 class BaseRecyclerView {
@@ -16,6 +17,7 @@ class BaseRecyclerView {
         private val items = mutableListOf<ITEM>()
 
         fun replaceAll(item: List<ITEM>?) {
+            LogUtil.e(item.toString())
             item?.let {
                 this.items.run {
                     clear()

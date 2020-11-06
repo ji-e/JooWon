@@ -29,14 +29,14 @@
             android:id="@+id/workerMain_layInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="center"
+            android:orientation="vertical"
             android:paddingTop="@dimen/dp10"
             android:paddingBottom="@dimen/dp10"
+            app:layout_constraintBottom_toTopOf="@id/workerMain_line"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/workerMain_titleView"
-            app:layout_constraintBottom_toTopOf="@id/workerMain_line">
+            app:layout_constraintTop_toBottomOf="@id/workerMain_titleView">
 
 
             <ImageView
@@ -146,10 +146,10 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/workerMain_tvDate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/workerMain_tvDate"
-            app:layout_constraintBottom_toBottomOf="@id/workerMain_tvDate">
+            app:layout_constraintTop_toTopOf="@id/workerMain_tvDate">
 
         </LinearLayout>
 
@@ -160,18 +160,49 @@
             android:layout_height="@dimen/dp45"
             android:layout_marginStart="@dimen/dp30"
             android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
+            android:onClick="onClickWorkerMain"
             app:layout_constraintBottom_toTopOf="@id/workerMain_viewpager"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="2020.10" />
 
-        <ImageView
+        <CheckBox
             android:id="@+id/workerMain_imgTri"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/btn_dropdown_tri"
+            android:background="@drawable/btn_ckb_tri_selector"
+            android:button="@null"
+            android:checked="false"
             app:layout_constraintBottom_toBottomOf="@id/workerMain_tvDate"
             app:layout_constraintStart_toEndOf="@id/workerMain_tvDate"
             app:layout_constraintTop_toTopOf="@id/workerMain_tvDate" />
+
+
+        <NumberPicker
+            android:id="@+id/workerMain_pickerY"
+            style="@style/Font_12_000000"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp20"
+            android:theme="@style/AppTheme.NumberPicker"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/workerMain_pickerM"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/workerMain_tvDate" />
+
+        <NumberPicker
+            android:id="@+id/workerMain_pickerM"
+            style="@style/Font_12_000000"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp20"
+            android:theme="@style/AppTheme.NumberPicker"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/workerMain_pickerY"
+            app:layout_constraintTop_toBottomOf="@id/workerMain_tvDate" />
+
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/workerMain_viewpager"

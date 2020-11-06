@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="workerMainViewPagerVm"
-            type="com.example.uohih.joowon.ui.worker.WorkerViewModel" />
+            name="workerMainViewpagerVal"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,35 +17,84 @@
         tools:context=".ui.worker.WorkerMainActivity">
 
         <include
-            layout="@layout/dialog_calendar_grid_day"
             android:id="@+id/viewpagerWorkerMain_gridviewDay"
-            app:layout_constraintTop_toTopOf="parent"
+            layout="@layout/dialog_calendar_grid_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp15"
             android:layout_marginEnd="@dimen/dp12"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent" />
+            android:visibility="invisible"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <GridView
             android:id="@+id/viewpagerWorkerMain_gridview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp10"
-            android:paddingStart="@dimen/dp15"
-            android:paddingEnd="@dimen/dp10"
+            android:adjustViewBounds="true"
             android:gravity="center"
             android:numColumns="7"
+            android:paddingStart="@dimen/dp15"
+            android:paddingEnd="@dimen/dp10"
             android:stretchMode="columnWidth"
-            android:visibility="visible"
-            tools:listitem="@layout/viewpager_worker_main_calendar_cell"
+            android:visibility="invisible"
             app:layout_constraintTop_toBottomOf="@id/viewpagerWorkerMain_gridviewDay"
-            android:adjustViewBounds="true" />
+            tools:listitem="@layout/viewpager_worker_main_calendar_cell" />
+
+
+        <LinearLayout
+            android:id="@+id/viewpagerWorkerMain_listTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/dp30"
+            android:paddingTop="@dimen/dp10"
+            android:paddingEnd="@dimen/dp30"
+            android:paddingBottom="@dimen/dp05"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!--            <ImageView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:layout_marginEnd="@dimen/dp15"-->
+            <!--                android:src="@drawable/indicator_nor" />-->
+            <TextView
+                style="@style/Font_12_4a4a4a"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/vacation_no" />
+
+
+            <TextView
+                style="@style/Font_12_4a4a4a"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="@string/vacation_date" />
+
+            <TextView
+                style="@style/Font_12_4a4a4a"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/vacation_content" />
+
+            <TextView
+                style="@style/Font_12_4a4a4a"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/vacation_use_cnt"
+                android:textAlignment="textEnd" />
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/viewpagerWorkerMain_recyclerView"
-            replaceAll="@{workerMainViewPagerVm.liveVacationList}"
+            android:id="@+id/viewpagerWorkerMain_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/list_item_main_list" />
-
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/viewpagerWorkerMain_listTitle"
+            tools:listitem="@layout/viewpager_worker_main_list_item" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

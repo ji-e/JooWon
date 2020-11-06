@@ -240,8 +240,9 @@ class CalendarDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
      * picker 설정
      */
     private fun setNumberPicker() {
-        val year = todayJson.get("year").toString().toInt()
-        val month = todayJson.get("month").toString().toInt()
+        val today = LocalDate.now()
+        val year = today.year
+        val month = today.monthValue
 
         pickerY.wrapSelectorWheel = false
         pickerM.wrapSelectorWheel = false

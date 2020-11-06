@@ -30,6 +30,7 @@ import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.list_item_main_list.view.*
 import ru.rambler.libs.swipe_layout.SwipeLayout
+import java.time.LocalDate
 
 
 class MainListActivity : JWBaseActivity() {
@@ -81,6 +82,7 @@ class MainListActivity : JWBaseActivity() {
 
         val jsonObject = JsonObject()
         jsonObject.addProperty("methodid", Constants.JW3001)
+        jsonObject.addProperty("year", LocalDate.now().year.toString())
         mainListViewModel.getEmployeeList(jsonObject)
     }
 
