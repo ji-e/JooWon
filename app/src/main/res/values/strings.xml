@@ -53,8 +53,10 @@
     <string name="workerInsert_btn_register">등록하기</string>
     <string name="workerInsert_dialog_msg">직원등록을 완료했습니다.</string>
 
+    <string name="workerUpdate_title">직원편집</string>
     <string name="workerUpdate_delete">삭제하기</string>
     <string name="workerUpdate_update">변경하기</string>
+    <string name="workerUpdate_dialog_msg">직원정보 업데이트를 완료했습니다.</string>
     <string name="workerUpdate_delete_msg">%s님을 삭제하시겠습니까?</string>
 
     <!--PasswordCheckActivity-->

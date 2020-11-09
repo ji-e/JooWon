@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
@@ -53,7 +54,7 @@ class SignInActivity : JWBaseActivity() {
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_signin)
         binding.run {
-            signInViewModel = ViewModelProviders.of(thisActivity, SignInViewModelFactory()).get(SignInViewModel::class.java)
+            signInViewModel = ViewModelProvider(thisActivity, SignInViewModelFactory()).get(SignInViewModel::class.java)
             lifecycleOwner = thisActivity
             signInVm = signInViewModel
         }

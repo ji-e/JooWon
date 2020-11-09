@@ -2,25 +2,22 @@ package com.example.uohih.joowon.ui.adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Paint.UNDERLINE_TEXT_FLAG
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.example.uohih.joowon.database.VacationData
-import com.example.uohih.joowon.model.CalendarDayInfo
-import kotlinx.android.synthetic.main.viewpager_worker_main_calendar_cell.view.*
-import kotlinx.android.synthetic.main.dialog_calendar_cell.view.*
-import java.time.LocalDate
-import java.util.*
-import android.graphics.Paint.UNDERLINE_TEXT_FLAG
-import android.util.AttributeSet
 import android.widget.TextView
 import com.example.uohih.joowon.R
+import com.example.uohih.joowon.model.CalendarDayInfo
 import com.example.uohih.joowon.model.VacationList
 import com.example.uohih.joowon.util.LogUtil
-import com.example.uohih.joowon.util.SizeConverterUtil
 import com.example.uohih.joowon.util.UICommonUtil
-import kotlin.collections.ArrayList
+import kotlinx.android.synthetic.main.dialog_calendar_cell.view.*
+import kotlinx.android.synthetic.main.viewpager_worker_main_calendar_cell.view.*
+import java.time.LocalDate
+import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.properties.Delegates
@@ -36,7 +33,7 @@ class CalendarAdapter() : BaseAdapter() {
 
     private lateinit var mContext: Context
     private lateinit var listCalendarDayInfo: ArrayList<CalendarDayInfo>        // 월간날짜정보
-    private lateinit var vacationList: ArrayList<VacationList>                  // 휴가리스트
+    private var vacationList = arrayListOf<VacationList>() // 휴가리스트
     private var selectedDateArray = arrayListOf<LocalDate>() // 선택날짜리스트
     private var isSelectedRanges: Boolean = false                               // 범위선택가능여부
     private var layout by Delegates.notNull<Int>()
@@ -61,11 +58,13 @@ class CalendarAdapter() : BaseAdapter() {
         selectedDate?.let { selectedDateArray = selectedDate }
     }
 
-    constructor(mContext: Context, layout: Int, listCalendarDayInfo: ArrayList<CalendarDayInfo>, vacationList: ArrayList<VacationList>) : this() {
+    constructor(mContext: Context, layout: Int, listCalendarDayInfo: ArrayList<CalendarDayInfo>, vacationList: ArrayList<VacationList>?) : this() {
         this.mContext = mContext
         this.layout = layout
         this.listCalendarDayInfo = listCalendarDayInfo
-        this.vacationList = vacationList
+        if (vacationList != null) {
+            this.vacationList = vacationList
+        }
     }
 
 
@@ -102,9 +101,7 @@ class CalendarAdapter() : BaseAdapter() {
             rangesCell2?.visibility = View.GONE
 
             cell?.text = day.getDay()
-//        val now = (LocalDate.now().toString().replace("-", "")).toInt()
-//        val selected = (day.getDate().toString().replace("-", "")).toInt()
-//        if (isFutureSelect || now >= selected) {
+
             if (isSelectedRanges && firstPosition != -1 && lastPosition != -1) {
                 val fP = min(firstPosition, lastPosition)
                 val lP = max(firstPosition, lastPosition)
@@ -124,35 +121,7 @@ class CalendarAdapter() : BaseAdapter() {
                 }
             }
 
-//            else {
-//                cell?.setOnClickListener {
-//
-//                    day.getDate()?.let {
-//
-//                        if (isSelectedMulti) {
-//                            if (selectedDateArray.contains(it)) {
-//                                selectedDateArray.remove(it)
-//                            } else {
-//                                selectedDateArray.add(it)
-//                            }
-//                        } else {
-//                            selectedDateArray.clear()
-//                            selectedDateArray.add(it)
-//                        }
-//
-//                    }
-//                    selectedDateClickListener?.onSelectedDateClick(selectedDateArray)
-//                    notifyDataSetChanged()
-//                }
-//            }
-//        }
-//
-//        if (firstPosition == -1 && lastPosition == -1) {
-//            selectedCell?.visibility = if (day.isSameDay(selectedDateArray)) View.VISIBLE else View.INVISIBLE
-//        }
-
-            if (firstPosition == -1 && lastPosition == -1
-                    && day.isSameDay(selectedDateArray)) {
+            if (firstPosition == -1 && lastPosition == -1 && day.isSameDay(selectedDateArray)) {
 
                 selectedCell?.visibility = View.VISIBLE
 
@@ -176,17 +145,15 @@ class CalendarAdapter() : BaseAdapter() {
             cell = convertView?.viewpagerWorkerMain_cell
             val imgVacation = convertView?.viewpagerWorkerMain_imgVacation
             val vacationInfo = UICommonUtil.getVacationInfo(day.getDate().toString(), vacationList)
-
             if (vacationInfo != null) {
                 imgVacation?.visibility = View.VISIBLE
             } else {
                 imgVacation?.visibility = View.GONE
             }
-
-
         }
 
         cell?.text = day.getDay()
+        cell?.paintFlags = 0
 
         if (day.isSameDay(LocalDate.now())) {
             cell?.paintFlags = UNDERLINE_TEXT_FLAG
@@ -232,5 +199,14 @@ class CalendarAdapter() : BaseAdapter() {
      */
     fun getCurrentDatePosition(): Int {
         return currentPosition
+    }
+
+    /**
+     * 휴가리스트
+     */
+    fun setVacationList(vacationList: ArrayList<VacationList>?, listCalendarDayInfo: ArrayList<CalendarDayInfo>) {
+        this.vacationList = vacationList ?: arrayListOf()
+        this.listCalendarDayInfo = listCalendarDayInfo
+        notifyDataSetChanged()
     }
 }

@@ -18,8 +18,9 @@ class Constants {
         val JW2001 = "JW2001"   // 로그인
         val JW2002 = "JW2002"   // 로그아웃
         val JW2003 = "JW2003"   // 자동로그인
-        val JW3001 = "JW3001"   // 직원리스트가져오기
-        val JW3002 = "JW3002"   // 직원정보추가하기
+        val JW3001 = "JW3001"   // 직원리스트조회
+        val JW3002 = "JW3002"   // 직원정보추가
+        val JW3003 = "JW3003"   // 직원정보업데이트
         val JW3004 = "JW3004"   // 직원삭제하기
         val JW4001 = "JW4001"   // 휴가등록하기
         val JW4002 = "JW4002"   // 휴가업데이트
@@ -45,8 +46,8 @@ class Constants {
         val PASSWORD_CONTINUE_PATTEN = "(.)\\1\\1\\1"
 
         // 네이버 api
-        val OAUTH_CLIENT_ID = "SSVjX00IPK8w6O_rjzaw"
-        val OAUTH_CLIENT_SECRET = "TbfvxZ6tBf"
+        val OAUTH_CLIENT_ID = ""
+        val OAUTH_CLIENT_SECRET = ""
         val OAUTH_CLIENT_NAME = "네이버 아이디로 로그인"
     }
 

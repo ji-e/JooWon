@@ -6,5 +6,5 @@ data class JW4003(
 ) : BaseResBody() {
     data class resbodyInfo(
             val successYn: String? = null,    // 직원리스트조회성공여부
-            val employeeList: List<VacationList>? = null)
+            val vacationList: ArrayList<VacationList>? = null)
 }

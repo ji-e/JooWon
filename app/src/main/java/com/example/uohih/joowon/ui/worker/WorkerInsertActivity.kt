@@ -21,8 +21,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -33,10 +35,8 @@ import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.databinding.ActivityWorkerInsertBinding
 import com.example.uohih.joowon.ui.adapter.DialogListAdapter
-import com.example.uohih.joowon.ui.customView.CalendarDialog
-import com.example.uohih.joowon.ui.customView.CustomDialog
-import com.example.uohih.joowon.ui.customView.CustomListDialog
-import com.example.uohih.joowon.ui.customView.CustomWhDialog
+import com.example.uohih.joowon.ui.customView.*
+import com.example.uohih.joowon.ui.main.MainListActivity
 import com.example.uohih.joowon.util.DateCommonUtil
 import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.JsonObject
@@ -61,21 +61,11 @@ class WorkerInsertActivity : JWBaseActivity() {
     private lateinit var workerViewModel: WorkerViewModel
     private lateinit var binding: ActivityWorkerInsertBinding
 
-    private val base = JWBaseApplication()
-    private val dbHelper = DBHelper(this)
-    private val todayJSONObject = DateCommonUtil().getToday()
     private var imageFilePath: String = ""
-    private lateinit var name: String
-    private lateinit var phoneNum: String
-    private lateinit var use: String
-    private lateinit var total: String
-    private lateinit var joinDate: String
-    private lateinit var no: String
+    private var _id = ""
 
-    private var workerUpdate: String = "N" //변경하기
-    private var workerBundle = Bundle()
-
-
+    private lateinit var tvTitleView: TopTitleView
+    private lateinit var layDelete: LinearLayout
     private lateinit var layProfile: ConstraintLayout
     private lateinit var imgProfile: ImageView
     private lateinit var edtName: EditText
@@ -90,16 +80,17 @@ class WorkerInsertActivity : JWBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (intent.hasExtra("workerUpdate")) {
-            workerUpdate = intent.getStringExtra("workerUpdate")
-        }
-
-
-        binding = DataBindingUtil.setContentView<ActivityWorkerInsertBinding>(thisActivity, R.layout.activity_worker_insert)
+        binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_worker_insert)
         binding.run {
-            workerViewModel = ViewModelProviders.of(thisActivity, WorkerViewModelFactory()).get(WorkerViewModel::class.java)
+            workerViewModel = ViewModelProvider(thisActivity, WorkerViewModelFactory()).get(WorkerViewModel::class.java)
             lifecycleOwner = thisActivity
             workerInsertVm = workerViewModel
+        }
+
+        val args = intent
+        if (args.hasExtra("_id")) {
+            _id = args.getStringExtra("_id").toString()
+            workerViewModel.setEmployeeInfo(_id)
         }
 
 
@@ -108,56 +99,8 @@ class WorkerInsertActivity : JWBaseActivity() {
     }
 
     private fun initView() {
-//        if ("Y" == workerUpdate) {
-//            workerInsert_titleView.setBackBtn()
-//
-//            workerBundle = intent.getBundleExtra("workerBundle")
-//            name = workerBundle.getString("name", "")                     //이름
-//            imageFilePath = workerBundle.getString("picture", "")         //사진
-//            phoneNum = workerBundle.getString("phone", "")                //핸드폰번호
-//            use = workerBundle.getString("use", "0")                      //사용한 휴가일수
-//            total = workerBundle.getString("total", "15")                 //잔여 휴가일수
-//            joinDate = workerBundle.getString("joinDate", "")             //입사날짜
-//            no = workerBundle.getString("no", "0")
-//
-//            worker_layout_delete.visibility = View.VISIBLE
-//            worker_insert_layout_use.visibility = View.VISIBLE
-//            workerInsert_btnConfirm.text = getString(R.string.workerUpdate_update)
-//
-//
-//            if (imageFilePath != "") {
-//                val bitmap = BitmapFactory.decodeFile(imageFilePath)
-//                lateinit var exif: ExifInterface
-//
-//                try {
-//                    exif = ExifInterface(imageFilePath)
-//                } catch (e: IOException) {
-//                    e.printStackTrace()
-//                }
-//
-//                val exifOrientation: Int
-//                val exifDegree: Int
-//
-//                exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-//                exifDegree = exifOrientationToDegrees(exifOrientation)
-//
-//                Glide.with(this).load(rotate(bitmap, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(worker_img)
-//
-//            }
-//
-//            worker_insert_edt_name.hint = name
-//            worker_insert_edt_name.setText(name)
-//            worker_insert_edt_phone.hint = phoneNum
-//            worker_insert_edt_phone.setText(phoneNum)
-//            worker_insert_edt_join.text = joinDate
-//            worker_insert_edt_vacation.hint = total
-//            worker_insert_edt_vacation.setText(total)
-//            worker_insert_edt_use.hint = use
-//            worker_insert_edt_use.setText(use)
-//
-//
-//        }
-
+        tvTitleView = binding.workerInsertTitleView
+        layDelete = binding.workerInsertLayDelete
         layProfile = binding.workerInsertLayProfileImg
         imgProfile = binding.workerInsertImgProfileImg
         edtName = binding.workerInsertEdtName
@@ -175,18 +118,36 @@ class WorkerInsertActivity : JWBaseActivity() {
         edtPhone.addTextChangedListener(WorkerInsertTextWatcher(edtPhone))
         edtPhone.addTextChangedListener(PhoneNumberFormattingTextWatcher())
 
-        edtName.onFocusChangeListener = WorkerInsertFocusChangeListner()
-        edtPhone.onFocusChangeListener = WorkerInsertFocusChangeListner()
-        tvBirthDate.onFocusChangeListener = WorkerInsertFocusChangeListner()
-        tvEnjoyDate.onFocusChangeListener = WorkerInsertFocusChangeListner()
+        edtName.onFocusChangeListener = WorkerInsertFocusChangeListener()
+        edtPhone.onFocusChangeListener = WorkerInsertFocusChangeListener()
+        tvBirthDate.onFocusChangeListener = WorkerInsertFocusChangeListener()
+        tvEnjoyDate.onFocusChangeListener = WorkerInsertFocusChangeListener()
 
         edtTotalCnt.setOnEditorActionListener(WorkerInsertEditActionListener())
 
-        btnResister.text = getString(R.string.workerInsert_btn_register)
-        btnResister.setOnClickListener {
-            if (binding.workerInsertBtnRegister.isEnabled) {
-                // 등록하기
-                addEmployee()
+
+        if (_id.isNotEmpty()) {
+            tvTitleView.setTitle(getString(R.string.workerUpdate_title))
+            layDelete.visibility = View.VISIBLE
+            edtName.setText(workerViewModel.liveEmployeeInfo.value?.name)
+            edtPhone.setText(workerViewModel.liveEmployeeInfo.value?.phone_number)
+            edtTotalCnt.setText(workerViewModel.liveEmployeeInfo.value?.total_vacation_cnt)
+            tvBirthDate.text = workerViewModel.liveEmployeeInfo.value?.birth
+            tvEnjoyDate.text = workerViewModel.liveEmployeeInfo.value?.entered_date
+            btnResister.text = getString(R.string.workerUpdate_update)
+            btnResister.setOnClickListener {
+                if (binding.workerInsertBtnRegister.isEnabled) {
+                    // 업데이트하기
+                    updateEmployee()
+                }
+            }
+        } else {
+            btnResister.text = getString(R.string.workerInsert_btn_register)
+            btnResister.setOnClickListener {
+                if (binding.workerInsertBtnRegister.isEnabled) {
+                    // 등록하기
+                    addEmployee()
+                }
             }
         }
 
@@ -214,23 +175,74 @@ class WorkerInsertActivity : JWBaseActivity() {
                             getString(R.string.btnConfirm), null)
                 }
                 customDialog.show()
-            } else {
-                if ("Y" == jw3002Data.resbody?.addEmployeeValid) {
-                    customDialog.apply {
-                        setBottomDialog(
-                                getString(R.string.workerInsert_dialog_msg),
-                                getString(R.string.btnConfirm),
-                                View.OnClickListener {
-                                    dismiss()
-                                    thisActivity.finish()
-                                })
+                return@Observer
+            }
+            if ("Y" == jw3002Data.resbody?.successYn) {
+                customDialog.apply {
+                    setBottomDialog(
+                            getString(R.string.workerInsert_dialog_msg),
+                            getString(R.string.btnConfirm),
+                            View.OnClickListener {
+                                dismiss()
+                                thisActivity.finish()
+                            })
 
-                    }
-                    customDialog.show()
                 }
+                customDialog.show()
+            }
+        })
 
+        workerViewModel.jw3003Data.observe(thisActivity, Observer {
+            val jw3003Data = it ?: return@Observer
+            val customDialog = CustomDialog(mContext)
+            if ("failure" == jw3003Data.result) {
+                customDialog.apply {
+                    setBottomDialog(
+                            jw3003Data.msg.toString(),
+                            getString(R.string.btnConfirm), null)
+                }
+                customDialog.show()
+                return@Observer
+            }
+            if ("Y" == jw3003Data.resbody?.successYn) {
+                customDialog.apply {
+                    setBottomDialog(
+                            getString(R.string.workerUpdate_dialog_msg),
+                            getString(R.string.btnConfirm),
+                            View.OnClickListener {
+                                dismiss()
+                                finish()
+                            })
+                }
+                customDialog.show()
+            }
+        })
+
+        workerViewModel.jw3004Data.observe(thisActivity, Observer {
+            val jw3004Data = it ?: return@Observer
+            val customDialog = CustomDialog(mContext)
+            if ("failure" == jw3004Data.result) {
+                customDialog.apply {
+                    setBottomDialog(
+                            jw3004Data.msg.toString(),
+                            getString(R.string.btnConfirm), null)
+                }
+                customDialog.show()
+                return@Observer
             }
 
+            if ("Y" == jw3004Data.resbody?.successYn) {
+                val result = Intent().apply {
+                    putExtras(bundleOf("WORKER_DELETE" to "Y")
+                    )
+                }
+
+                setResult(Activity.RESULT_OK, result)
+                finish()
+//               val intent = Intent(thisActivity, MainListActivity::class.java)
+//
+//                startActivity(intent)
+            }
         })
     }
 
@@ -283,7 +295,7 @@ class WorkerInsertActivity : JWBaseActivity() {
     /**
      * 포커스 체인지 리스너
      */
-    private inner class WorkerInsertFocusChangeListner : View.OnFocusChangeListener {
+    private inner class WorkerInsertFocusChangeListener : View.OnFocusChangeListener {
         override fun onFocusChange(v: View?, hasFocus: Boolean) {
             if (hasFocus) {
                 when (v) {
@@ -322,21 +334,10 @@ class WorkerInsertActivity : JWBaseActivity() {
             layProfile -> {
                 showProfileDialog()
             }
-//            worker_layout_delete -> {
-//                customDialog.showDialog(this, String.format(resources.getString(R.string.workerUpdate_delete_msg), name),
-//                        resources.getString(R.string.btnCancel), null,
-//                        resources.getString(R.string.btnConfirm), DialogInterface.OnClickListener { dialog, which ->
-//                    dbHelper.delete(dbHelper.tableNameWorkerJW, no)
-//
-//
-//                    val intent = Intent(this, MainListActivity::class.java)
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//                    startActivity(intent)
-//
-//                })
-//            }
+            layDelete -> {
+                showDeleteDialog()
+            }
         }
-
     }
 
 
@@ -365,38 +366,67 @@ class WorkerInsertActivity : JWBaseActivity() {
     }
 
     /**
-     * 키보드 숨기기
-     * edt: EditText
+     * 직원 업데이트
      */
-    private fun hideKeypad(edt: EditText) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(edt.windowToken, 0)
-//        workerInsert_btnConfirm.requestFocus()
+    private fun updateEmployee() {
+        val photo = File(imageFilePath)
+        val photoBody = RequestBody.create(MediaType.parse("image/jpg"), photo)
+        var body = MultipartBody.Part.createFormData("photo", photo.name, photoBody)
+
+        if (imageFilePath.isEmpty()) {
+            body = MultipartBody.Part.createFormData("photo", "")
+        }
+
+        val jsonObject = JsonObject()
+
+        jsonObject.addProperty("methodid", Constants.JW3003)
+        jsonObject.addProperty("_id", _id)
+        jsonObject.addProperty("name", edtName.text.toString())
+        jsonObject.addProperty("phone_number", edtPhone.text.toString().replace("-", ""))
+        jsonObject.addProperty("birth", tvBirthDate.text.toString().replace("-", ""))
+        jsonObject.addProperty("entered_date", tvEnjoyDate.text.toString().replace("-", ""))
+        jsonObject.addProperty("total_vacation_cnt", edtTotalCnt.text.toString())
+        jsonObject.addProperty("remain_vacation_cnt", edtTotalCnt.text.toString())
+
+        workerViewModel.updateEmployee(body, jsonObject)
     }
 
     /**
-     * 리스트 다이얼로그
+     * 직원 삭제
+     */
+    private fun deleteEmployee() {
+        val jsonObject = JsonObject()
+
+        jsonObject.addProperty("methodid", Constants.JW3004)
+        jsonObject.addProperty("_id", _id)
+        LogUtil.e(jsonObject.get("_id"))
+        workerViewModel.deleteEmployee(jsonObject)
+    }
+
+    /**
+     * 직원삭제 다이얼로그
+     */
+    private fun showDeleteDialog() {
+        val customDialog = CustomDialog(mContext).apply {
+            setBottomDialog(
+                    getString(R.string.dialog_title),
+                    String.format(getString(R.string.workerUpdate_delete_msg), edtName.text.toString()),
+                    null,
+                    getString(R.string.btnCancel), null,
+                    getString(R.string.btnConfirm),
+                    View.OnClickListener {
+                        deleteEmployee()
+                        dismiss()
+                    })
+        }
+        customDialog.show()
+    }
+
+
+    /**
+     * 프로필 다이얼로그
      */
     private fun showProfileDialog() {
-//        val listViewAdapter = DialogListAdapter(thisActivity, ArrayList()).apply {
-//            setContent(getString(R.string.menu01))
-//            setContent(getString(R.string.menu02))
-//        }
-//
-//        val customDialogList = CustomListDialog(thisActivity, android.R.style.Theme_Material_Dialog_MinWidth)
-//        customDialogList.showDialogList(
-//                thisActivity,
-//                getString(R.string.workerInsert_picture),
-//                DialogInterface.OnClickListener { dialogInterface: DialogInterface, i: Int -> },
-//                listViewAdapter,
-//                AdapterView.OnItemClickListener { parent, view, p, id ->
-//                    when (p) {
-//                        0 -> sendTakePhotoIntent()      //카메라
-//                        1 -> sendTakeGalleryIntent()    //갤러리
-//                    }
-//                    customDialogList.dismiss()
-//                })?.show()
-
         val customWhDialog = CustomWhDialog(mContext).apply {
             setBottomDialog(
                     getString(R.string.workerInsert_picture),

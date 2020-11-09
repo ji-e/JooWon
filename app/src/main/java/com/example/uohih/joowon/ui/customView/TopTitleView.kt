@@ -110,6 +110,9 @@ class TopTitleView : RelativeLayout, View.OnClickListener {
         }
     }
 
+    fun setTitle(title: String) {
+        top_tvTitle.text = title
+    }
 
     fun setBackBtn() {
         top_btnClose.visibility = View.GONE

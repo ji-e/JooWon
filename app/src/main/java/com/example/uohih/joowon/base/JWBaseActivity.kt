@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
@@ -51,7 +52,7 @@ open class JWBaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         thisActivity = this
-        jwBaseViewModel = ViewModelProviders.of(thisActivity, JWBaseViewModelFactory()).get(JWBaseViewModel::class.java)
+        jwBaseViewModel = ViewModelProvider(thisActivity, JWBaseViewModelFactory()).get(JWBaseViewModel::class.java)
     }
 
     /**
@@ -286,5 +287,6 @@ open class JWBaseActivity : AppCompatActivity() {
                 })
         customDialog.show()
     }
+
 
 }

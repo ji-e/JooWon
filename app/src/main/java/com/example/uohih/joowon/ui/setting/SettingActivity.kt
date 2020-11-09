@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.base.JWBaseActivity
@@ -34,7 +35,7 @@ class SettingActivity : JWBaseActivity() {
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_setting)
         binding.run {
-            settingViewModel = ViewModelProviders.of(thisActivity, SettingViewModelFactory()).get(SettingViewModel::class.java)
+            settingViewModel = ViewModelProvider(thisActivity, SettingViewModelFactory()).get(SettingViewModel::class.java)
             lifecycleOwner = thisActivity
             settingVm = settingViewModel
         }

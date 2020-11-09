@@ -93,7 +93,7 @@
                 <ImageButton
                     android:id="@+id/workerMain_btnWrite"
                     android:layout_width="@dimen/dp40"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dp40"
                     android:layout_marginEnd="@dimen/dp10"
                     android:background="@drawable/btn_write_selector"
                     android:onClick="onClickWorkerMain" />
@@ -101,7 +101,7 @@
                 <ImageButton
                     android:id="@+id/workerMain_btnList"
                     android:layout_width="@dimen/dp40"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dp40"
                     android:background="@drawable/btn_list_selector"
                     android:onClick="onClickWorkerMain"
                     android:visibility="gone" />
@@ -109,14 +109,14 @@
                 <ImageButton
                     android:id="@+id/workerMain_btnCalendar"
                     android:layout_width="@dimen/dp40"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dp40"
                     android:background="@drawable/btn_calendar_selector"
                     android:onClick="onClickWorkerMain" />
 
                 <ImageButton
                     android:id="@+id/workerMain_btnCall"
                     android:layout_width="@dimen/dp40"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dp40"
                     android:layout_marginStart="@dimen/dp10"
                     android:background="@drawable/btn_call_selector"
                     android:onClick="onClickWorkerMain" />
@@ -124,7 +124,7 @@
                 <ImageButton
                     android:id="@+id/workerMain_btnSetting"
                     android:layout_width="@dimen/dp40"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dp40"
                     android:layout_marginStart="@dimen/dp10"
                     android:background="@drawable/btn_setting_selector"
                     android:onClick="onClickWorkerMain" />

@@ -1,19 +1,22 @@
 package com.example.uohih.joowon.ui.worker
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.text.method.HideReturnsTransformationMethod
-import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts.*
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.uohih.joowon.BR
+import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.databinding.ActivityWorkerMainBinding
@@ -21,20 +24,36 @@ import com.example.uohih.joowon.databinding.ViewpagerWorkerMainBinding
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.adapter.CalendarAdapter
 import com.example.uohih.joowon.ui.adapter.WorkerVacationListAdapter
+import com.example.uohih.joowon.ui.customView.CustomDialog
+import com.example.uohih.joowon.ui.vacation.VacationRegisterActivity
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.SizeConverterUtil
+import com.example.uohih.joowon.util.UICommonUtil
+import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.viewpager_worker_main.view.*
 import kotlinx.android.synthetic.main.viewpager_worker_main_calendar_cell.view.*
 import java.time.LocalDate
 
 
 class WorkerMainActivity : JWBaseActivity() {
-    private lateinit var thisActivity: WorkerMainActivity
+    val thisActivity by lazy { this }
+    private val requestActivity: ActivityResultLauncher<Intent> = registerForActivityResult(
+            StartActivityForResult() // ◀ StartActivityForResult 처리를 담당
+    ) { activityResult ->
+        if (activityResult.data?.hasExtra("WORKER_DELETE") == true) {
+            if ("Y" == activityResult.data?.getStringExtra("WORKER_DELETE").toString()) {
+                finish()
+            }
+        }
+    }
+
 
     private lateinit var workerViewModel: WorkerViewModel
     private lateinit var binding: ActivityWorkerMainBinding
 
     private var _id = ""
-    private var dateTxt = LocalDate.now()
+    private var localDate = LocalDate.now()
+    private var preYear = localDate.year.toString()
 
     private lateinit var tvDate: TextView
     private lateinit var ckbTri: CheckBox
@@ -48,11 +67,11 @@ class WorkerMainActivity : JWBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker_main)
-        thisActivity = this
+//        thisActivity = this
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_worker_main)
         binding.run {
-            workerViewModel = ViewModelProviders.of(thisActivity, WorkerViewModelFactory()).get(WorkerViewModel::class.java)
+            workerViewModel = ViewModelProvider(thisActivity, WorkerViewModelFactory()).get(WorkerViewModel::class.java)
             lifecycleOwner = thisActivity
             workerMainVm = workerViewModel
         }
@@ -60,10 +79,25 @@ class WorkerMainActivity : JWBaseActivity() {
         val args = intent
         if (args != null) {
             _id = args.getStringExtra("_id").toString()
-            workerViewModel.setEmployeeInfo(_id, dateTxt)
+            workerViewModel.setEmployeeInfo(_id)
+            workerViewModel.setInitWorkerMainActivity()
         }
 
         initView()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        localDate = LocalDate.now()
+        preYear = localDate.year.toString()
+
+        if (_id.isNotEmpty()) {
+            workerViewModel.setCalendarList(localDate)
+            findVacation()
+            setNumberPicker()   // 피커설정
+        }
+
 
     }
 
@@ -75,56 +109,124 @@ class WorkerMainActivity : JWBaseActivity() {
         pickerY = binding.workerMainPickerY
         pickerM = binding.workerMainPickerM
 
-        tvDate.text = dateTxt.toString().substring(0, 7)
+        tvDate.text = localDate.toString().substring(0, 7)
 
         ckbTri.setOnCheckedChangeListener(WorkerMainCheckChangeListener())
 
         setViewpager()
         setIndicator()      // 뷰페이저 인디케이터 설정
-        setNumberPicker()   // 피커설정
+        setObserve()
+    }
+
+    private fun setObserve() {
+        // 네트워크에러
+        workerViewModel.isNetworkErr.observe(thisActivity, Observer {
+            val isNetworkErr = it ?: return@Observer
+            if (isNetworkErr) {
+                showNetworkErrDialog(mContext)
+            }
+        })
+
+        // 로딩
+        workerViewModel.isLoading.observe(thisActivity, Observer {
+            val isLoading = it ?: return@Observer
+
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+
+        workerViewModel.jw4003Data.observe(thisActivity, Observer {
+            val jw4003Data = it ?: return@Observer
+            if ("ZZZZ" == jw4003Data.errCode) {
+                showSessionOutDialog(thisActivity)
+                return@Observer
+            }
+
+            if ("failure" == jw4003Data.result) {
+                val customDialog = CustomDialog(mContext).apply {
+                    setBottomDialog(
+                            jw4003Data.msg.toString(),
+                            getString(R.string.btnConfirm),
+                            View.OnClickListener {
+                                dismiss()
+                                finish()
+                            })
+                }
+                customDialog.show()
+
+                return@Observer
+            }
+
+
+            val useVacation = jw4003Data.resbody?.vacationList
+            val useVacationSize = jw4003Data.resbody?.vacationList?.size ?: 0
+            var useVacationCnt = 0f
+            for (i in 0 until useVacationSize) {
+                useVacationCnt += (useVacation?.get(i)?.vacation_cnt)?.toFloat() ?: 0f
+            }
+
+            val bundle = Bundle()
+            bundle.putString("use_vacation_cnt", useVacationCnt.toString())
+            LogUtil.e(bundle)
+            UICommonUtil.setEmployeeInfo(_id, bundle, useVacation)
+            workerViewModel.setEmployeeInfo(_id)
+        })
+
     }
 
     private fun setViewpager() {
-        var viewpagerAdapter: BaseRecyclerView.Adapter<String, ViewpagerWorkerMainBinding>? = null
+        val viewpagerAdapter = object : BaseRecyclerView.Adapter<String, ViewpagerWorkerMainBinding>(
+                layoutResId = R.layout.viewpager_worker_main,
+                bindingVariableId = BR.workerMainViewpagerVal
+        ) {
 
-        val liveCalendarList = workerViewModel.liveCalendarList
-        workerViewModel.liveVacationList.observe(thisActivity as LifecycleOwner, Observer {
-            val liveVacationList = it ?: return@Observer
-            viewpagerAdapter = object : BaseRecyclerView.Adapter<String, ViewpagerWorkerMainBinding>(
-                    layoutResId = R.layout.viewpager_worker_main,
-                    bindingVariableId = BR.workerMainViewpagerVal
-            ) {
-                override fun onBindViewHolder(holder: BaseRecyclerView.ViewHolder<ViewpagerWorkerMainBinding>, position: Int) {
-                    super.onBindViewHolder(holder, position)
-                    // 그리드뷰
-                    val gridview = holder.itemView.viewpagerWorkerMain_gridview
-                    val calendarAdapter = CalendarAdapter(
-                            mContext,
-                            R.layout.viewpager_worker_main_calendar_cell,
-                            liveCalendarList,
-                            liveVacationList
-                    )
-                    gridview.adapter = calendarAdapter
-                    gridview.setOnItemClickListener { parent, view, position, id ->
+            override fun onBindViewHolder(holder: BaseRecyclerView.ViewHolder<ViewpagerWorkerMainBinding>, position: Int) {
+                super.onBindViewHolder(holder, position)
+                val liveCalendarList = workerViewModel.liveCalendarList
+                val liveVacationList = workerViewModel.liveVacationList.value
 
-                        if (view.viewpagerWorkerMain_imgVacation.isVisible) {
+                // 그리드뷰
+                val calendarAdapter =
+                        CalendarAdapter(
+                                mContext,
+                                R.layout.viewpager_worker_main_calendar_cell,
+                                liveCalendarList,
+                                liveVacationList)
+                val gridview = holder.itemView.viewpagerWorkerMain_gridview
+                gridview.adapter = calendarAdapter
+                gridview.setOnItemClickListener { parent, view, position, id ->
 
-                        }
+                    if (view.viewpagerWorkerMain_imgVacation.isVisible) {
 
                     }
 
-                    // 리사이클러뷰
-                    val recyclerview = holder.itemView.viewpagerWorkerMain_recyclerview
-                    recyclerview.setHasFixedSize(true)
-                    recyclerview.layoutManager = LinearLayoutManager(thisActivity)
-                    recyclerview.adapter = WorkerVacationListAdapter(liveVacationList, thisActivity)
                 }
 
+                // 리사이클러뷰
+                val workerVacationListAdapter = WorkerVacationListAdapter(liveVacationList, thisActivity)
+                val recyclerview = holder.itemView.viewpagerWorkerMain_recyclerview
+                recyclerview.setHasFixedSize(true)
+                recyclerview.layoutManager = LinearLayoutManager(thisActivity)
+                recyclerview.adapter = workerVacationListAdapter
+
+                workerViewModel.liveCalendarInfo.observe(thisActivity as LifecycleOwner, Observer {
+                    val liveCalendarInfo = it ?: return@Observer
+                    val liveCalendarList = workerViewModel.liveCalendarList
+                    val liveVacationList = workerViewModel.liveVacationList.value
+
+                    workerVacationListAdapter.setVacationList(liveVacationList)
+                    calendarAdapter.setVacationList(liveVacationList, liveCalendarList)
+
+
+                })
             }
 
-            viewPager.adapter = viewpagerAdapter
+        }
 
-        })
+        viewPager.adapter = viewpagerAdapter
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -136,18 +238,24 @@ class WorkerMainActivity : JWBaseActivity() {
                         mIvDot[index]?.setImageResource(R.drawable.indicator_nor)
                     }
                 }
+
+                val mVGridView = viewPager.viewpagerWorkerMain_gridview
+                val mVDay = viewPager.viewpagerWorkerMain_gridviewDay
+                val mVRecyclerView = viewPager.viewpagerWorkerMain_recyclerview
+                val mVRecyclerViewTitle = viewPager.viewpagerWorkerMain_listTitle
+
                 if (position == 0) {
-                    viewPager.viewpagerWorkerMain_gridview.visibility = View.VISIBLE
-                    viewPager.viewpagerWorkerMain_gridviewDay.visibility = View.VISIBLE
-                    viewPager.viewpagerWorkerMain_recyclerview.visibility = View.INVISIBLE
-                    viewPager.viewpagerWorkerMain_listTitle.visibility = View.INVISIBLE
-                    tvDate.text = dateTxt.toString().substring(0, 7)
+                    mVGridView.visibility = View.VISIBLE
+                    mVDay.visibility = View.VISIBLE
+                    mVRecyclerView.visibility = View.INVISIBLE
+                    mVRecyclerViewTitle.visibility = View.INVISIBLE
+                    tvDate.text = localDate.toString().substring(0, 7)
                 } else {
-                    viewPager.viewpagerWorkerMain_gridview.visibility = View.INVISIBLE
-                    viewPager.viewpagerWorkerMain_gridviewDay.visibility = View.INVISIBLE
-                    viewPager.viewpagerWorkerMain_recyclerview.visibility = View.VISIBLE
-                    viewPager.viewpagerWorkerMain_listTitle.visibility = View.VISIBLE
-                    tvDate.text = dateTxt.toString().substring(0, 4)
+                    mVGridView.visibility = View.INVISIBLE
+                    mVDay.visibility = View.INVISIBLE
+                    mVRecyclerView.visibility = View.VISIBLE
+                    mVRecyclerViewTitle.visibility = View.VISIBLE
+                    tvDate.text = localDate.toString().substring(0, 4)
                 }
 
             }
@@ -183,7 +291,7 @@ class WorkerMainActivity : JWBaseActivity() {
      * picker 설정
      */
     private fun setNumberPicker() {
-        val today = LocalDate.now()
+        val today = localDate
         val year = today.year
         val month = today.monthValue
 
@@ -211,11 +319,12 @@ class WorkerMainActivity : JWBaseActivity() {
             } else {
                 tvDate.text = newVal.toString()
             }
+            localDate = LocalDate.of(newVal, pickerM.value, 1)
         }
 
         pickerM.setOnValueChangedListener { picker, oldVal, newVal ->
             tvDate.text = pickerY.value.toString() + "-" + String.format("%02d", newVal)
-
+            localDate = LocalDate.of(pickerY.value, newVal, 1)
         }
     }
 
@@ -228,23 +337,76 @@ class WorkerMainActivity : JWBaseActivity() {
                 viewPager.visibility = View.INVISIBLE
                 pickerY.visibility = View.VISIBLE
 
-                pickerY.value = tvDate.text.toString().substring(0, 4).toInt()
+                pickerY.value = localDate.year
                 if (viewPager.currentItem == 0) {
-                    pickerM.value = tvDate.text.toString().substring(5, 7).toInt()
+                    pickerM.value = localDate.monthValue
                     pickerM.visibility = View.VISIBLE
                 }
             } else {
                 pickerY.visibility = View.INVISIBLE
                 pickerM.visibility = View.GONE
                 viewPager.visibility = View.VISIBLE
+
+                if (preYear != pickerY.value.toString()) {
+                    // 년도를 설정한 경우
+                    preYear = pickerY.value.toString()
+                    findVacation()
+                } else {
+                    workerViewModel.setCalendarList(localDate)
+                }
             }
         }
+    }
+
+    /**
+     * 휴가리스트 조회
+     * jw4003
+     */
+    private fun findVacation() {
+        val jsonObject = JsonObject()
+        jsonObject.addProperty("methodid", Constants.JW4003)
+        jsonObject.addProperty("vacation_id", _id)
+        jsonObject.addProperty("year", preYear)
+        workerViewModel.findVacation(localDate, jsonObject)
+
     }
 
     fun onClickWorkerMain(view: View) {
         when (view) {
             tvDate -> {
+                // 날짜 클릭
                 ckbTri.isChecked = !ckbTri.isChecked
+            }
+            binding.workerMainBtnWrite -> {
+                // 휴가등록버튼 클릭
+                val intent = Intent(thisActivity, VacationRegisterActivity::class.java)
+                intent.putExtra("_id", _id)
+                startActivity(intent)
+            }
+
+            binding.workerMainBtnCalendar -> {
+                // 캘린더버튼 클릭
+                binding.workerMainBtnCalendar.visibility = View.GONE
+                binding.workerMainBtnList.visibility = View.VISIBLE
+                viewPager.currentItem = 1
+            }
+            binding.workerMainBtnList -> {
+                // 리스트버튼 클릭
+                binding.workerMainBtnCalendar.visibility = View.VISIBLE
+                binding.workerMainBtnList.visibility = View.GONE
+                viewPager.currentItem = 0
+            }
+            binding.workerMainBtnCall -> {
+                // 전화버튼 클릭
+                startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + workerViewModel.liveEmployeeInfo.value?.phone_number?.replace("-", ""))))
+            }
+            binding.workerMainBtnSetting -> {
+                // 세팅버튼 클릭
+                val intent = Intent(thisActivity, WorkerInsertActivity::class.java)
+                intent.putExtra("_id", _id)
+                requestActivity.launch(intent)
+//                startActivity(intent)
+
             }
         }
 

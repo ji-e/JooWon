@@ -1,5 +1,6 @@
 package com.example.uohih.joowon.ui.vacation
 
+import android.app.Activity
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -67,7 +69,7 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_vacation_register)
         binding.run {
-            vacationViewModel = ViewModelProviders.of(thisActivity, VacationViewModelFactory()).get(VacationViewModel::class.java)
+            vacationViewModel = ViewModelProvider(thisActivity, VacationViewModelFactory()).get(VacationViewModel::class.java)
             lifecycleOwner = thisActivity
             vacationRegisterVm = vacationViewModel
         }

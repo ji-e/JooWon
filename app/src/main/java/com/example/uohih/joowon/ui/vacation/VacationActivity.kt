@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -64,7 +65,7 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_vacation)
         binding.run {
-            vacationViewModel = ViewModelProviders.of(thisActivity, VacationViewModelFactory()).get(VacationViewModel::class.java)
+            vacationViewModel = ViewModelProvider(thisActivity, VacationViewModelFactory()).get(VacationViewModel::class.java)
             lifecycleOwner = thisActivity
             vacationVm = vacationViewModel
         }

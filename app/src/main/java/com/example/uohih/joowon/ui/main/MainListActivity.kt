@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -67,7 +68,7 @@ class MainListActivity : JWBaseActivity() {
 
         binding = DataBindingUtil.setContentView<ActivityMainListBinding>(thisActivity, R.layout.activity_main_list)
         binding.run {
-            mainListViewModel = ViewModelProviders.of(thisActivity, MainListViewModelFactory()).get(MainListViewModel::class.java)
+            mainListViewModel = ViewModelProvider(thisActivity, MainListViewModelFactory()).get(MainListViewModel::class.java)
             lifecycleOwner = thisActivity
             mainListVm = mainListViewModel
         }

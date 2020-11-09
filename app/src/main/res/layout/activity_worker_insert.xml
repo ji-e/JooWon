@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingStart="@dimen/dp30"
-                android:paddingTop="@dimen/dp30"
+                android:paddingTop="@dimen/dp20"
                 android:paddingEnd="@dimen/dp30"
                 android:paddingBottom="@dimen/dp10">
 
@@ -48,8 +48,8 @@
                 <!--사진등록 버튼-->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/workerInsert_layProfileImg"
-                    android:layout_width="@dimen/dp80"
-                    android:layout_height="@dimen/dp80"
+                    android:layout_width="@dimen/dp65"
+                    android:layout_height="@dimen/dp65"
                     android:layout_gravity="center"
                     android:onClick="onClickWorkerInsert"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -63,8 +63,8 @@
                         android:src="@drawable/img_people" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/dp25"
+                        android:layout_height="@dimen/dp25"
                         android:src="@drawable/plus"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -282,6 +282,8 @@
                     android:orientation="horizontal"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginBottom="@dimen/dp75"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_edtTotalCnt"
                     tools:visibility="visible">
 

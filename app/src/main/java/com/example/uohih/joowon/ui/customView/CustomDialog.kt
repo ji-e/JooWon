@@ -84,8 +84,6 @@ class CustomDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnClick
                         strNo: String?, onNoListener: View.OnClickListener?,
                         strYes: String, onYesListener: View.OnClickListener?) {
 
-        LogUtil.e(onYesListener.toString())
-
         onCloseListener?.let { btnClose.setOnClickListener(it) }
         onNoListener?.let { btnNo.setOnClickListener(it) }
         onYesListener?.let { btnYes.setOnClickListener(it) }

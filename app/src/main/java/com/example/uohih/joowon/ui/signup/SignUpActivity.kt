@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
@@ -42,7 +43,7 @@ class SignUpActivity : JWBaseActivity() {
 
         binding = DataBindingUtil.setContentView<ActivitySignupBinding>(thisActivity, R.layout.activity_signup)
         binding.run {
-            signUpViewModel = ViewModelProviders.of(thisActivity, SignUpViewModelFactory()).get(SignUpViewModel::class.java)
+            signUpViewModel = ViewModelProvider(thisActivity, SignUpViewModelFactory()).get(SignUpViewModel::class.java)
             lifecycleOwner = thisActivity
             signUpVm = signUpViewModel
         }
@@ -99,7 +100,7 @@ class SignUpActivity : JWBaseActivity() {
         })
 
         // 로딩
-        signUpViewModel.isLoading.observe(this@SignUpActivity, Observer {
+        signUpViewModel.isLoading.observe(thisActivity, Observer {
             val isLoading = it ?: return@Observer
 
             if (isLoading) {
@@ -108,7 +109,7 @@ class SignUpActivity : JWBaseActivity() {
                 hideLoading()
             }
         })
-        signUpViewModel.JW1002Data.observe(this@SignUpActivity, Observer {
+        signUpViewModel.JW1002Data.observe(thisActivity, Observer {
             val jw1002Data = it ?: return@Observer
 
             if ("Y" == jw1002Data.resbody?.signUpValid) {

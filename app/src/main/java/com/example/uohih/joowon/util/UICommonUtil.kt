@@ -1,12 +1,12 @@
 package com.example.uohih.joowon.util
 
 import android.app.Activity
+import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.model.JW3001ResBodyList
 import com.example.uohih.joowon.model.VacationList
-import java.io.Serializable
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -83,6 +83,26 @@ class UICommonUtil {
             return initEmployeeList
         }
 
+        fun setEmployeeInfo(_id: String, bundle: Bundle, useVacation: ArrayList<VacationList>?) {
+            for (i in 0 until initEmployeeList.size) {
+                val info = initEmployeeList[i]
+                if (info._id.toString() == _id) {
+                    initEmployeeList[i] = (JW3001ResBodyList(
+                            _id = info._id,
+                            profile_image = bundle.getString("profile_image", info.profile_image),
+                            name = bundle.getString("name", info.name),
+                            phone_number = bundle.getString("phone_number", info.phone_number),
+                            birth = bundle.getString("birth", info.birth),
+                            entered_date = bundle.getString("entered_date", info.entered_date),
+                            total_vacation_cnt = bundle.getString("total_vacation_cnt", info.total_vacation_cnt),
+                            use_vacation = useVacation ?: info.use_vacation,
+                            use_vacation_cnt = bundle.getString("use_vacation_cnt", info.use_vacation_cnt)
+                    ))
+                    return
+                }
+            }
+        }
+
         fun getEmployeeInfo(_id: String): JW3001ResBodyList? {
             var employeeInfo: JW3001ResBodyList? = null
             for (i in 0 until initEmployeeList.size) {
@@ -107,7 +127,6 @@ class UICommonUtil {
         }
 
         fun getVacationInfo(calendarDate: String, vacationList: ArrayList<VacationList>): VacationList? {
-//            LogUtil.e(calendarDate, vacationList[0].vacation_date.toString())
             for (i in vacationList.indices) {
                 if (calendarDate == vacationList[i].vacation_date.toString()) {
                     return VacationList(vacationList[i].vacation_date, vacationList[i].vacation_content, vacationList[i].vacation_cnt)

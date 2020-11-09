@@ -89,7 +89,7 @@
 //
 //        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_vacation, container, false)
 //        binding.run {
-//            vacationViewModel = ViewModelProviders.of(thisFragment, VacationViewModelFactory()).get(VacationViewModel::class.java)
+//            vacationViewModel = ViewModelProvider(thisFragment, VacationViewModelFactory()).get(VacationViewModel::class.java)
 //            lifecycleOwner = thisFragment
 //            vacationEVm = vacationViewModel
 //        }

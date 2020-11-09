@@ -15,9 +15,21 @@ import java.util.*
 /**
  * WorkerVacationListAdapter 아답터(직원휴가리스트)
  */
-class WorkerVacationListAdapter(private val vacationList: ArrayList<VacationList>, private val mContext: Context)
+class WorkerVacationListAdapter(vacationList: ArrayList<VacationList>?, private val mContext: Context)
     : RecyclerView.Adapter<WorkerVacationListAdapter.ViewHolder>() {
 
+    private var vacationList = arrayListOf<VacationList>()
+
+    init {
+        if (vacationList != null) {
+            this.vacationList = vacationList
+        }
+    }
+
+    fun setVacationList(vacationList: ArrayList<VacationList>?) {
+        this.vacationList = vacationList ?: arrayListOf()
+        notifyDataSetChanged()
+    }
 
     override fun getItemCount() = vacationList.size
 
@@ -26,7 +38,7 @@ class WorkerVacationListAdapter(private val vacationList: ArrayList<VacationList
         holder.tvNo.text = String.format("%2d", position + 1)
 
         holder.itemView.setOnClickListener {
-            LogUtil.e(position)
+
 
         }
 

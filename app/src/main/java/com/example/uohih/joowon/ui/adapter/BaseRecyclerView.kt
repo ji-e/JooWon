@@ -17,7 +17,6 @@ class BaseRecyclerView {
         private val items = mutableListOf<ITEM>()
 
         fun replaceAll(item: List<ITEM>?) {
-            LogUtil.e(item.toString())
             item?.let {
                 this.items.run {
                     clear()
