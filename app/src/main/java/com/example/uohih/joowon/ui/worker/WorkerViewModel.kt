@@ -42,8 +42,7 @@ class WorkerViewModel(application: JWBaseApplication, private val jwBaseReposito
     val jw3004Data: LiveData<JW3004> = _jw3004Data
     val jw4003Data: LiveData<JW4003> = _jw4003Data
 
-    val today = DateCommonUtil().setFormatHpDate(DateCommonUtil().getToday().get("yyyymmdd").toString())
-
+    val today = LocalDate.now().toString()
 
     fun setEmployeeInfo(_id: String) {
         liveEmployeeInfo.value = UICommonUtil.getEmployeeInfo(_id)
@@ -119,7 +118,8 @@ class WorkerViewModel(application: JWBaseApplication, private val jwBaseReposito
 //                    bundle.putString("profile_image",jsonObject.get("profile_image").toString())
                     bundle.putString("name", jsonObject.get("name").asString)
                     bundle.putString("phone_number", (Constants.PHONE_NUM_PATTERN).toRegex().replace(jsonObject.get("phone_number").asString, "$1-$2-$3"))
-                    bundle.putString("entered_date", jsonObject.get("entered_date").asString)
+                    bundle.putString("entered_date", (Constants.YYYYMMDD_PATTERN).toRegex().replace(jsonObject.get("entered_date").asString, "$1-$2-$3"))
+                    bundle.putString("birth", (Constants.YYYYMMDD_PATTERN).toRegex().replace(jsonObject.get("birth").asString, "$1-$2-$3"))
                     bundle.putString("total_vacation_cnt", jsonObject.get("total_vacation_cnt").asString)
                     UICommonUtil.setEmployeeInfo(jsonObject.get("_id").asString, bundle, null)
 

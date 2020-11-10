@@ -96,6 +96,7 @@
                     android:paddingStart="@dimen/dp10"
                     android:paddingEnd="@dimen/dp120"
                     android:singleLine="true"
+                    android:text="@{workerInsertVm.liveEmployeeInfo.name.empty?&quot;&quot;:workerInsertVm.liveEmployeeInfo.name}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_tvNameLabel" />
 
@@ -148,6 +149,7 @@
                     android:paddingStart="@dimen/dp10"
                     android:paddingEnd="@dimen/dp120"
                     android:singleLine="true"
+                    android:text="@{workerInsertVm.liveEmployeeInfo.phone_number.empty?&quot;&quot;:workerInsertVm.liveEmployeeInfo.phone_number}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_tvPhoneLabel" />
 
@@ -189,7 +191,7 @@
                     android:gravity="center_vertical"
                     android:onClick="onClickWorkerInsert"
                     android:paddingStart="@dimen/dp10"
-                    android:text="@{workerInsertVm.today}"
+                    android:text="@{workerInsertVm.liveEmployeeInfo.birth.length()>0?workerInsertVm.liveEmployeeInfo.birth:workerInsertVm.today}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_tvBirthLabel"
                     tools:text="2020-10-10" />
@@ -229,7 +231,7 @@
                     android:gravity="center_vertical"
                     android:onClick="onClickWorkerInsert"
                     android:paddingStart="@dimen/dp10"
-                    android:text="@{workerInsertVm.today}"
+                    android:text="@{workerInsertVm.liveEmployeeInfo.entered_date.length()>0?workerInsertVm.liveEmployeeInfo.entered_date: workerInsertVm.today}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_tvEnjoyDateLabel"
                     tools:text="2020-10-10" />
@@ -269,6 +271,7 @@
                     android:inputType="text"
                     android:maxLength="3"
                     android:paddingStart="@dimen/dp10"
+                    android:text="@{workerInsertVm.liveEmployeeInfo.total_vacation_cnt.empty?&quot;&quot;:workerInsertVm.liveEmployeeInfo.total_vacation_cnt}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_tvTotalCntLabel" />
 
@@ -278,12 +281,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp13"
+                    android:layout_marginBottom="@dimen/dp75"
                     android:onClick="onClickWorkerInsert"
                     android:orientation="horizontal"
                     android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginBottom="@dimen/dp75"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/workerInsert_edtTotalCnt"
                     tools:visibility="visible">
 

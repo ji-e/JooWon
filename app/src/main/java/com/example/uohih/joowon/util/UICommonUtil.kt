@@ -129,7 +129,7 @@ class UICommonUtil {
         fun getVacationInfo(calendarDate: String, vacationList: ArrayList<VacationList>): VacationList? {
             for (i in vacationList.indices) {
                 if (calendarDate == vacationList[i].vacation_date.toString()) {
-                    return VacationList(vacationList[i].vacation_date, vacationList[i].vacation_content, vacationList[i].vacation_cnt)
+                    return VacationList(vacationList[i].vacation_date, vacationList[i].vacation_content, vacationList[i].vacation_cnt, vacationList[i].vacation_id, vacationList[i]._id)
                 }
             }
             return null

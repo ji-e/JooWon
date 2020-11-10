@@ -29,7 +29,7 @@
     <string name="mainList_join">Join</string>
     <string name="mainList_phone">Phone</string>
     <string name="mainList_balance">Balance</string>
-<!--    <string name="mainList_vacation">Vacation</string>-->
+    <!--    <string name="mainList_vacation">Vacation</string>-->
     <string name="mainList_search_hint">이름 또는 전화번호를 입력해주세요.</string>
     <string name="mainList_ph">P.H</string>
     <string name="mainList_vacation">남은휴가일수:&#160;</string>

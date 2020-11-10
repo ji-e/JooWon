@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.vacation.VacationDeleteActivity"></activity>
         <activity
             android:name=".ui.signin.SignInActivity"
             android:windowSoftInputMode="adjustResize" />

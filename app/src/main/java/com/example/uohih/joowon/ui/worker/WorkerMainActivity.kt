@@ -25,6 +25,7 @@ import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.adapter.CalendarAdapter
 import com.example.uohih.joowon.ui.adapter.WorkerVacationListAdapter
 import com.example.uohih.joowon.ui.customView.CustomDialog
+import com.example.uohih.joowon.ui.vacation.VacationDeleteActivity
 import com.example.uohih.joowon.ui.vacation.VacationRegisterActivity
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.SizeConverterUtil
@@ -38,7 +39,7 @@ import java.time.LocalDate
 class WorkerMainActivity : JWBaseActivity() {
     val thisActivity by lazy { this }
     private val requestActivity: ActivityResultLauncher<Intent> = registerForActivityResult(
-            StartActivityForResult() // ◀ StartActivityForResult 처리를 담당
+            StartActivityForResult() // StartActivityForResult 처리를 담당
     ) { activityResult ->
         if (activityResult.data?.hasExtra("WORKER_DELETE") == true) {
             if ("Y" == activityResult.data?.getStringExtra("WORKER_DELETE").toString()) {
@@ -67,7 +68,6 @@ class WorkerMainActivity : JWBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker_main)
-//        thisActivity = this
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_worker_main)
         binding.run {
@@ -185,9 +185,8 @@ class WorkerMainActivity : JWBaseActivity() {
 
             override fun onBindViewHolder(holder: BaseRecyclerView.ViewHolder<ViewpagerWorkerMainBinding>, position: Int) {
                 super.onBindViewHolder(holder, position)
-                val liveCalendarList = workerViewModel.liveCalendarList
-                val liveVacationList = workerViewModel.liveVacationList.value
-
+                var liveCalendarList = workerViewModel.liveCalendarList
+                var liveVacationList = workerViewModel.liveVacationList.value
                 // 그리드뷰
                 val calendarAdapter =
                         CalendarAdapter(
@@ -198,9 +197,22 @@ class WorkerMainActivity : JWBaseActivity() {
                 val gridview = holder.itemView.viewpagerWorkerMain_gridview
                 gridview.adapter = calendarAdapter
                 gridview.setOnItemClickListener { parent, view, position, id ->
-
-                    if (view.viewpagerWorkerMain_imgVacation.isVisible) {
-
+                    if (view.viewpagerWorkerMain_imgVacation.isVisible && liveVacationList != null) {
+                        // 휴가가 등록되어있는 날짜를 클릭한 경우
+                        val vacationInfo = UICommonUtil.getVacationInfo(liveCalendarList[position].getDate().toString(), liveVacationList!!)
+                        val intent = Intent(thisActivity, VacationDeleteActivity::class.java)
+                        intent.putExtra("vacation_cnt", vacationInfo?.vacation_cnt)
+                        intent.putExtra("vacation_content", vacationInfo?.vacation_content)
+                        intent.putExtra("vacation_date", vacationInfo?.vacation_date)
+                        intent.putExtra("vacation_id", _id)
+                        intent.putExtra("_id", vacationInfo?._id)
+                        startActivity(intent)
+                    } else {
+                        // 휴가가 미등록되어있는 날짜를 클릭한 경우
+                        val intent = Intent(thisActivity, VacationRegisterActivity::class.java)
+                        intent.putExtra("_id", _id)
+                        intent.putExtra("date", liveCalendarList[position].getDate().toString())
+                        startActivity(intent)
                     }
 
                 }
@@ -214,8 +226,8 @@ class WorkerMainActivity : JWBaseActivity() {
 
                 workerViewModel.liveCalendarInfo.observe(thisActivity as LifecycleOwner, Observer {
                     val liveCalendarInfo = it ?: return@Observer
-                    val liveCalendarList = workerViewModel.liveCalendarList
-                    val liveVacationList = workerViewModel.liveVacationList.value
+                    liveCalendarList = workerViewModel.liveCalendarList
+                    liveVacationList = workerViewModel.liveVacationList.value
 
                     workerVacationListAdapter.setVacationList(liveVacationList)
                     calendarAdapter.setVacationList(liveVacationList, liveCalendarList)
@@ -405,8 +417,6 @@ class WorkerMainActivity : JWBaseActivity() {
                 val intent = Intent(thisActivity, WorkerInsertActivity::class.java)
                 intent.putExtra("_id", _id)
                 requestActivity.launch(intent)
-//                startActivity(intent)
-
             }
         }
 

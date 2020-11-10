@@ -1,30 +1,24 @@
 package com.example.uohih.joowon.ui.vacation
 
-import android.app.Activity
-import android.content.DialogInterface
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.databinding.ActivityVacationRegisterBinding
-import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.databinding.ListItemVacationBinding
 import com.example.uohih.joowon.model.VacationList
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CustomDialog
-import com.example.uohih.joowon.util.UICommonUtil
+import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.btn_positive_bottom.view.*
 import kotlinx.android.synthetic.main.btn_white.view.*
@@ -33,8 +27,6 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
-
-import kotlin.collections.ArrayList
 
 class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
     private lateinit var thisActivity: VacationRegisterActivity
@@ -46,12 +38,8 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
 
     private lateinit var bitmap: String
 
-    private var cntSchedule = 0.0           //사용예정휴가일수
-    private var cntRemain = 0.0             //남은휴가일수
-    private var cntTotal = ""               //총휴가일수
-
-
     private var _id = ""
+    private var date = LocalDate.now().toString()
     private var isCalendarDialogShow = false
 
     private lateinit var btnCalendar: ImageButton
@@ -76,8 +64,12 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
 
         val args = intent
         if (args != null) {
-            _id = args.getStringExtra("_id").toString()
+            _id = args.getStringExtra("_id")
             vacationViewModel.setEmployeeInfo(_id)
+
+            if (args.hasExtra("date")) {
+                date = args.getStringExtra("date")
+            }
         }
 
         initView()
@@ -96,7 +88,7 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
 
         btnRegisterV.text = getString(R.string.vacation_add)
         btnRegister.text = getString(R.string.vacation_title)
-        tvDate.text = LocalDate.now().toString() + " ~ " + LocalDate.now().toString()
+        tvDate.text = "$date ~ $date"
 
         btnCalendar.setOnClickListener(this)
         tvDate.setOnClickListener(this)
@@ -107,32 +99,6 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
         setRecyclerView()
 
         setObserve()
-//        if (bitmap != "") {
-//            val file = BitmapFactory.decodeFile(bitmap)
-//            lateinit var exif: ExifInterface
-//
-//            try {
-//                exif = ExifInterface(bitmap)
-//            } catch (e: IOException) {
-//                e.printStackTrace()
-//            }
-//
-//            val exifOrientation: Int
-//            val exifDegree: Int
-//
-//            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-//            exifDegree = baseActivity.exifOrientationToDegrees(exifOrientation)
-//
-////            Glide.with(mContext).load(baseActivity.rotate(file, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(vacation_img_people)
-//
-//        } else {
-//            vacation_img_people.setImageDrawable(mContext.getDrawable(R.drawable.people))
-//        }
-
-//        vacation_tv_name.text = name
-//        vacation_tv_join.text = (Constants.YYYYMMDD_PATTERN).toRegex().replace(join, "$1-$2-$3")
-//        vacation_tv_phone.text = (Constants.PHONE_NUM_PATTERN).toRegex().replace(phone, "$1-$2-$3")
-//        vacation_tv_vacation.text = vacation
     }
 
 
@@ -251,7 +217,7 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
                     vacationList.removeAt(j)
                 }
             }
-            vacationList.add(VacationList(weekdayList[i], contentTxt, isHalf))
+            vacationList.add(VacationList(weekdayList[i], contentTxt, isHalf, null, null))
         }
 
         vacationViewModel.addVacationList(vacationList)

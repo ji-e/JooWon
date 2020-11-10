@@ -129,11 +129,6 @@ class WorkerInsertActivity : JWBaseActivity() {
         if (_id.isNotEmpty()) {
             tvTitleView.setTitle(getString(R.string.workerUpdate_title))
             layDelete.visibility = View.VISIBLE
-            edtName.setText(workerViewModel.liveEmployeeInfo.value?.name)
-            edtPhone.setText(workerViewModel.liveEmployeeInfo.value?.phone_number)
-            edtTotalCnt.setText(workerViewModel.liveEmployeeInfo.value?.total_vacation_cnt)
-            tvBirthDate.text = workerViewModel.liveEmployeeInfo.value?.birth
-            tvEnjoyDate.text = workerViewModel.liveEmployeeInfo.value?.entered_date
             btnResister.text = getString(R.string.workerUpdate_update)
             btnResister.setOnClickListener {
                 if (binding.workerInsertBtnRegister.isEnabled) {
