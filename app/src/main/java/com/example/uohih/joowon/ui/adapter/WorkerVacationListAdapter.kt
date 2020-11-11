@@ -35,7 +35,7 @@ class WorkerVacationListAdapter(vacationList: ArrayList<VacationList>?, private 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = vacationList[position]
-        holder.tvNo.text = String.format("%2d", position + 1)
+        holder.tvNo.text = String.format("%02d", position + 1)
 
         holder.itemView.setOnClickListener {
 

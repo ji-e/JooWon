@@ -80,7 +80,7 @@
                     style="@style/Font_13_4a4a4a"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/mainList_vacation+mainListItem.use_vacation_cnt+&quot;/&quot;+mainListItem.total_vacation_cnt}"
+                    android:text="@{@string/mainList_vacation+mainListItem.use_vacation_cnt+&quot; / &quot;+mainListItem.total_vacation_cnt}"
                     tools:text="@string/mainList_vacation" />
             </LinearLayout>
 

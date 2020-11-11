@@ -1,9 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.vacation.VacationDeleteActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+
+        <variable
+            name="vacationDeleteVm"
+            type="com.example.uohih.joowon.ui.vacation.VacationViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
+        tools:context=".ui.vacation.VacationDeleteActivity">
+
+        <!--상단 타이틀 및 아이콘 바-->
+        <com.example.uohih.joowon.ui.customView.TopTitleView
+            android:id="@+id/vacationDelete_titleView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp60"
+            android:gravity="center_vertical"
+            app:btnBack="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tvTitle="@string/vacation_delete_title" />
+
+
+        <!--        &lt;!&ndash;Image&ndash;&gt;-->
+        <!--        <ImageView-->
+        <!--            android:id="@+id/vacationDelete_imgPeople"-->
+        <!--            android:layout_width="@dimen/dp55"-->
+        <!--            android:layout_height="@dimen/dp55"-->
+        <!--            android:layout_gravity="center_vertical"-->
+        <!--            android:background="@drawable/img_people"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+
+        <!--이름-->
+        <TextView
+            android:id="@+id/vacationDelete_tvName"
+            style="@style/Font_17_000000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp30"
+            android:layout_marginTop="@dimen/dp20"
+            android:text="@{vacationDeleteVm.liveEmployeeInfo.name}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vacationDelete_titleView"
+            tools:text="@string/mainList_name" />
+
+        <!--휴대폰번호-->
+        <TextView
+            android:id="@+id/vacationDelete_tvPhone"
+            style="@style/Font_13_4a4a4a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp30"
+            android:layout_marginTop="@dimen/dp10"
+            android:text="@{vacationDeleteVm.liveEmployeeInfo.phone_number.empty?@string/mainList_ph:vacationDeleteVm.liveEmployeeInfo.phone_number}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vacationDelete_tvName"
+            tools:text="@string/mainList_phone" />
+
+        <!--휴가일수-->
+        <TextView
+            android:id="@+id/vacationDelete_tvVacation"
+            style="@style/Font_13_4a4a4a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp30"
+            android:layout_marginTop="@dimen/dp10"
+            android:text="@{@string/mainList_vacation+vacationDeleteVm.liveEmployeeInfo.use_vacation_cnt+&quot; / &quot;+vacationDeleteVm.liveEmployeeInfo.total_vacation_cnt}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vacationDelete_tvPhone"
+            tools:text="@string/mainList_vacation" />
+
+
+        <TextView
+            android:id="@+id/vacationDelete_tvCntTxt"
+            style="@style/Font_13_4a4a4a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp30"
+            android:layout_marginTop="@dimen/dp30"
+            android:text="@string/vacation_delete_cnt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vacationDelete_tvVacation"
+            tools:text="@string/vacation_delete_cnt" />
+
+
+        <TextView
+            android:id="@+id/vacationDelete_tvCnt"
+            style="@style/Font_13_4a4a4a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp10"
+            android:text="@{vacationDeleteVm.vacationInfo.vacation_cnt}"
+            app:layout_constraintStart_toEndOf="@id/vacationDelete_tvCntTxt"
+            app:layout_constraintBottom_toBottomOf="@id/vacationDelete_tvCntTxt"
+            app:layout_constraintTop_toTopOf="@id/vacationDelete_tvCntTxt"
+            tools:text="@string/vacation_delete_cnt" />
+
+        <TextView
+            android:id="@+id/vacationDelete_tvDateTxt"
+            style="@style/Font_13_4a4a4a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp10"
+            android:layout_marginStart="@dimen/dp30"
+            android:text="@string/vacation_delete_date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vacationDelete_tvCntTxt"
+            tools:text="@string/vacation_delete_date" />
+
+        <TextView
+            android:id="@+id/vacationDelete_tvDate"
+            style="@style/Font_13_4a4a4a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp10"
+            android:text="@{vacationDeleteVm.vacationInfo.vacation_date}"
+            app:layout_constraintStart_toEndOf="@id/vacationDelete_tvDateTxt"
+            app:layout_constraintBottom_toBottomOf="@id/vacationDelete_tvDateTxt"
+            app:layout_constraintTop_toTopOf="@id/vacationDelete_tvDateTxt"
+            tools:text="@string/vacation_delete_date" />
+
+        <TextView
+            android:id="@+id/vacationDelete_tvContentTxt"
+            style="@style/Font_13_4a4a4a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp30"
+            android:layout_marginTop="@dimen/dp10"
+            android:text="@string/vacation_delete_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vacationDelete_tvDateTxt"
+            tools:text="@string/vacation_delete_content" />
+
+        <TextView
+            android:id="@+id/vacationDelete_tvContent"
+            style="@style/Font_13_4a4a4a"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp10"
+            android:layout_marginEnd="@dimen/dp30"
+            android:text="@{vacationDeleteVm.vacationInfo.vacation_content}"
+            app:layout_constraintStart_toEndOf="@id/vacationDelete_tvContentTxt"
+            app:layout_constraintTop_toTopOf="@id/vacationDelete_tvContentTxt"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="라라라라라랄휴가지렁라라라ㅏ라라ㅏ\ㅜ휴가지렁휴가규ㅏ휴ㅏㄱ후ㅏㅇ" />
+
+
+        <!--삭제-->
+        <LinearLayout
+            android:id="@+id/vacationDelete_layDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp30"
+            android:layout_marginBottom="@dimen/dp40"
+            android:onClick="onClickVacationDelete"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible">
+
+            <TextView
+                style="@style/Font_14_000000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/workerUpdate_delete" />
+
+            <ImageButton
+                android:layout_width="@dimen/dp20"
+                android:layout_height="@dimen/dp20"
+                android:background="@drawable/btn_next_selector" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

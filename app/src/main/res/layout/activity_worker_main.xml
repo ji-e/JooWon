@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp02"
-                android:text="@{@string/mainList_vacation+workerMainVm.liveEmployeeInfo.use_vacation_cnt+&quot;/&quot;+workerMainVm.liveEmployeeInfo.total_vacation_cnt}"
+                android:text="@{@string/mainList_vacation+workerMainVm.liveEmployeeInfo.use_vacation_cnt+&quot; / &quot;+workerMainVm.liveEmployeeInfo.total_vacation_cnt}"
                 tools:text="@string/mainList_vacation" />
 
 

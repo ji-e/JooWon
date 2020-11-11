@@ -124,13 +124,28 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
 
         vacationViewModel.jw4001Data.observe(thisActivity, Observer {
             val jw4001Data = it ?: return@Observer
-
+            val customDialog = CustomDialog(mContext)
             if ("ZZZZ" == jw4001Data.errCode) {
                 showSessionOutDialog(thisActivity)
                 return@Observer
             }
 
-            val customDialog = CustomDialog(mContext).apply {
+            if (jw4001Data.resbody == null) {
+                customDialog.apply {
+                    setBottomDialog(
+                            getString(R.string.dialog_title),
+                            getString(R.string.vacation_dialog_err),
+                            null,
+                            getString(R.string.btnConfirm),
+                            View.OnClickListener {
+                                dismiss()
+                            })
+                }
+                customDialog.show()
+                return@Observer
+            }
+
+            customDialog.apply {
                 setBottomDialog(
                         getString(R.string.dialog_title),
                         getString(R.string.vacation_dialog_msg),

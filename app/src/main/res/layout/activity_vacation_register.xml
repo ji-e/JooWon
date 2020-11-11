@@ -92,7 +92,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp16"
-                        android:text="@{@string/mainList_vacation+vacationRegisterVm.liveEmployeeInfo.use_vacation_cnt+&quot;/&quot;+vacationRegisterVm.liveEmployeeInfo.total_vacation_cnt}"
+                        android:text="@{@string/mainList_vacation+vacationRegisterVm.liveEmployeeInfo.use_vacation_cnt+&quot; / &quot;+vacationRegisterVm.liveEmployeeInfo.total_vacation_cnt}"
                         app:layout_constraintBottom_toBottomOf="@id/vacation_imgPeople"
                         app:layout_constraintStart_toEndOf="@id/vacation_imgPeople"
                         tools:text="@string/mainList_vacation" />

@@ -170,7 +170,6 @@ class WorkerMainActivity : JWBaseActivity() {
 
             val bundle = Bundle()
             bundle.putString("use_vacation_cnt", useVacationCnt.toString())
-            LogUtil.e(bundle)
             UICommonUtil.setEmployeeInfo(_id, bundle, useVacation)
             workerViewModel.setEmployeeInfo(_id)
         })
@@ -204,8 +203,8 @@ class WorkerMainActivity : JWBaseActivity() {
                         intent.putExtra("vacation_cnt", vacationInfo?.vacation_cnt)
                         intent.putExtra("vacation_content", vacationInfo?.vacation_content)
                         intent.putExtra("vacation_date", vacationInfo?.vacation_date)
-                        intent.putExtra("vacation_id", _id)
-                        intent.putExtra("_id", vacationInfo?._id)
+                        intent.putExtra("_id", _id)
+                        intent.putExtra("vacation_id", vacationInfo?._id)
                         startActivity(intent)
                     } else {
                         // 휴가가 미등록되어있는 날짜를 클릭한 경우

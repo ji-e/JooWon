@@ -19,6 +19,8 @@ import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import org.json.JSONObject
 import java.time.LocalDate
+import java.util.*
+import kotlin.collections.ArrayList
 
 class WorkerViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : JWBaseViewModel(application, jwBaseRepository) {
     private val _isLoading = MutableLiveData<Boolean>()
@@ -179,10 +181,11 @@ class WorkerViewModel(application: JWBaseApplication, private val jwBaseReposito
 
                 val jw4003Data = Gson().fromJson(data.toString(), JW4003::class.java)
                 _jw4003Data.value = jw4003Data
-                _isLoading.value = false
 
                 liveVacationList.value = (jw4003Data.resbody?.vacationList)
                 setCalendarList(localDate)
+
+                _isLoading.value = false
             }
 
             override fun onFailure(code: Int) {

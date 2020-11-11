@@ -126,12 +126,25 @@ class UICommonUtil {
             return employeeInfo
         }
 
-        fun getVacationInfo(calendarDate: String, vacationList: ArrayList<VacationList>): VacationList? {
+        fun getVacationInfo(calendarDate: String, vacationList: ArrayList<VacationList>?): VacationList? {
+            if (vacationList == null) return null
             for (i in vacationList.indices) {
                 if (calendarDate == vacationList[i].vacation_date.toString()) {
                     return VacationList(vacationList[i].vacation_date, vacationList[i].vacation_content, vacationList[i].vacation_cnt, vacationList[i].vacation_id, vacationList[i]._id)
                 }
             }
+            return null
+        }
+
+        fun getVacationList(_id: String?): ArrayList<VacationList>? {
+            if (_id == null) return null
+
+            for (i in initEmployeeList.indices) {
+                if (_id == initEmployeeList[i]._id) {
+                    return initEmployeeList[i].use_vacation
+                }
+            }
+
             return null
         }
 
