@@ -29,14 +29,14 @@ import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.OAuthLoginHandler
 import com.nhn.android.naverlogin.data.OAuthLoginState
 import kotlinx.android.synthetic.main.btn_positive.view.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class SignInActivity : JWBaseActivity() {
-    val thisActivity by lazy { this }
-
-    private lateinit var signInViewModel: SignInViewModel
+    private val thisActivity by lazy { this }
+    private val signInViewModel: SignInViewModel by viewModel()
     private lateinit var binding: ActivitySigninBinding
 
     private lateinit var keyboardShowUtil: KeyboardShowUtil
@@ -54,7 +54,6 @@ class SignInActivity : JWBaseActivity() {
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_signin)
         binding.run {
-            signInViewModel = ViewModelProvider(thisActivity, SignInViewModelFactory()).get(SignInViewModel::class.java)
             lifecycleOwner = thisActivity
             signInVm = signInViewModel
         }
@@ -75,10 +74,10 @@ class SignInActivity : JWBaseActivity() {
         edtEmail.setOnEditorActionListener(SignInEditActionListener())
 
         btnContinue.text = getString(R.string.signin_btn_continue)
-        btnContinue.setOnClickListener{
+        btnContinue.setOnClickListener {
             // 계속하기
-            if(binding.signinBtnContinue.isEnabled)
-            continueSignIn()
+            if (binding.signinBtnContinue.isEnabled)
+                continueSignIn()
         }
 
 //        keyboardShowUtil = KeyboardShowUtil(window,
@@ -105,126 +104,114 @@ class SignInActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
-        // 네트워크에러
-        signInViewModel.isNetworkErr.observe(thisActivity, Observer {
-            val isNetworkErr = it ?: return@Observer
-            if (isNetworkErr) {
-                showNetworkErrDialog(mContext)
-            }
-        })
-
-        // 로딩
-        signInViewModel.isLoading.observe(thisActivity, Observer {
-            val isLoading = it ?: return@Observer
-
-            if (isLoading) {
-                showLoading()
-            } else {
-                hideLoading()
-            }
-        })
-
-        signInViewModel.jw1001Data.observe(thisActivity, Observer {
-            val jw1001Data = it ?: return@Observer
-            if ("N" == jw1001Data.resbody?.emailValid) {
-                // 회원가입
-                val customDialog = CustomDialog(mContext).apply {
-                    setBottomDialog(
-                            getString(R.string.dialog_title),
-                            getString(R.string.signin_dialog_msg_email_registration2),
-                            null,
-                            getString(R.string.btnCancel), null,
-                            getString(R.string.btnConfirm),
-                            View.OnClickListener {
-                                val intentUp = Intent(mContext, SignUpActivity::class.java).apply {
-                                    val bundle = Bundle()
-                                    bundle.putString("email", edtEmail.text.toString())
-                                    bundle.putBoolean("autoSignIn", ckbAutoSignIn.isChecked)
-                                    putExtra("signIn", bundle)
-                                }
-                                mContext.startActivity(intentUp)
-                                dismiss()
-                            })
+        with(signInViewModel) {
+            isNetworkErr.observe(thisActivity, Observer {
+                if (it) {
+                    showNetworkErrDialog(mContext)
                 }
-                customDialog.show()
-            } else {
-                // 로그인
-                // 비밀번호 입력
+            })
 
-                val intentPw = Intent(mContext, SignInPwActivity::class.java).apply {
-                    val bundle = Bundle()
-                    bundle.putString("email", edtEmail.text.toString())
-                    bundle.putBoolean("autoSignIn", ckbAutoSignIn.isChecked)
-                    putExtra("signIn", bundle)
+            isLoading.observe(thisActivity, Observer {
+                when {
+                    it -> showLoading()
+                    else -> hideLoading()
                 }
-                mContext.startActivity(intentPw)
-            }
-        })
+            })
 
-        signInViewModel.jw1002Data.observe(thisActivity, Observer {
-            val jw1002Data = it ?: return@Observer
-            if ("Y" == jw1002Data.resbody?.signUpValid) {
-                goMain()
-            }
-        })
+            jw1001Data.observe(thisActivity, Observer {
+                if ("N" == it.resbody?.emailValid) {
+                    // 회원가입
+                    val customDialog = CustomDialog(mContext).apply {
+                        setBottomDialog(
+                                getString(R.string.dialog_title),
+                                getString(R.string.signin_dialog_msg_email_registration2),
+                                null,
+                                getString(R.string.btnCancel), null,
+                                getString(R.string.btnConfirm),
+                                View.OnClickListener {
+                                    val intentUp = Intent(mContext, SignUpActivity::class.java).apply {
+                                        val bundle = Bundle()
+                                        bundle.putString("email", edtEmail.text.toString())
+                                        bundle.putBoolean("autoSignIn", ckbAutoSignIn.isChecked)
+                                        putExtra("signIn", bundle)
+                                    }
+                                    mContext.startActivity(intentUp)
+                                    dismiss()
+                                })
+                    }
+                    customDialog.show()
+                } else {
+                    // 로그인
+                    // 비밀번호 입력
 
-        signInViewModel.jw1005Data.observe(thisActivity, Observer {
-            val jw1005Data = it ?: return@Observer
-            if ("Y" == jw1005Data.resbody?.adminUpdateValid) {
-                goMain()
-            }
-        })
+                    val intentPw = Intent(mContext, SignInPwActivity::class.java).apply {
+                        val bundle = Bundle()
+                        bundle.putString("email", edtEmail.text.toString())
+                        bundle.putBoolean("autoSignIn", ckbAutoSignIn.isChecked)
+                        putExtra("signIn", bundle)
+                    }
+                    mContext.startActivity(intentPw)
+                }
+            })
 
-        signInViewModel.jw1006Data.observe(thisActivity, Observer {
-            val jw1006Data = it ?: return@Observer
+            jw1002Data.observe(thisActivity, Observer {
+                if ("Y" == it.resbody?.signUpValid) {
+                    goMain()
+                }
+            })
 
-            if ("Y" == jw1006Data.resbody?.isSnsIdRegisted) {
-//                // todo 로그인완료?
-//                goMain()
-            } else {
-                if ("Y" == jw1006Data.resbody?.isEmailRegisted) {
-                    if (isNaverSignIn) {
-                        // 중복임
-                        val customDialog = CustomDialog(mContext).apply {
-                            setBottomDialog(
-                                    getString(R.string.signin_dialog_msg_email_registration),
-                                    getString(R.string.btnCancel),
-                                    View.OnClickListener {
-                                        goMain()
-                                        dismiss()
-                                    },
-                                    getString(R.string.btnConfirm),
-                                    View.OnClickListener {
-                                        adminUpdate()
-                                        dismiss()
-                                    })
+            jw1005Data.observe(thisActivity, Observer {
+                if ("Y" == it.resbody?.adminUpdateValid) {
+                    goMain()
+                }
+            })
+
+            jw1006Data.observe(thisActivity, Observer {
+                if ("Y" == it.resbody?.isSnsIdRegisted) {
+
+                } else {
+                    if ("Y" == it.resbody?.isEmailRegisted) {
+                        if (isNaverSignIn) {
+                            // 중복임
+                            val customDialog = CustomDialog(mContext).apply {
+                                setBottomDialog(
+                                        getString(R.string.signin_dialog_msg_email_registration),
+                                        getString(R.string.btnCancel),
+                                        View.OnClickListener {
+                                            goMain()
+                                            dismiss()
+                                        },
+                                        getString(R.string.btnConfirm),
+                                        View.OnClickListener {
+                                            adminUpdate()
+                                            dismiss()
+                                        })
+                            }
+                            customDialog.show()
+                        } else {
+                            goMain()
                         }
-                        customDialog.show()
-                    } else {
-                        goMain()
                     }
                 }
-            }
-        })
+            })
 
-        signInViewModel.jw2001Data.observe(thisActivity, Observer {
-            val jw2001Data = it ?: return@Observer
-
-            if ("Y" == jw2001Data.resbody?.signInValid) {
-                // todo 로그인완료?
-                if (ckbAutoSignIn.isChecked) {
-                    jw2001Data.resbody.autoToken?.let { it1 -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, it1) }
+            jw2001Data.observe(thisActivity, Observer {
+                if ("Y" == it.resbody?.signInValid) {
+                    // 로그인완료
+                    if (ckbAutoSignIn.isChecked) {
+                        it.resbody.autoToken?.let { autoToken -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, autoToken) }
+                    }
+                    if (signInViewModel.jw1006Data.value?.resbody?.isSnsIdRegisted == "Y" || !isNaverSignIn) goMain()
+                } else {
+                    val customDialog = CustomDialog(mContext).apply {
+                        setBottomDialog(
+                                getString(R.string.signin_err),
+                                getString(R.string.btnConfirm), null)
+                    }
+                    customDialog.show()
                 }
-                if (signInViewModel.jw1006Data.value?.resbody?.isSnsIdRegisted == "Y" || !isNaverSignIn) goMain()
-            } else {
-                val customDialog = CustomDialog(mContext).apply {
-                    setBottomDialog(
-                            getString(R.string.signin_err),
-                            getString(R.string.btnConfirm), null)
-                }
-                customDialog.show()
-            }
-        })
+            })
+        }
     }
 
     private val mOAuthLoginHandler = object : OAuthLoginHandler() {
@@ -278,8 +265,7 @@ class SignInActivity : JWBaseActivity() {
      * 메인으로이동
      */
     private fun goMain() {
-        val intent = Intent(this, MainListActivity::class.java)
-        startActivity(intent)
+        startActivity(Intent(this, MainListActivity::class.java))
         finish()
     }
 

@@ -1,12 +1,13 @@
 package com.example.uohih.joowon.base
 
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.uohih.joowon.repository.JWBaseRepository
+import androidx.lifecycle.ViewModel
 
-open class JWBaseViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : AndroidViewModel(application) {
-     val _isNetworkErr = MutableLiveData<Boolean>()
+open class JWBaseViewModel() : ViewModel() {
+    val _isLoading = MutableLiveData<Boolean>()
+    val _isNetworkErr = MutableLiveData<Boolean>()
 
     val isNetworkErr: LiveData<Boolean> = _isNetworkErr
+    val isLoading: LiveData<Boolean> = _isLoading
 }

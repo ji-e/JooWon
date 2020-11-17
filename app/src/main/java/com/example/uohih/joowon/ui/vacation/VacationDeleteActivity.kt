@@ -13,10 +13,11 @@ import com.example.uohih.joowon.model.VacationList
 import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.JsonObject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VacationDeleteActivity : JWBaseActivity() {
     private val thisActivity by lazy { this }
-    private lateinit var vacationViewModel: VacationViewModel
+    private val vacationViewModel: VacationViewModel by viewModel()
     private lateinit var binding: ActivityVacationDeleteBinding
 
     private var _id = ""
@@ -27,7 +28,6 @@ class VacationDeleteActivity : JWBaseActivity() {
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_vacation_delete)
         binding.run {
-            vacationViewModel = ViewModelProvider(thisActivity, VacationViewModelFactory()).get(VacationViewModel::class.java)
             lifecycleOwner = thisActivity
             vacationDeleteVm = vacationViewModel
         }
@@ -48,46 +48,41 @@ class VacationDeleteActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
-        // 네트워크에러
-        vacationViewModel.isNetworkErr.observe(thisActivity, Observer {
-            val isNetworkErr = it ?: return@Observer
-            if (isNetworkErr) {
-                showNetworkErrDialog(mContext)
-            }
-        })
 
-        // 로딩
-        vacationViewModel.isLoading.observe(thisActivity, Observer {
-            val isLoading = it ?: return@Observer
+        with(vacationViewModel) {
+            isNetworkErr.observe(thisActivity, Observer {
+                if (it) {
+                    showNetworkErrDialog(mContext)
+                }
+            })
 
-            if (isLoading) {
-                showLoading()
-            } else {
-                hideLoading()
-            }
-        })
+            isLoading.observe(thisActivity, Observer {
+                when {
+                    it -> showLoading()
+                    else -> hideLoading()
+                }
+            })
 
-        vacationViewModel.jw4004Data.observe(thisActivity, Observer {
-            val jw4004Data = it ?: return@Observer
+            jw4004Data.observe(thisActivity, Observer {
+                if ("ZZZZ" == it.errCode) {
+                    showSessionOutDialog(thisActivity)
+                    return@Observer
+                }
 
-            if ("ZZZZ" == jw4004Data.errCode) {
-                showSessionOutDialog(thisActivity)
-                return@Observer
-            }
-
-            val customDialog = CustomDialog(mContext).apply {
-                setBottomDialog(
-                        getString(R.string.dialog_title),
-                        getString(R.string.vacation_delete_dialog_msg),
-                        null,
-                        getString(R.string.btnConfirm),
-                        View.OnClickListener {
-                            dismiss()
-                            finish()
-                        })
-            }
-            customDialog.show()
-        })
+                val customDialog = CustomDialog(mContext).apply {
+                    setBottomDialog(
+                            getString(R.string.dialog_title),
+                            getString(R.string.vacation_delete_dialog_msg),
+                            null,
+                            getString(R.string.btnConfirm),
+                            View.OnClickListener {
+                                dismiss()
+                                finish()
+                            })
+                }
+                customDialog.show()
+            })
+        }
     }
 
     fun onClickVacationDelete(view: View) {

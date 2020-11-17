@@ -44,6 +44,7 @@ import kotlinx.android.synthetic.main.btn_positive_bottom.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -57,8 +58,7 @@ import java.util.ArrayList
  */
 class WorkerInsertActivity : JWBaseActivity() {
     private val thisActivity by lazy { this }
-
-    private lateinit var workerViewModel: WorkerViewModel
+    private val workerViewModel: WorkerViewModel by viewModel()
     private lateinit var binding: ActivityWorkerInsertBinding
 
     private var imageFilePath: String = ""
@@ -82,7 +82,6 @@ class WorkerInsertActivity : JWBaseActivity() {
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_worker_insert)
         binding.run {
-            workerViewModel = ViewModelProvider(thisActivity, WorkerViewModelFactory()).get(WorkerViewModel::class.java)
             lifecycleOwner = thisActivity
             workerInsertVm = workerViewModel
         }

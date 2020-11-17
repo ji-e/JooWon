@@ -1,10 +1,6 @@
 package com.example.uohih.joowon.base
 
-import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import android.content.pm.PackageInfo
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.media.ExifInterface
@@ -14,27 +10,14 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.model.CalendarDayInfo
-import com.example.uohih.joowon.model.JW2002
-import com.example.uohih.joowon.repository.JWBaseRepository
-import com.example.uohih.joowon.retrofit.GetResbodyCallback
 import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.ui.customView.CustomLoadingBar
-import com.example.uohih.joowon.ui.signin.SignInActivity
 import com.example.uohih.joowon.util.LogUtil
-import com.example.uohih.joowon.util.UICommonUtil
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import com.nhn.android.naverlogin.OAuthLogin
-import com.nhn.android.naverlogin.data.OAuthLoginState
-import org.json.JSONObject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
 import java.time.temporal.ChronoField
 import java.util.*
@@ -45,14 +28,13 @@ open class JWBaseActivity : AppCompatActivity() {
 
     val mContext: Context by lazy { this }
     private lateinit var thisActivity: JWBaseActivity
-    private lateinit var jwBaseViewModel: JWBaseViewModel
+    private val jwBaseViewModel: JWBaseViewModel  by viewModel()
 
 //    val ss = getPreference("cookie")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         thisActivity = this
-        jwBaseViewModel = ViewModelProvider(thisActivity, JWBaseViewModelFactory()).get(JWBaseViewModel::class.java)
     }
 
     /**
@@ -287,6 +269,5 @@ open class JWBaseActivity : AppCompatActivity() {
                 })
         customDialog.show()
     }
-
 
 }

@@ -11,8 +11,6 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uohih.joowon.Constants
@@ -30,14 +28,14 @@ import com.example.uohih.joowon.ui.worker.WorkerMainActivity
 import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.list_item_main_list.view.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.rambler.libs.swipe_layout.SwipeLayout
 import java.time.LocalDate
 
 
 class MainListActivity : JWBaseActivity() {
     private val thisActivity by lazy { this }
-
-    private lateinit var mainListViewModel: MainListViewModel
+    private val mainListViewModel: MainListViewModel by viewModel()
     private lateinit var binding: ActivityMainListBinding
 
     // back key exit
@@ -68,7 +66,6 @@ class MainListActivity : JWBaseActivity() {
 
         binding = DataBindingUtil.setContentView<ActivityMainListBinding>(thisActivity, R.layout.activity_main_list)
         binding.run {
-            mainListViewModel = ViewModelProvider(thisActivity, MainListViewModelFactory()).get(MainListViewModel::class.java)
             lifecycleOwner = thisActivity
             mainListVm = mainListViewModel
         }
@@ -128,42 +125,34 @@ class MainListActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
-        // 네트워크에러
-        mainListViewModel.isNetworkErr.observe(thisActivity, Observer {
-            val isNetworkErr = it ?: return@Observer
-            if (isNetworkErr) {
-                showNetworkErrDialog(mContext)
-            }
-        })
+        with(mainListViewModel) {
+            isNetworkErr.observe(thisActivity, Observer {
+                if (it) {
+                    showNetworkErrDialog(mContext)
+                }
+            })
 
-        // 로딩
-        mainListViewModel.isLoading.observe(thisActivity, Observer {
-            val isLoading = it ?: return@Observer
+            isLoading.observe(thisActivity, Observer {
+                when {
+                    it -> showLoading()
+                    else -> hideLoading()
+                }
+            })
 
-            if (isLoading) {
-                showLoading()
-            } else {
-                hideLoading()
-            }
-        })
-
-        mainListViewModel.jw3001Data.observe(thisActivity, Observer {
-            val jw3001Data = it ?: return@Observer
-            if ("ZZZZ" == jw3001Data.errCode) {
-                showSessionOutDialog(thisActivity)
-                return@Observer
-            }
-            setData()
-        })
-
-        mainListViewModel.searchData.observe(thisActivity, Observer {
-            val searchData = it ?: return@Observer
-            if (searchData) {
+            jw3001Data.observe(thisActivity, Observer {
+                if ("ZZZZ" == it.errCode) {
+                    showSessionOutDialog(thisActivity)
+                    return@Observer
+                }
                 setData()
-            }
-        })
+            })
 
-
+            searchData.observe(thisActivity, Observer {
+                if (it) {
+                    setData()
+                }
+            })
+        }
     }
 
 
@@ -223,17 +212,15 @@ class MainListActivity : JWBaseActivity() {
                                 jsonObject.addProperty("methodid", Constants.JW3004)
                                 jsonObject.addProperty("_id", mainListViewModel.searchEmployeeList[position]._id)
 
-                                mainListViewModel.deleteEmployee(jsonObject, position)
+                                with(mainListViewModel){
+                                    deleteEmployee(jsonObject, position)
 
-                                mainListViewModel.jw3004Data.observe(thisActivity, Observer {
-                                    val jw3004Data = it ?: return@Observer
-                                    holder.itemView.mainList_swipeLayout.animateReset()
-                                    notifyItemRemoved(position)
-                                    mainListViewModel.liveEmployeeList.postValue(mainListViewModel.searchEmployeeList)
-
-                                })
-
-
+                                    jw3004Data.observe(thisActivity, Observer {
+                                        holder.itemView.mainList_swipeLayout.animateReset()
+                                        notifyItemRemoved(position)
+                                        this.setLiveEmployeeList(this.searchEmployeeList)
+                                    })
+                                }
                             }
                         }
                 )

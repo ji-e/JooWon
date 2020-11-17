@@ -1,5 +1,6 @@
 package com.example.uohih.joowon.ui.signup
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,23 +12,21 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.databinding.ActivitySignupBinding
-import com.example.uohih.joowon.util.KeyboardShowUtil
-import com.example.uohih.joowon.util.LogUtil
+import com.example.uohih.joowon.ui.main.MainListActivity
+import com.example.uohih.joowon.ui.signin.SignInViewModel
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.btn_positive.view.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignUpActivity : JWBaseActivity() {
-    private lateinit var signUpViewModel: SignUpViewModel
-
     private val thisActivity by lazy { this }
-
+    private val signUpViewModel: SignUpViewModel by viewModel()
     private lateinit var binding: ActivitySignupBinding
 
     private lateinit var edtPW: EditText
@@ -43,7 +42,6 @@ class SignUpActivity : JWBaseActivity() {
 
         binding = DataBindingUtil.setContentView<ActivitySignupBinding>(thisActivity, R.layout.activity_signup)
         binding.run {
-            signUpViewModel = ViewModelProvider(thisActivity, SignUpViewModelFactory()).get(SignUpViewModel::class.java)
             lifecycleOwner = thisActivity
             signUpVm = signUpViewModel
         }
@@ -69,7 +67,7 @@ class SignUpActivity : JWBaseActivity() {
         btnSignUp.text = getString(R.string.signin_sign_up)
         btnSignUp.setOnClickListener {
             // 가입하기
-            if( binding.signupBtnSignUp.isEnabled){
+            if (binding.signupBtnSignUp.isEnabled) {
                 signUp()
             }
         }
@@ -91,42 +89,42 @@ class SignUpActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
-        // 네트워크에러
-        signUpViewModel.isNetworkErr.observe(thisActivity, Observer {
-            val isNetworkErr = it ?: return@Observer
-            if(isNetworkErr){
-                showNetworkErrDialog(mContext)
-            }
-        })
+        with(signUpViewModel) {
+            isNetworkErr.observe(thisActivity, Observer {
+                if (it) {
+                    showNetworkErrDialog(mContext)
+                }
+            })
 
-        // 로딩
-        signUpViewModel.isLoading.observe(thisActivity, Observer {
-            val isLoading = it ?: return@Observer
+            isLoading.observe(thisActivity, Observer {
+                when {
+                    it -> showLoading()
+                    else -> hideLoading()
+                }
+            })
 
-            if (isLoading) {
-                showLoading()
-            } else {
-                hideLoading()
-            }
-        })
-        signUpViewModel.JW1002Data.observe(thisActivity, Observer {
-            val jw1002Data = it ?: return@Observer
+            jw1002Data.observe(this@SignUpActivity, Observer {
+                if ("Y" == it.resbody?.signUpValid) {
+                    finish()
+                }
+            })
 
-            if ("Y" == jw1002Data.resbody?.signUpValid) {
-                finish()
-            }
-        })
-    }
-
-    fun onClickSignUp(view: View) {
-        when (view) {
-            binding.signupBtnSignUp -> {
-                // 회원가입
-                signUp()
-            }
+            jw2001Data.observe(this@SignUpActivity, Observer {
+                if ("Y" == it.resbody?.signInValid) {
+                    goMain()
+                }
+            })
         }
-
     }
+
+    /**
+     * 메인으로이동
+     */
+    private fun goMain() {
+        startActivity(Intent(this, MainListActivity::class.java))
+        finish()
+    }
+
 
     /**
      * 회원가입

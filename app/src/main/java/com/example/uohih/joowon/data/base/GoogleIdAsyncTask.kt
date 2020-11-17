@@ -1,4 +1,4 @@
-package com.example.uohih.joowon.repository
+package com.example.uohih.joowon.data.base
 
 import android.content.Context
 import android.os.AsyncTask

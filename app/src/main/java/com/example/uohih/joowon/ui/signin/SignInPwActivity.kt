@@ -13,7 +13,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
@@ -25,9 +24,10 @@ import com.example.uohih.joowon.util.KeyboardShowUtil
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.btn_positive.view.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignInPwActivity : JWBaseActivity() {
-    private lateinit var signInViewModel: SignInViewModel
+    private val signInViewModel: SignInViewModel by viewModel()
     private lateinit var binding: ActivitySigninPwBinding
 
     private val thisActivity by lazy { this }
@@ -39,13 +39,11 @@ class SignInPwActivity : JWBaseActivity() {
 
     private var signInBundle = Bundle()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_signin_pw)
         binding.run {
-            signInViewModel = ViewModelProvider(thisActivity, SignInViewModelFactory()).get(SignInViewModel::class.java)
             lifecycleOwner = thisActivity
             signInVm = signInViewModel
         }
@@ -73,7 +71,6 @@ class SignInPwActivity : JWBaseActivity() {
                 signIn()
             }
         }
-//        edtPW.onFocusChangeListener = SignInFocusChangeListener()
 
         edtPW.addTextChangedListener(SignInTextWatcher(edtPW))
         edtPW.setOnEditorActionListener(SignInEditActionListener())
@@ -85,44 +82,38 @@ class SignInPwActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
-        // 네트워크에러
-        signInViewModel.isNetworkErr.observe(thisActivity, Observer {
-            val isNetworkErr = it ?: return@Observer
-            if(isNetworkErr){
-                showNetworkErrDialog(mContext)
-            }
-        })
-
-        // 로딩
-        signInViewModel.isLoading.observe(thisActivity, Observer {
-            val isLoading = it ?: return@Observer
-
-            if (isLoading) {
-                showLoading()
-            } else {
-                hideLoading()
-            }
-        })
-
-        signInViewModel.jw2001Data.observe(thisActivity, Observer {
-            val jw2001Data = it ?: return@Observer
-            if ("Y" == jw2001Data.resbody?.signInValid) {
-                // todo 로그인완료?
-                if (signInBundle.getBoolean("autoSignIn", false)) {
-                    jw2001Data.resbody.autoToken?.let { it1 -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, it1) }
+        with(signInViewModel) {
+            isNetworkErr.observe(thisActivity, Observer {
+                if (it) {
+                    showNetworkErrDialog(mContext)
                 }
+            })
 
-                goMain()
-
-            } else {
-                val customDialog = CustomDialog(mContext).apply {
-                    setBottomDialog(
-                            getString(R.string.signin_err),
-                            getString(R.string.btnConfirm), null)
+            isLoading.observe(thisActivity, Observer {
+                when {
+                    it -> showLoading()
+                    else -> hideLoading()
                 }
-                customDialog.show()
-            }
-        })
+            })
+
+            jw2001Data.observe(thisActivity, Observer {
+                if ("Y" == it.resbody?.signInValid) {
+                    // 로그인완료
+                    if (signInBundle.getBoolean("autoSignIn", false)) {
+                        it.resbody.autoToken?.let { autoToken -> UICommonUtil.setPreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN, autoToken) }
+                    }
+                    goMain()
+
+                } else {
+                    val customDialog = CustomDialog(mContext).apply {
+                        setBottomDialog(
+                                getString(R.string.signin_err),
+                                getString(R.string.btnConfirm), null)
+                    }
+                    customDialog.show()
+                }
+            })
+        }
     }
 
     fun onClickSignIn(view: View) {

@@ -1,4 +1,4 @@
-package com.example.uohih.joowon.repository
+package com.example.uohih.joowon.api
 
 import com.google.gson.JsonObject
 import okhttp3.ResponseBody

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.base.JWBaseActivity
@@ -15,19 +14,20 @@ import com.example.uohih.joowon.R
 import com.example.uohih.joowon.databinding.ActivitySettingBinding
 import com.example.uohih.joowon.ui.customView.CustomDialog
 import com.example.uohih.joowon.ui.signin.SignInActivity
+import com.example.uohih.joowon.ui.signin.SignInViewModel
 import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.data.OAuthLoginState
 import kotlinx.android.synthetic.main.activity_setting.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * 환경 설정
  */
 class SettingActivity : JWBaseActivity() {
     private val thisActivity by lazy { this }
-
-    private lateinit var settingViewModel: SettingViewModel
+    private val settingViewModel: SettingViewModel by viewModel()
     private lateinit var binding: ActivitySettingBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +35,6 @@ class SettingActivity : JWBaseActivity() {
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_setting)
         binding.run {
-            settingViewModel = ViewModelProvider(thisActivity, SettingViewModelFactory()).get(SettingViewModel::class.java)
             lifecycleOwner = thisActivity
             settingVm = settingViewModel
         }
@@ -45,41 +44,36 @@ class SettingActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
-        // 네트워크에러
-        settingViewModel.isNetworkErr.observe(thisActivity, Observer {
-            val isNetworkErr = it ?: return@Observer
-            if (isNetworkErr) {
-                showNetworkErrDialog(mContext)
-            }
-        })
+        with(settingViewModel) {
+            isNetworkErr.observe(thisActivity, Observer {
+                if (it) {
+                    showNetworkErrDialog(mContext)
+                }
+            })
 
-        // 로딩
-        settingViewModel.isLoading.observe(thisActivity, Observer {
-            val isLoading = it ?: return@Observer
+            isLoading.observe(thisActivity, Observer {
+                when {
+                    it -> showLoading()
+                    else -> hideLoading()
+                }
+            })
 
-            if (isLoading) {
-                showLoading()
-            } else {
-                hideLoading()
-            }
-        })
+            jw2002Data.observe(thisActivity, Observer {
+                val jw2002Data = it ?: return@Observer
+                if ("false" == it.result) {
+                    //todo
+                }
+                if ("N" == it.resbody?.signOutValid) {
+                    //todo
+                }
 
-        settingViewModel.jw2002Data.observe(thisActivity, Observer {
-            val jw2002Data = it ?: return@Observer
-            if ("false" == jw2002Data.result) {
-                //todo
-            }
-            if ("N" == jw2002Data.resbody?.signOutValid) {
-                //todo
-            }
+                // 자동로그인 토큰 제거
+                UICommonUtil.removePreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN)
 
-            // 자동로그인 토큰 제거
-            UICommonUtil.removePreferencesData(Constants.PREFERENCE_AUTO_SIGNIN_TOKEN)
-
-            (mContext as Activity).finish()
-            val intent = Intent(mContext, SignInActivity::class.java)
-            startActivity(intent)
-        })
+                (mContext as Activity).finish()
+                startActivity(Intent(mContext, SignInActivity::class.java))
+            })
+        }
     }
 
     fun onClickSetting(v: View) {

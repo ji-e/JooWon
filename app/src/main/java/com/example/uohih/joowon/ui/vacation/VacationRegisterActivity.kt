@@ -1,42 +1,53 @@
 package com.example.uohih.joowon.ui.vacation
 
+import android.content.DialogInterface
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.databinding.ActivityVacationRegisterBinding
+import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.databinding.ListItemVacationBinding
 import com.example.uohih.joowon.model.VacationList
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.customView.CalendarDialog
 import com.example.uohih.joowon.ui.customView.CustomDialog
-import com.example.uohih.joowon.util.LogUtil
+import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.btn_positive_bottom.view.*
 import kotlinx.android.synthetic.main.btn_white.view.*
 import kotlinx.android.synthetic.main.list_item_vacation.view.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 
-class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
-    private lateinit var thisActivity: VacationRegisterActivity
+import kotlin.collections.ArrayList
 
-    private lateinit var vacationViewModel: VacationViewModel
+class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
+    private val thisActivity by lazy { this }
+    private  val vacationViewModel: VacationViewModel by viewModel()
     private lateinit var binding: ActivityVacationRegisterBinding
 
     private val vacationList = mutableListOf<VacationList>()
 
     private lateinit var bitmap: String
+
+    private var cntSchedule = 0.0           //사용예정휴가일수
+    private var cntRemain = 0.0             //남은휴가일수
+    private var cntTotal = ""               //총휴가일수
+
 
     private var _id = ""
     private var date = LocalDate.now().toString()
@@ -53,18 +64,16 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        thisActivity = this
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_vacation_register)
         binding.run {
-            vacationViewModel = ViewModelProvider(thisActivity, VacationViewModelFactory()).get(VacationViewModel::class.java)
             lifecycleOwner = thisActivity
             vacationRegisterVm = vacationViewModel
         }
 
         val args = intent
         if (args != null) {
-            _id = args.getStringExtra("_id")
+            _id = args.getStringExtra("_id").toString()
             vacationViewModel.setEmployeeInfo(_id)
 
             if (args.hasExtra("date")) {
@@ -103,61 +112,56 @@ class VacationRegisterActivity : JWBaseActivity(), View.OnClickListener {
 
 
     private fun setObserve() {
-        // 네트워크에러
-        vacationViewModel.isNetworkErr.observe(thisActivity, Observer {
-            val isNetworkErr = it ?: return@Observer
-            if (isNetworkErr) {
-                showNetworkErrDialog(mContext)
-            }
-        })
+        with(vacationViewModel) {
+            isNetworkErr.observe(thisActivity, Observer {
+                if (it) {
+                    showNetworkErrDialog(mContext)
+                }
+            })
 
-        // 로딩
-        vacationViewModel.isLoading.observe(thisActivity, Observer {
-            val isLoading = it ?: return@Observer
+            isLoading.observe(thisActivity, Observer {
+                when {
+                    it -> showLoading()
+                    else -> hideLoading()
+                }
+            })
 
-            if (isLoading) {
-                showLoading()
-            } else {
-                hideLoading()
-            }
-        })
+            jw4001Data.observe(thisActivity, Observer {
+                val customDialog = CustomDialog(mContext)
+                if ("ZZZZ" == it.errCode) {
+                    showSessionOutDialog(thisActivity)
+                    return@Observer
+                }
 
-        vacationViewModel.jw4001Data.observe(thisActivity, Observer {
-            val jw4001Data = it ?: return@Observer
-            val customDialog = CustomDialog(mContext)
-            if ("ZZZZ" == jw4001Data.errCode) {
-                showSessionOutDialog(thisActivity)
-                return@Observer
-            }
+                if (it.resbody == null) {
+                    customDialog.apply {
+                        setBottomDialog(
+                                getString(R.string.dialog_title),
+                                getString(R.string.vacation_dialog_err),
+                                null,
+                                getString(R.string.btnConfirm),
+                                View.OnClickListener {
+                                    dismiss()
+                                })
+                    }
+                    customDialog.show()
+                    return@Observer
+                }
 
-            if (jw4001Data.resbody == null) {
                 customDialog.apply {
                     setBottomDialog(
                             getString(R.string.dialog_title),
-                            getString(R.string.vacation_dialog_err),
+                            getString(R.string.vacation_dialog_msg),
                             null,
                             getString(R.string.btnConfirm),
                             View.OnClickListener {
+                                finish()
                                 dismiss()
                             })
                 }
                 customDialog.show()
-                return@Observer
-            }
-
-            customDialog.apply {
-                setBottomDialog(
-                        getString(R.string.dialog_title),
-                        getString(R.string.vacation_dialog_msg),
-                        null,
-                        getString(R.string.btnConfirm),
-                        View.OnClickListener {
-                            finish()
-                            dismiss()
-                        })
-            }
-            customDialog.show()
-        })
+            })
+        }
 
     }
 

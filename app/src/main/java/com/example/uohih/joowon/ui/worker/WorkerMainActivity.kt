@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.*
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
@@ -33,11 +34,15 @@ import com.example.uohih.joowon.util.UICommonUtil
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.viewpager_worker_main.view.*
 import kotlinx.android.synthetic.main.viewpager_worker_main_calendar_cell.view.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
 
 
 class WorkerMainActivity : JWBaseActivity() {
-    val thisActivity by lazy { this }
+    private val thisActivity by lazy { this }
+    private val workerViewModel: WorkerViewModel by viewModel()
+    private lateinit var binding: ActivityWorkerMainBinding
+
     private val requestActivity: ActivityResultLauncher<Intent> = registerForActivityResult(
             StartActivityForResult() // StartActivityForResult 처리를 담당
     ) { activityResult ->
@@ -48,9 +53,6 @@ class WorkerMainActivity : JWBaseActivity() {
         }
     }
 
-
-    private lateinit var workerViewModel: WorkerViewModel
-    private lateinit var binding: ActivityWorkerMainBinding
 
     private var _id = ""
     private var localDate = LocalDate.now()
@@ -71,7 +73,6 @@ class WorkerMainActivity : JWBaseActivity() {
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_worker_main)
         binding.run {
-            workerViewModel = ViewModelProvider(thisActivity, WorkerViewModelFactory()).get(WorkerViewModel::class.java)
             lifecycleOwner = thisActivity
             workerMainVm = workerViewModel
         }
@@ -119,61 +120,57 @@ class WorkerMainActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
-        // 네트워크에러
-        workerViewModel.isNetworkErr.observe(thisActivity, Observer {
-            val isNetworkErr = it ?: return@Observer
-            if (isNetworkErr) {
-                showNetworkErrDialog(mContext)
-            }
-        })
 
-        // 로딩
-        workerViewModel.isLoading.observe(thisActivity, Observer {
-            val isLoading = it ?: return@Observer
-
-            if (isLoading) {
-                showLoading()
-            } else {
-                hideLoading()
-            }
-        })
-
-        workerViewModel.jw4003Data.observe(thisActivity, Observer {
-            val jw4003Data = it ?: return@Observer
-            if ("ZZZZ" == jw4003Data.errCode) {
-                showSessionOutDialog(thisActivity)
-                return@Observer
-            }
-
-            if ("failure" == jw4003Data.result) {
-                val customDialog = CustomDialog(mContext).apply {
-                    setBottomDialog(
-                            jw4003Data.msg.toString(),
-                            getString(R.string.btnConfirm),
-                            View.OnClickListener {
-                                dismiss()
-                                finish()
-                            })
+        with(workerViewModel) {
+            isNetworkErr.observe(thisActivity, Observer {
+                if (it) {
+                    showNetworkErrDialog(mContext)
                 }
-                customDialog.show()
+            })
 
-                return@Observer
-            }
+            isLoading.observe(thisActivity, Observer {
+                when {
+                    it -> showLoading()
+                    else -> hideLoading()
+                }
+            })
+
+            jw4003Data.observe(thisActivity, Observer {
+                if ("ZZZZ" == it.errCode) {
+                    showSessionOutDialog(thisActivity)
+                    return@Observer
+                }
+
+                if ("failure" == it.result) {
+                    val customDialog = CustomDialog(mContext).apply {
+                        setBottomDialog(
+                                it.msg.toString(),
+                                getString(R.string.btnConfirm),
+                                View.OnClickListener {
+                                    dismiss()
+                                    finish()
+                                })
+                    }
+                    customDialog.show()
+
+                    return@Observer
+                }
 
 
-            val useVacation = jw4003Data.resbody?.vacationList
-            val useVacationSize = jw4003Data.resbody?.vacationList?.size ?: 0
-            var useVacationCnt = 0f
-            for (i in 0 until useVacationSize) {
-                useVacationCnt += (useVacation?.get(i)?.vacation_cnt)?.toFloat() ?: 0f
-            }
+                val useVacation = it.resbody?.vacationList
+                val useVacationSize = it.resbody?.vacationList?.size ?: 0
+                var useVacationCnt = 0f
+                for (i in 0 until useVacationSize) {
+                    useVacationCnt += (useVacation?.get(i)?.vacation_cnt)?.toFloat() ?: 0f
+                }
 
-            val bundle = Bundle()
-            bundle.putString("use_vacation_cnt", useVacationCnt.toString())
-            UICommonUtil.setEmployeeInfo(_id, bundle, useVacation)
-            workerViewModel.setEmployeeInfo(_id)
-        })
+                val bundle = bundleOf("use_vacation_cnt" to useVacationCnt.toString())
+                UICommonUtil.setEmployeeInfo(_id, bundle, useVacation)
+                workerViewModel.setEmployeeInfo(_id)
 
+            })
+
+        }
     }
 
     private fun setViewpager() {
@@ -196,7 +193,7 @@ class WorkerMainActivity : JWBaseActivity() {
                 val gridview = holder.itemView.viewpagerWorkerMain_gridview
                 gridview.adapter = calendarAdapter
                 gridview.setOnItemClickListener { parent, view, position, id ->
-                    if (view.viewpagerWorkerMain_imgVacation.isVisible && liveVacationList != null) {
+                    if (((view.viewpagerWorkerMain_imgVacation) as ImageView).visibility == View.VISIBLE && liveVacationList != null) {
                         // 휴가가 등록되어있는 날짜를 클릭한 경우
                         val vacationInfo = UICommonUtil.getVacationInfo(liveCalendarList[position].getDate().toString(), liveVacationList!!)
                         val intent = Intent(thisActivity, VacationDeleteActivity::class.java)
@@ -223,18 +220,17 @@ class WorkerMainActivity : JWBaseActivity() {
                 recyclerview.layoutManager = LinearLayoutManager(thisActivity)
                 recyclerview.adapter = workerVacationListAdapter
 
-                workerViewModel.liveCalendarInfo.observe(thisActivity as LifecycleOwner, Observer {
-                    val liveCalendarInfo = it ?: return@Observer
-                    liveCalendarList = workerViewModel.liveCalendarList
-                    liveVacationList = workerViewModel.liveVacationList.value
+                with(workerViewModel){
+                    liveCalendarInfo.observe(thisActivity as LifecycleOwner, Observer {
+                        val liveCalendarInfo = it ?: return@Observer
+                        liveCalendarList = this.liveCalendarList
+                        liveVacationList = this.liveVacationList.value
 
-                    workerVacationListAdapter.setVacationList(liveVacationList)
-                    calendarAdapter.setVacationList(liveVacationList, liveCalendarList)
-
-
-                })
+                        workerVacationListAdapter.setVacationList(liveVacationList)
+                        calendarAdapter.setVacationList(liveVacationList, liveCalendarList)
+                    })
+                }
             }
-
         }
 
         viewPager.adapter = viewpagerAdapter

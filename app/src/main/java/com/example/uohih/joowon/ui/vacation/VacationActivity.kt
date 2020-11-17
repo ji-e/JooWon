@@ -13,7 +13,6 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,26 +27,13 @@ import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.adapter.StaffData
 import com.example.uohih.joowon.ui.adapter.VacationSearchAdapter
 import com.example.uohih.joowon.util.DateCommonUtil
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class VacationActivity : JWBaseActivity(), View.OnClickListener {
+class VacationActivity : JWBaseActivity() {
     private val thisActivity by lazy { this }
-
-    private lateinit var vacationViewModel: VacationViewModel
+    private val vacationViewModel: VacationViewModel by viewModel()
     private lateinit var binding: ActivityVacationBinding
-
-    private val base = JWBaseApplication()
-    private val dbHelper = DBHelper(this)
-
-    // 리스트 뷰
-    private var mainList = arrayListOf<StaffData>()
-    private var subList = arrayListOf<StaffData>()
-    private val vacationList = arrayListOf<String>()
-    private var checkBoxList = arrayListOf<Boolean>(false)
-
-    private val todayJson = DateCommonUtil().getToday().get("yyyymmdd").toString()
-
-    private lateinit var mVacationSearchAdapter: VacationSearchAdapter
 
     private lateinit var edtSearch: EditText
     private lateinit var btnSearchDelete: ImageButton
@@ -55,17 +41,12 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
     private lateinit var layVacationFram: FrameLayout
     private lateinit var tvEmpty: TextView
 
-    private var cntSchedule = 0.0           //사용예정휴가일수
-    private var cntRemain = 0.0             //남은휴가일수
-    private var cntTotal = ""               //총휴가일수
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(thisActivity, R.layout.activity_vacation)
         binding.run {
-            vacationViewModel = ViewModelProvider(thisActivity, VacationViewModelFactory()).get(VacationViewModel::class.java)
             lifecycleOwner = thisActivity
             vacationVm = vacationViewModel
         }
@@ -91,25 +72,32 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
         tvEmpty = binding.vacationTvEmpty
 
         edtSearch.addTextChangedListener(VacationTextWatcher())
-//        edtSearch.setOnTouchListener { view, motionEvent ->
-//
-//            if (motionEvent.action == MotionEvent.ACTION_UP) {
-//                recyclerView.visibility = View.VISIBLE
-//                layVacationFram.visibility = View.GONE
-//            }
-//            false
-//        }
 
         setObserve()
     }
 
     private fun setObserve() {
-        vacationViewModel.liveEmployeeList.observe(thisActivity, Observer {
-            val liveEmployeeList = it ?: return@Observer
-            layVacationFram.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
-            setData()
-        })
+
+        with(vacationViewModel) {
+            isNetworkErr.observe(thisActivity, Observer {
+                if (it) {
+                    showNetworkErrDialog(mContext)
+                }
+            })
+
+            isLoading.observe(thisActivity, Observer {
+                when {
+                    it -> showLoading()
+                    else -> hideLoading()
+                }
+            })
+
+            liveEmployeeList.observe(thisActivity, Observer {
+                layVacationFram.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+                setData()
+            })
+        }
     }
 
 
@@ -173,94 +161,6 @@ class VacationActivity : JWBaseActivity(), View.OnClickListener {
 
 
     }
-
-//    inner class VacationListItemClickListener : OnItemClickListener {
-//        override fun onItemClick(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-//
-//            cntRemain = (subList[position].total.toDouble() - subList[position].use.toDouble())
-//            cntTotal = subList[position].total
-//
-//            val imm= getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//            imm.hideSoftInputFromWindow(vacation_edt_name.windowToken, 0)
-//
-//            val bundle = Bundle()
-//            bundle.putString("name", subList[position].name)
-//            bundle.putString("join", subList[position].joinDate.toString())
-//            bundle.putString("phone", subList[position].phone)
-//            bundle.putString("vacation", subList[position].use + "/" + subList[position].total)
-//            bundle.putString("bitmap", subList[position].picture)
-//
-//            bundle.putDouble("cntRemain", cntRemain)
-//            bundle.putString("cntTotal", cntTotal)
-//
-//            replaceContainerFragment(R.id.vacation_frame_ly, VacationFragment.newInstance(bundle), position)
-//
-//            vacation_ly_search.visibility = View.GONE
-//            vacation_frame_ly.visibility = View.VISIBLE
-//        }
-//
-//    }
-
-    override fun onClick(view: View) {
-        when (view) {
-//            edtSearch -> {
-//                recyclerView.visibility = View.VISIBLE
-//                layVacationFram.visibility = View.GONE
-//            }
-//            R.id.vacation_btn_delete1 ->{
-//                vacation_edt_name.setText("")
-//            }
-//            R.id.vacation_btn_search -> {
-//                setSearch(vacation_edt_name.text.toString())
-//            }
-
-        }
-    }
-
-    /**
-     * db에서 데이터 가져온 후 set
-     */
-//    private fun setData() {
-//        mainList.clear()
-//        val dbHelper = DBHelper(this)
-//        val cursor = dbHelper.selectAll(dbHelper.tableNameWorkerJW)
-//
-//        while (cursor.moveToNext()) {
-//            mainList.add(StaffData(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6)))
-//        }
-//    }
-
-
-    /**
-     * 검색한 후 set
-     * 문자 입력시마다 리스트를 지우고 새로 뿌려줌
-     */
-//    private fun setSearch(charText: String) {
-//        vacation_frame_ly.visibility = View.GONE
-//        vacation_ly_search.visibility = View.VISIBLE
-//
-//        subList.clear()
-//        for (i in 0 until mainList.size) {
-//            // arraylist의 모든 데이터에 입력받은 단어(charText)가 포함되어 있으면 true를 반환
-//            if (mainList[i].name.toLowerCase().contains(charText) || mainList[i].phone.toLowerCase().contains(charText)) {
-//                // 검색된 데이터를 리스트에 추가한다.
-//                subList.add(mainList[i])
-//            }
-//        }
-//
-//        if (subList.size > 0) {
-//            vacation_tv_nothing.visibility = View.GONE
-//            vacation_listview_search.visibility = View.VISIBLE
-//        }
-//
-//        mVacationSearchAdapter = VacationSearchAdapter(this, subList)
-//        vacation_listview_search.adapter = mVacationSearchAdapter
-//    }
-//
-//
-//    fun clearEditName() {
-//        vacation_edt_name.setText("")
-//    }
 
     override fun onStop() {
         super.onStop()

@@ -3,47 +3,41 @@ package com.example.uohih.joowon.ui.vacation
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.uohih.joowon.Constants
-import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.base.JWBaseViewModel
-import com.example.uohih.joowon.model.*
-import com.example.uohih.joowon.repository.JWBaseRepository
-import com.example.uohih.joowon.retrofit.GetResbodyCallback
+import com.example.uohih.joowon.data.vacation.VacationRepository
+import com.example.uohih.joowon.model.JW3001ResBodyList
+import com.example.uohih.joowon.model.JW4001
+import com.example.uohih.joowon.model.JW4004
+import com.example.uohih.joowon.model.VacationList
 import com.example.uohih.joowon.util.LogUtil
 import com.example.uohih.joowon.util.UICommonUtil
-import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import org.json.JSONObject
-import java.time.LocalDate
 
-class VacationViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : JWBaseViewModel(application, jwBaseRepository) {
+class VacationViewModel(private val vacationRepository: VacationRepository) : JWBaseViewModel() {
 
-    private val _isLoading = MutableLiveData<Boolean>()
     private val _isBtnRegisterState = MutableLiveData<Boolean>()
     private val _jw4001Data = MutableLiveData<JW4001>()
     private val _jw4004Data = MutableLiveData<JW4004>()
-    private val _vacationInfo = MutableLiveData<VacationList>()
+    private val _liveVacationList = MutableLiveData<List<VacationList>>()
+    private val _liveVacationInfo = MutableLiveData<VacationList>()
+    private val _liveEmployeeList = MutableLiveData<List<JW3001ResBodyList>>()
+    private val _liveEmployeeInfo = MutableLiveData<JW3001ResBodyList>()
 
-    val isLoading: LiveData<Boolean> = _isLoading
     val isBtnRegisterState: LiveData<Boolean> = _isBtnRegisterState
     val jw4001Data: LiveData<JW4001> = _jw4001Data  // 휴가등록
     val jw4004Data: LiveData<JW4004> = _jw4004Data  // 휴가삭제
+    val liveVacationList: LiveData<List<VacationList>> = _liveVacationList
+    val liveVacationInfo: LiveData<VacationList> = _liveVacationInfo
+    val liveEmployeeList: LiveData<List<JW3001ResBodyList>> = _liveEmployeeList
+    val liveEmployeeInfo: LiveData<JW3001ResBodyList> = _liveEmployeeInfo
 
     var initEmployeeList = UICommonUtil.getInitEmployeeList()
     var searchEmployeeList = mutableListOf<JW3001ResBodyList>()
-    val liveEmployeeList = MutableLiveData<List<JW3001ResBodyList>>()
-
-    val liveVacationList = MutableLiveData<List<VacationList>>()
-    val liveEmployeeInfo = MutableLiveData<JW3001ResBodyList>()
     var vacationList = mutableListOf<VacationList>()
-    val vacationInfo: LiveData<VacationList> = _vacationInfo
 
 
-    fun setEmployeeList() {
-        liveEmployeeList.postValue(initEmployeeList)
-        searchEmployeeList = initEmployeeList
-    }
+
 
     /**
      * 검색결과리스트가져오기
@@ -57,17 +51,21 @@ class VacationViewModel(application: JWBaseApplication, private val jwBaseReposi
                 employeeList.add(list)
             }
         }
-        liveEmployeeList.postValue(employeeList)
+        _liveEmployeeList.postValue(employeeList)
         searchEmployeeList = employeeList
     }
 
+    fun setEmployeeList() {
+        _liveEmployeeList.postValue(initEmployeeList)
+        searchEmployeeList = initEmployeeList
+    }
 
     fun setEmployeeInfo(_id: String) {
-        liveEmployeeInfo.value = UICommonUtil.getEmployeeInfo(_id)
+        _liveEmployeeInfo.value = UICommonUtil.getEmployeeInfo(_id)
     }
 
     fun setVacationInfo(extras: Bundle) {
-        _vacationInfo.value = VacationList(
+        _liveVacationInfo.value = VacationList(
                 extras.getString("vacation_date"),
                 extras.getString("vacation_content"),
                 extras.getString("vacation_cnt"),
@@ -77,15 +75,16 @@ class VacationViewModel(application: JWBaseApplication, private val jwBaseReposi
     }
 
     fun setInitVacationList() {
-        liveVacationList.postValue(vacationList)
+        _liveVacationList.postValue(vacationList)
         _isBtnRegisterState.value = false
     }
 
     fun addVacationList(vacationList: MutableList<VacationList>) {
         this.vacationList = vacationList
-        liveVacationList.postValue(vacationList)
+        _liveVacationList.postValue(vacationList)
         _isBtnRegisterState.value = vacationList.size > 0
     }
+
 
 
     /**
@@ -94,6 +93,7 @@ class VacationViewModel(application: JWBaseApplication, private val jwBaseReposi
      */
     fun registerVacation(jsonObject: JsonObject) {
         _isLoading.value = true
+
         val paramInsertData = JsonArray()
         val vacationExistList = UICommonUtil.getVacationList(liveEmployeeInfo.value?._id)
                 ?: arrayListOf()
@@ -119,25 +119,19 @@ class VacationViewModel(application: JWBaseApplication, private val jwBaseReposi
         jsonObject.addProperty("vacation_id", liveEmployeeInfo.value?._id)
         jsonObject.add("paramInsertData", paramInsertData)
 
-        jwBaseRepository.requestBaseService(jsonObject, Constants.SERVICE_VACATION, object : GetResbodyCallback {
+        vacationRepository.registerVacation(
+                jsonObject = jsonObject,
+                success = {
+                    _jw4001Data.value = it
+                    _isLoading.value = false
+                },
+                failure = {
+                    LogUtil.e( "" + it)
+                    _isLoading.value = false
+                    _isNetworkErr.value = true
+                }
+        )
 
-            override fun onSuccess(code: Int, data: JSONObject) {
-
-                val jw4001Data = Gson().fromJson(data.toString(), JW4001::class.java)
-                _jw4001Data.value = jw4001Data
-                _isLoading.value = false
-            }
-
-            override fun onFailure(code: Int) {
-                _isLoading.value = false
-                _isNetworkErr.value = true
-            }
-
-            override fun onError(throwable: Throwable) {
-                _isLoading.value = false
-                _isNetworkErr.value = true
-            }
-        })
     }
 
     /**
@@ -146,25 +140,19 @@ class VacationViewModel(application: JWBaseApplication, private val jwBaseReposi
      */
     fun deleteVacation(jsonObject: JsonObject) {
         _isLoading.value = true
-        jsonObject.addProperty("vacation_id", vacationInfo.value?._id)
+        jsonObject.addProperty("vacation_id", liveVacationInfo.value?._id)
 
-        jwBaseRepository.requestBaseService(jsonObject, Constants.SERVICE_VACATION, object : GetResbodyCallback {
-
-            override fun onSuccess(code: Int, data: JSONObject) {
-                val jw4004Data = Gson().fromJson(data.toString(), JW4004::class.java)
-                _jw4004Data.value = jw4004Data
-                _isLoading.value = false
-            }
-
-            override fun onFailure(code: Int) {
-                _isLoading.value = false
-                _isNetworkErr.value = true
-            }
-
-            override fun onError(throwable: Throwable) {
-                _isLoading.value = false
-                _isNetworkErr.value = true
-            }
-        })
+        vacationRepository.deleteVacation(
+                jsonObject = jsonObject,
+                success = {
+                    _jw4004Data.value = it
+                    _isLoading.value = false
+                },
+                failure = {
+                    LogUtil.e( "" + it)
+                    _isLoading.value = false
+                    _isNetworkErr.value = true
+                }
+        )
     }
 }

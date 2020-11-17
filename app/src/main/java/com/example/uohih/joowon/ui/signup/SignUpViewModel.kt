@@ -1,36 +1,30 @@
 package com.example.uohih.joowon.ui.signup
 
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.base.JWBaseApplication
 import com.example.uohih.joowon.base.JWBaseViewModel
-import com.example.uohih.joowon.model.JW1001
 import com.example.uohih.joowon.model.JW1002
 import com.example.uohih.joowon.model.SignUpFormState
-import com.example.uohih.joowon.repository.JWBaseRepository
-import com.example.uohih.joowon.retrofit.GetResbodyCallback
-import com.google.gson.Gson
+import com.example.uohih.joowon.data.setting.SettingRepository
+import com.example.uohih.joowon.data.signup.SignUpRepository
+import com.example.uohih.joowon.model.JW2001
+import com.example.uohih.joowon.util.LogUtil
 import com.google.gson.JsonObject
-import org.json.JSONObject
 import java.util.regex.Pattern
 
 
-class SignUpViewModel(application: JWBaseApplication, private val jwBaseRepository: JWBaseRepository) : JWBaseViewModel(application, jwBaseRepository) {
-
-    private val _isLoding = MutableLiveData<Boolean>()
+class SignUpViewModel(private val signUpRepository: SignUpRepository) : JWBaseViewModel() {
     private val _signUpForm = MutableLiveData<SignUpFormState>()
-    private val _jw1001Data = MutableLiveData<JW1001>()
     private val _jw1002Data = MutableLiveData<JW1002>()
+    private val _jw2001Data = MutableLiveData<JW2001>()
 
-    val isLoading: LiveData<Boolean> = _isLoding
     val signUpFormState: LiveData<SignUpFormState> = _signUpForm
-    val JW1001Data: LiveData<JW1001> = _jw1001Data
-    val JW1002Data: LiveData<JW1002> = _jw1002Data
+    val jw1002Data: LiveData<JW1002> = _jw1002Data
+    val jw2001Data: LiveData<JW2001> = _jw2001Data
 
-    fun isDataValidCheck() {
+    private fun isDataValidCheck() {
         if (_signUpForm.value?.passwordError == null && _signUpForm.value?.password2Error == null) {
             _signUpForm.value = SignUpFormState(isDataValid = true)
         }
@@ -48,53 +42,6 @@ class SignUpViewModel(application: JWBaseApplication, private val jwBaseReposito
         isDataValidCheck()
     }
 
-    fun isEmailOverlapConfirm(jsonObject: JsonObject) {
-        _isLoding.value = true
-        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
-            override fun onSuccess(code: Int, data: JSONObject) {
-                val jw1001Data = Gson().fromJson(data.toString(), JW1001::class.java)
-                _jw1001Data.value = jw1001Data
-                if ("N" == jw1001Data.resbody?.emailValid) {
-                    _signUpForm.value = SignUpFormState(
-                            emailMsg = R.string.signup_email_confirm,
-                            passwordError = signUpFormState.value?.passwordError,
-                            password2Error = signUpFormState.value?.password2Error)
-                }
-                isDataValidCheck()
-                _isLoding.value = false
-            }
-
-            override fun onFailure(code: Int) {
-                _isLoding.value = false
-                _isNetworkErr.value = true
-            }
-
-            override fun onError(throwable: Throwable) {
-                _isLoding.value = false
-                _isNetworkErr.value = true
-            }
-        })
-    }
-
-    /**
-     * 이메일 검증
-     */
-    private fun isEmailValid(email: String): Int? {
-        var emailError: Int? = null
-
-        if (email == JW1001Data.value?.resbody?.email) {
-            if ("N" == JW1001Data.value?.resbody?.emailValid) {
-                emailError = R.string.signup_email_confirm
-            }
-        } else {
-            _jw1001Data.value = null
-        }
-
-        if (!Pattern.matches(Constants.EMAIL_PATTERN, email)) {
-            emailError = R.string.signup_email_err
-        }
-        return emailError
-    }
 
     /**
      * 비밀번호 검증
@@ -134,27 +81,38 @@ class SignUpViewModel(application: JWBaseApplication, private val jwBaseReposito
      * jw1002
      */
     fun signUp(jsonObject: JsonObject) {
-        _isLoding.value = true
-        jwBaseRepository.requestSignInService(jsonObject, object : GetResbodyCallback {
+        _isLoading.value = true
+        signUpRepository.signUp(
+                jsonObject = jsonObject,
+                success = {
+                    _jw1002Data.value = it
+                    _isLoading.value = false
+                },
+                failure = {
+                    LogUtil.e( "" + it)
+                    _isLoading.value = false
+                    _isNetworkErr.value = true
+                }
+        )
+    }
 
-            override fun onSuccess(code: Int, data: JSONObject) {
-
-                val jw1002Data = Gson().fromJson(data.toString(), JW1002::class.java)
-                _jw1002Data.value = jw1002Data
-                _isLoding.value = false
-            }
-
-            override fun onFailure(code: Int) {
-                _isLoding.value = false
-                _isNetworkErr.value = true
-            }
-
-            override fun onError(throwable: Throwable) {
-                _isLoding.value = false
-                _isNetworkErr.value = true
-            }
-
-
-        })
+    /**
+     * 로그인
+     * jw2001
+     */
+    fun signIn(jsonObject: JsonObject) {
+        _isLoading.value = true
+        signUpRepository.signIn(
+                jsonObject = jsonObject,
+                success = {
+                    _jw2001Data.value = it
+                    _isLoading.value = false
+                },
+                failure = {
+                    LogUtil.e("" + it)
+                    _isLoading.value = false
+                    _isNetworkErr.value = true
+                }
+        )
     }
 }
