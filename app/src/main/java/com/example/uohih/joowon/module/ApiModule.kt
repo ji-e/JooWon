@@ -19,14 +19,27 @@ val apiModule: Module = module {
                 .readTimeout(60L, TimeUnit.SECONDS)
                 .writeTimeout(60L, TimeUnit.SECONDS)
                 .cookieJar(JavaNetCookieJar(JWBaseApplication.cookieManager))
-                .addInterceptor(HttpLoggingInterceptor().apply {
-                    level = if (BuildConfig.DEBUG) {
-                        HttpLoggingInterceptor.Level.BODY
-                    } else {
-                        HttpLoggingInterceptor.Level.NONE
-                    }
-                })
+                .addInterceptor(get<HttpLoggingInterceptor>())
                 .build()
+    }
+
+//    single {
+//        Interceptor { chain: Interceptor.Chain ->
+//            val original = chain.request()
+//            chain.proceed(original.newBuilder().apply {
+//                addHeader("Authorizaion_Header", "access_token")
+//            }.build())
+//        }
+//    }
+
+    single {
+        HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
+        }
     }
 
     single {
@@ -35,6 +48,12 @@ val apiModule: Module = module {
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(ApiService.Base_URL)
                 .build()
-                .create(ApiService::class.java)
+//                .create(ApiService::class.java)
+    }
+
+    single {
+        get<Retrofit>().create(
+                ApiService::class.java
+        )
     }
 }

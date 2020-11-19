@@ -19,6 +19,8 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
@@ -124,7 +126,6 @@ class WorkerInsertActivity : JWBaseActivity() {
 
         edtTotalCnt.setOnEditorActionListener(WorkerInsertEditActionListener())
 
-
         if (_id.isNotEmpty()) {
             tvTitleView.setTitle(getString(R.string.workerUpdate_title))
             layDelete.visibility = View.VISIBLE
@@ -132,7 +133,7 @@ class WorkerInsertActivity : JWBaseActivity() {
             btnResister.setOnClickListener {
                 if (binding.workerInsertBtnRegister.isEnabled) {
                     // 업데이트하기
-                    updateEmployee()
+                    setEmployee(Constants.JW3003)
                 }
             }
         } else {
@@ -140,7 +141,7 @@ class WorkerInsertActivity : JWBaseActivity() {
             btnResister.setOnClickListener {
                 if (binding.workerInsertBtnRegister.isEnabled) {
                     // 등록하기
-                    addEmployee()
+                    setEmployee(Constants.JW3002)
                 }
             }
         }
@@ -149,95 +150,96 @@ class WorkerInsertActivity : JWBaseActivity() {
     }
 
     private fun setObserve() {
-        workerViewModel.isLoading.observe(thisActivity, Observer {
-            val isLoading = it ?: return@Observer
-
-            if (isLoading) {
-                showLoading()
-            } else {
-                hideLoading()
-            }
-        })
-
-        workerViewModel.jw3002Data.observe(thisActivity, Observer {
-            val jw3002Data = it ?: return@Observer
-            val customDialog = CustomDialog(mContext)
-            if ("failure" == jw3002Data.result) {
-                customDialog.apply {
-                    setBottomDialog(
-                            jw3002Data.msg.toString(),
-                            getString(R.string.btnConfirm), null)
+        with(workerViewModel) {
+            isNetworkErr.observe(thisActivity, Observer {
+                if (it) {
+                    showNetworkErrDialog(mContext)
                 }
-                customDialog.show()
-                return@Observer
-            }
-            if ("Y" == jw3002Data.resbody?.successYn) {
-                customDialog.apply {
-                    setBottomDialog(
-                            getString(R.string.workerInsert_dialog_msg),
-                            getString(R.string.btnConfirm),
-                            View.OnClickListener {
-                                dismiss()
-                                thisActivity.finish()
-                            })
+            })
 
+            isLoading.observe(thisActivity, Observer {
+                when {
+                    it -> showLoading()
+                    else -> hideLoading()
                 }
-                customDialog.show()
-            }
-        })
+            })
 
-        workerViewModel.jw3003Data.observe(thisActivity, Observer {
-            val jw3003Data = it ?: return@Observer
-            val customDialog = CustomDialog(mContext)
-            if ("failure" == jw3003Data.result) {
-                customDialog.apply {
-                    setBottomDialog(
-                            jw3003Data.msg.toString(),
-                            getString(R.string.btnConfirm), null)
+            jw3002Data.observe(thisActivity, Observer { jw3002Data ->
+                val customDialog = CustomDialog(mContext)
+                if ("failure" == jw3002Data.result) {
+                    customDialog.apply {
+                        setBottomDialog(
+                                strContent = jw3002Data.msg.toString(),
+                                strYes = getString(R.string.btnConfirm),
+                                onYesListener = null)
+                    }
+                    customDialog.show()
+                    return@Observer
                 }
-                customDialog.show()
-                return@Observer
-            }
-            if ("Y" == jw3003Data.resbody?.successYn) {
-                customDialog.apply {
-                    setBottomDialog(
-                            getString(R.string.workerUpdate_dialog_msg),
-                            getString(R.string.btnConfirm),
-                            View.OnClickListener {
-                                dismiss()
-                                finish()
-                            })
-                }
-                customDialog.show()
-            }
-        })
+                if ("Y" == jw3002Data.resbody?.successYn) {
+                    customDialog.apply {
+                        setBottomDialog(
+                                strContent = getString(R.string.workerInsert_dialog_msg),
+                                strYes = getString(R.string.btnConfirm),
+                                onYesListener = View.OnClickListener {
+                                    dismiss()
+                                    thisActivity.finish()
+                                })
 
-        workerViewModel.jw3004Data.observe(thisActivity, Observer {
-            val jw3004Data = it ?: return@Observer
-            val customDialog = CustomDialog(mContext)
-            if ("failure" == jw3004Data.result) {
-                customDialog.apply {
-                    setBottomDialog(
-                            jw3004Data.msg.toString(),
-                            getString(R.string.btnConfirm), null)
+                    }
+                    customDialog.show()
                 }
-                customDialog.show()
-                return@Observer
-            }
+            })
 
-            if ("Y" == jw3004Data.resbody?.successYn) {
-                val result = Intent().apply {
-                    putExtras(bundleOf("WORKER_DELETE" to "Y")
-                    )
+            jw3003Data.observe(thisActivity, Observer { jw3003Data ->
+                val customDialog = CustomDialog(mContext)
+                if ("failure" == jw3003Data.result) {
+                    customDialog.apply {
+                        setBottomDialog(
+                                strContent = jw3003Data.msg.toString(),
+                                strYes = getString(R.string.btnConfirm),
+                                onYesListener = null)
+                    }
+                    customDialog.show()
+                    return@Observer
+                }
+                if ("Y" == jw3003Data.resbody?.successYn) {
+                    customDialog.apply {
+                        setBottomDialog(
+                                strContent = getString(R.string.workerUpdate_dialog_msg),
+                                strYes = getString(R.string.btnConfirm),
+                                onYesListener = View.OnClickListener {
+                                    dismiss()
+                                    finish()
+                                })
+                    }
+                    customDialog.show()
+                }
+            })
+
+            jw3004Data.observe(thisActivity, Observer { jw3004Data ->
+                val customDialog = CustomDialog(mContext)
+                if ("failure" == jw3004Data.result) {
+                    customDialog.apply {
+                        setBottomDialog(
+                                strContent = jw3004Data.msg.toString(),
+                                strYes = getString(R.string.btnConfirm),
+                                onYesListener = null)
+                    }
+                    customDialog.show()
+                    return@Observer
                 }
 
-                setResult(Activity.RESULT_OK, result)
-                finish()
-//               val intent = Intent(thisActivity, MainListActivity::class.java)
-//
-//                startActivity(intent)
-            }
-        })
+                if ("Y" == jw3004Data.resbody?.successYn) {
+                    val result = Intent().apply {
+                        putExtras(bundleOf("WORKER_DELETE" to "Y"))
+                    }
+
+                    setResult(Activity.RESULT_OK, result)
+                    finish()
+                }
+            })
+        }
     }
 
 
@@ -251,22 +253,18 @@ class WorkerInsertActivity : JWBaseActivity() {
         override fun onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {
             when (mEditText) {
                 edtName -> {
-                    //이름
                     btnNameDelete.visibility =
                             if (charSequence.isNotEmpty()) View.VISIBLE
                             else View.GONE
                 }
                 edtPhone -> {
-                    //핸드폰번호
                     btnPhoneDelete.visibility =
                             if (charSequence.isNotEmpty()) View.VISIBLE
                             else View.GONE
                 }
             }
 
-            workerViewModel.signUpDataChanged(
-                    edtName.text.toString()
-            )
+            workerViewModel.signUpDataChanged(edtName.text.toString())
         }
 
         override fun afterTextChanged(s: Editable) {}
@@ -313,32 +311,20 @@ class WorkerInsertActivity : JWBaseActivity() {
 
     fun onClickWorkerInsert(v: View?) {
         when (v) {
-            btnNameDelete -> {
-                edtName.setText("")
-            }
-            btnPhoneDelete -> {
-                edtPhone.setText("")
-            }
-            tvBirthDate, binding.workerInsertBtnBirthCalendar -> {
-                showCalendarDialog(tvBirthDate, false)
-            }
-            tvEnjoyDate, binding.workerInsertBtnEnjoyCalendar -> {
-                showCalendarDialog(tvEnjoyDate, true)
-            }
-            layProfile -> {
-                showProfileDialog()
-            }
-            layDelete -> {
-                showDeleteDialog()
-            }
+            btnNameDelete -> edtName.setText("")
+            btnPhoneDelete -> edtPhone.setText("")
+            tvBirthDate, binding.workerInsertBtnBirthCalendar -> showCalendarDialog(tvBirthDate, false)
+            tvEnjoyDate, binding.workerInsertBtnEnjoyCalendar -> showCalendarDialog(tvEnjoyDate, true)
+            layProfile -> showProfileDialog()
+            layDelete -> showDeleteDialog()
         }
     }
 
 
     /**
-     * 직원 추가하기
+     *
      */
-    private fun addEmployee() {
+    private fun setEmployee(methodid: String) {
         val photo = File(imageFilePath)
         val photoBody = RequestBody.create(MediaType.parse("image/jpg"), photo)
         var body = MultipartBody.Part.createFormData("photo", photo.name, photoBody)
@@ -348,52 +334,32 @@ class WorkerInsertActivity : JWBaseActivity() {
         }
 
         val jsonObject = JsonObject()
-        jsonObject.addProperty("methodid", Constants.JW3002)
+        jsonObject.addProperty("methodid", methodid)
         jsonObject.addProperty("name", edtName.text.toString())
         jsonObject.addProperty("phone_number", edtPhone.text.toString().replace("-", ""))
         jsonObject.addProperty("birth", tvBirthDate.text.toString().replace("-", ""))
         jsonObject.addProperty("entered_date", tvEnjoyDate.text.toString().replace("-", ""))
         jsonObject.addProperty("total_vacation_cnt", edtTotalCnt.text.toString())
-        jsonObject.addProperty("remain_vacation_cnt", edtTotalCnt.text.toString())
 
-        workerViewModel.addEmployee(body, jsonObject)
-    }
-
-    /**
-     * 직원 업데이트
-     */
-    private fun updateEmployee() {
-        val photo = File(imageFilePath)
-        val photoBody = RequestBody.create(MediaType.parse("image/jpg"), photo)
-        var body = MultipartBody.Part.createFormData("photo", photo.name, photoBody)
-
-        if (imageFilePath.isEmpty()) {
-            body = MultipartBody.Part.createFormData("photo", "")
+        if (methodid == Constants.JW3002) {
+            // 직원추가
+            workerViewModel.addEmployee(body, jsonObject)
+        } else {
+            // 직원정보 업데이트
+            jsonObject.addProperty("_id", _id)
+            workerViewModel.updateEmployee(body, jsonObject)
         }
 
-        val jsonObject = JsonObject()
-
-        jsonObject.addProperty("methodid", Constants.JW3003)
-        jsonObject.addProperty("_id", _id)
-        jsonObject.addProperty("name", edtName.text.toString())
-        jsonObject.addProperty("phone_number", edtPhone.text.toString().replace("-", ""))
-        jsonObject.addProperty("birth", tvBirthDate.text.toString().replace("-", ""))
-        jsonObject.addProperty("entered_date", tvEnjoyDate.text.toString().replace("-", ""))
-        jsonObject.addProperty("total_vacation_cnt", edtTotalCnt.text.toString())
-        jsonObject.addProperty("remain_vacation_cnt", edtTotalCnt.text.toString())
-
-        workerViewModel.updateEmployee(body, jsonObject)
     }
 
     /**
-     * 직원 삭제
+     * 직원삭제
      */
     private fun deleteEmployee() {
         val jsonObject = JsonObject()
-
         jsonObject.addProperty("methodid", Constants.JW3004)
         jsonObject.addProperty("_id", _id)
-        LogUtil.e(jsonObject.get("_id"))
+
         workerViewModel.deleteEmployee(jsonObject)
     }
 
@@ -403,12 +369,13 @@ class WorkerInsertActivity : JWBaseActivity() {
     private fun showDeleteDialog() {
         val customDialog = CustomDialog(mContext).apply {
             setBottomDialog(
-                    getString(R.string.dialog_title),
-                    String.format(getString(R.string.workerUpdate_delete_msg), edtName.text.toString()),
-                    null,
-                    getString(R.string.btnCancel), null,
-                    getString(R.string.btnConfirm),
-                    View.OnClickListener {
+                    strTitle = getString(R.string.dialog_title),
+                    strContent = String.format(getString(R.string.workerUpdate_delete_msg), edtName.text.toString()),
+                    onCloseListener = null,
+                    strNo = getString(R.string.btnCancel),
+                    onNoListener = null,
+                    strYes = getString(R.string.btnConfirm),
+                    onYesListener = View.OnClickListener {
                         deleteEmployee()
                         dismiss()
                     })
@@ -423,16 +390,16 @@ class WorkerInsertActivity : JWBaseActivity() {
     private fun showProfileDialog() {
         val customWhDialog = CustomWhDialog(mContext).apply {
             setBottomDialog(
-                    getString(R.string.workerInsert_picture),
-                    "",
-                    View.OnClickListener { dismiss() },
-                    getString(R.string.menu01),
-                    View.OnClickListener {
+                    strTitle = getString(R.string.workerInsert_picture),
+                    strContent = "",
+                    onCloseListener = View.OnClickListener { dismiss() },
+                    strBtn1 = getString(R.string.menu01),
+                    onBtn1Listener = View.OnClickListener {
                         sendTakePhotoIntent()
                         dismiss()
                     },
-                    getString(R.string.menu02),
-                    View.OnClickListener {
+                    strBtn2 = getString(R.string.menu02),
+                    onBtn2Listener = View.OnClickListener {
                         sendTakeGalleryIntent()
                         dismiss()
                     }
@@ -449,11 +416,10 @@ class WorkerInsertActivity : JWBaseActivity() {
     private fun showCalendarDialog(textView: TextView, isFutureSelect: Boolean) {
         val calendarDialog = CalendarDialog(thisActivity).apply {
             setBottomDialog(
-                    textView.text.toString(),
-                    null,
-                    object : CalendarDialog.ConfirmBtnClickListener {
+                    date = textView.text.toString(),
+                    onCloseListener = null,
+                    onConfirmListener = object : CalendarDialog.ConfirmBtnClickListener {
                         override fun onConfirmClick(date: ArrayList<LocalDate>) {
-                            LogUtil.e(date)
                             textView.text = date[0].toString()
                         }
                     },
@@ -487,88 +453,70 @@ class WorkerInsertActivity : JWBaseActivity() {
 
 
     private var photoUri: Uri? = null
-    private val REQUEST_IMAGE_CAPTURE = 1000
-    private val REQUEST_IMAGE_GALLERY = 2000
+
+    private val requestPhoto = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { photoResult ->
+        val bitmap = BitmapFactory.decodeFile(imageFilePath)
+        lateinit var exif: ExifInterface
+
+        try {
+            exif = ExifInterface(imageFilePath)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        val exifOrientation: Int
+        val exifDegree: Int
+
+        exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+        exifDegree = exifOrientationToDegrees(exifOrientation)
+
+        Glide.with(this).load(rotate(bitmap, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(imgProfile)
+
+    }
 
     /**
      * 카메라
      */
+    @Throws(IOException::class)
     private fun sendTakePhotoIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(packageManager) != null) {
-            var photoFile: File? = null
-            try {
-                photoFile = createImageFile()
-            } catch (ex: IOException) {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (intent.resolveActivity(packageManager) != null) {
+            val photoFile = createImageFile()
+            photoUri = FileProvider.getUriForFile(this, packageName, photoFile)
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+            requestPhoto.launch(intent)
+        }
+    }
 
-            }
+    private val requestGallery = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { galleryResult ->
+        try {
+            val inputStream = galleryResult?.data?.data?.let { contentResolver.openInputStream(it) }
+            val img = BitmapFactory.decodeStream(inputStream)
+            val out = FileOutputStream(imageFilePath)
 
-            if (photoFile != null) {
-                photoUri = FileProvider.getUriForFile(this, packageName, photoFile)
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-            }
+            img.compress(Bitmap.CompressFormat.JPEG, 90, out)
+            out.close()
+            inputStream?.close()
+
+            Glide.with(this).load(img).apply(RequestOptions().circleCrop()).into(imgProfile)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
     /**
      * 갤러리
      */
+    @Throws(IOException::class)
     private fun sendTakeGalleryIntent() {
-        var photoFile: File? = null
-        try {
-            photoFile = createImageFile()
-        } catch (ex: IOException) {
-
+        val photoFile = createImageFile()
+        photoUri = FileProvider.getUriForFile(this, packageName, photoFile)
+        val intent = Intent().apply {
+            type = "image/*"
+            action = Intent.ACTION_GET_CONTENT
         }
-        photoUri = photoFile?.let { FileProvider.getUriForFile(this, packageName, it) }
-        val intent = Intent()
-        intent.type = "image/*"
-        intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(intent, REQUEST_IMAGE_GALLERY)
+        requestGallery.launch(intent)
     }
 
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                REQUEST_IMAGE_CAPTURE -> {
-                    val bitmap = BitmapFactory.decodeFile(imageFilePath)
-                    lateinit var exif: ExifInterface
-
-                    try {
-                        exif = ExifInterface(imageFilePath)
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
-
-                    val exifOrientation: Int
-                    val exifDegree: Int
-
-                    exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-                    exifDegree = exifOrientationToDegrees(exifOrientation)
-
-                    Glide.with(this).load(rotate(bitmap, exifDegree.toFloat())).apply(RequestOptions().circleCrop()).into(imgProfile)
-
-                }
-                REQUEST_IMAGE_GALLERY -> {
-                    try {
-                        val inputStream = data?.data?.let { contentResolver.openInputStream(it) }
-                        val img = BitmapFactory.decodeStream(inputStream)
-                        val out = FileOutputStream(imageFilePath)
-
-                        img.compress(Bitmap.CompressFormat.JPEG, 90, out)
-                        out.close()
-                        inputStream?.close()
-
-                        Glide.with(this).load(img).apply(RequestOptions().circleCrop()).into(imgProfile)
-
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        }
-    }
 }

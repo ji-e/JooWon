@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-open class JWBaseViewModel() : ViewModel() {
+open class JWBaseViewModel : ViewModel() {
     val _isLoading = MutableLiveData<Boolean>()
     val _isNetworkErr = MutableLiveData<Boolean>()
 

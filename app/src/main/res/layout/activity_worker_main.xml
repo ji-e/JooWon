@@ -208,7 +208,7 @@
             android:id="@+id/workerMain_viewpager"
             replaceAll="@{workerMainVm.liveViewPagerInfo}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp310"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

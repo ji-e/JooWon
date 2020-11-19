@@ -1,28 +1,16 @@
 package com.example.uohih.joowon.ui.customView
 
-import android.app.Activity
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.Window
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import com.example.uohih.joowon.R
-import com.example.uohih.joowon.databinding.DialogBasicBinding
 import com.example.uohih.joowon.databinding.DialogWhBinding
-import com.example.uohih.joowon.util.LogUtil
-import com.example.uohih.joowon.util.SizeConverterUtil
-import kotlinx.android.synthetic.main.btn_negative_bottom.view.*
-import kotlinx.android.synthetic.main.btn_positive_bottom.view.*
 import kotlinx.android.synthetic.main.btn_white.view.*
-import kotlinx.android.synthetic.main.dialog_basic.view.*
 
 /**
  * 다이얼로그
@@ -79,8 +67,8 @@ class CustomWhDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
     fun setBottomDialog(strTitle: String,
                         strContent: String?,
                         onCloseListener: View.OnClickListener?,
-                        strNo: String?, onBtn1Listener: View.OnClickListener?,
-                        strYes: String, onBtn2Listener: View.OnClickListener?) {
+                        strBtn1: String?, onBtn1Listener: View.OnClickListener?,
+                        strBtn2: String, onBtn2Listener: View.OnClickListener?) {
 
         onCloseListener?.let { btnClose.setOnClickListener(it) }
         onBtn1Listener?.let { btn1.setOnClickListener(it) }
@@ -88,8 +76,8 @@ class CustomWhDialog(mContext: Context) : BaseBottomDialog(mContext), View.OnCli
 
         tvTitle.text = strTitle
         tvContent.text = strContent
-        btn1.text = strNo
-        btn2.text = strYes
+        btn1.text = strBtn1
+        btn2.text = strBtn2
 
 
         if (onCloseListener == null) {

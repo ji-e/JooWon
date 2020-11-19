@@ -9,8 +9,7 @@ import com.example.uohih.joowon.R
  * back key 두번 클릭 시 앱 종료
  * mContext: Context
  */
-class BackPressCloseHandler(mContext: Context) {
-    private var mContext = mContext
+class BackPressCloseHandler(private val mContext: Context) {
     private var backKeyPressedTime: Long = 0
     lateinit var toast: Toast
 

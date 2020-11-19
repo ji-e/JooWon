@@ -1,6 +1,7 @@
 package com.example.uohih.joowon.ui.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -9,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.databinding.ViewpagerWorkerMainListItemBinding
 import com.example.uohih.joowon.model.VacationList
+import com.example.uohih.joowon.ui.vacation.VacationDeleteActivity
 import com.example.uohih.joowon.util.LogUtil
+import com.example.uohih.joowon.util.UICommonUtil
 import java.util.*
 
 /**
@@ -26,6 +29,15 @@ class WorkerVacationListAdapter(vacationList: ArrayList<VacationList>?, private 
         }
     }
 
+    interface ItemClickListener {
+        fun onItemClick(point: Int)
+    }
+
+    private var mItemClickListener: ItemClickListener? = null
+    fun setItemClickListener(mItemClickListener: ItemClickListener) {
+        this.mItemClickListener = mItemClickListener
+    }
+
     fun setVacationList(vacationList: ArrayList<VacationList>?) {
         this.vacationList = vacationList ?: arrayListOf()
         notifyDataSetChanged()
@@ -38,8 +50,7 @@ class WorkerVacationListAdapter(vacationList: ArrayList<VacationList>?, private 
         holder.tvNo.text = String.format("%02d", position + 1)
 
         holder.itemView.setOnClickListener {
-
-
+            mItemClickListener?.onItemClick(position)
         }
 
         holder.apply {

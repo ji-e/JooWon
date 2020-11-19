@@ -30,7 +30,6 @@ open class JWBaseActivity : AppCompatActivity() {
     private lateinit var thisActivity: JWBaseActivity
     private val jwBaseViewModel: JWBaseViewModel  by viewModel()
 
-//    val ss = getPreference("cookie")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,9 +144,9 @@ open class JWBaseActivity : AppCompatActivity() {
      * 캘린더 가져오기
      */
 
-    fun getCalendar(currentDate: LocalDate): java.util.ArrayList<CalendarDayInfo> {
+    fun getCalendar(currentDate: LocalDate): ArrayList<CalendarDayInfo> {
         var day: CalendarDayInfo
-        val arrayListDayInfo = java.util.ArrayList<CalendarDayInfo>()
+        val arrayListDayInfo = ArrayList<CalendarDayInfo>()
         var calendar = currentDate.withDayOfMonth(1)    //1일로 변경
         var dayOfWeek = calendar.dayOfWeek.get(ChronoField.DAY_OF_WEEK) //1일의 요일 구하기
         val thisMonthLastDay = calendar.withDayOfMonth(calendar.month.length(calendar.isLeapYear)).get(ChronoField.DAY_OF_MONTH)

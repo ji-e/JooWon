@@ -31,12 +31,14 @@ class CalendarDayInfo {
     fun isSameDay(selectedDate: ArrayList<LocalDate>): Boolean {
         if (date == null) {
             return false
-        } else {
-            for (i in 0 until selectedDate.size) {
-                if (selectedDate[i].isEqual(date)) return true
-            }
-            return false
         }
+
+        for (i in 0 until selectedDate.size) {
+            if (selectedDate[i].isEqual(date)) return true
+        }
+
+        return false
+
     }
 
     fun isSameDay(selectedDate: LocalDate): Boolean {

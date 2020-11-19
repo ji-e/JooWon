@@ -22,6 +22,8 @@ import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
 import com.example.uohih.joowon.databinding.ActivityWorkerMainBinding
 import com.example.uohih.joowon.databinding.ViewpagerWorkerMainBinding
+import com.example.uohih.joowon.model.CalendarDayInfo
+import com.example.uohih.joowon.model.VacationList
 import com.example.uohih.joowon.ui.adapter.BaseRecyclerView
 import com.example.uohih.joowon.ui.adapter.CalendarAdapter
 import com.example.uohih.joowon.ui.adapter.WorkerVacationListAdapter
@@ -42,17 +44,6 @@ class WorkerMainActivity : JWBaseActivity() {
     private val thisActivity by lazy { this }
     private val workerViewModel: WorkerViewModel by viewModel()
     private lateinit var binding: ActivityWorkerMainBinding
-
-    private val requestActivity: ActivityResultLauncher<Intent> = registerForActivityResult(
-            StartActivityForResult() // StartActivityForResult 처리를 담당
-    ) { activityResult ->
-        if (activityResult.data?.hasExtra("WORKER_DELETE") == true) {
-            if ("Y" == activityResult.data?.getStringExtra("WORKER_DELETE").toString()) {
-                finish()
-            }
-        }
-    }
-
 
     private var _id = ""
     private var localDate = LocalDate.now()
@@ -135,18 +126,18 @@ class WorkerMainActivity : JWBaseActivity() {
                 }
             })
 
-            jw4003Data.observe(thisActivity, Observer {
-                if ("ZZZZ" == it.errCode) {
+            jw4003Data.observe(thisActivity, Observer { jw4003Data ->
+                if ("ZZZZ" == jw4003Data.errCode) {
                     showSessionOutDialog(thisActivity)
                     return@Observer
                 }
 
-                if ("failure" == it.result) {
+                if ("failure" == jw4003Data.result) {
                     val customDialog = CustomDialog(mContext).apply {
                         setBottomDialog(
-                                it.msg.toString(),
-                                getString(R.string.btnConfirm),
-                                View.OnClickListener {
+                                strContent = jw4003Data.msg.toString(),
+                                strYes = getString(R.string.btnConfirm),
+                                onYesListener = View.OnClickListener {
                                     dismiss()
                                     finish()
                                 })
@@ -157,8 +148,8 @@ class WorkerMainActivity : JWBaseActivity() {
                 }
 
 
-                val useVacation = it.resbody?.vacationList
-                val useVacationSize = it.resbody?.vacationList?.size ?: 0
+                val useVacation = jw4003Data.resbody?.vacationList
+                val useVacationSize = jw4003Data.resbody?.vacationList?.size ?: 0
                 var useVacationCnt = 0f
                 for (i in 0 until useVacationSize) {
                     useVacationCnt += (useVacation?.get(i)?.vacation_cnt)?.toFloat() ?: 0f
@@ -193,22 +184,12 @@ class WorkerMainActivity : JWBaseActivity() {
                 val gridview = holder.itemView.viewpagerWorkerMain_gridview
                 gridview.adapter = calendarAdapter
                 gridview.setOnItemClickListener { parent, view, position, id ->
-                    if (((view.viewpagerWorkerMain_imgVacation) as ImageView).visibility == View.VISIBLE && liveVacationList != null) {
+                    if ((view.viewpagerWorkerMain_imgVacation).visibility == View.VISIBLE && liveVacationList != null) {
                         // 휴가가 등록되어있는 날짜를 클릭한 경우
-                        val vacationInfo = UICommonUtil.getVacationInfo(liveCalendarList[position].getDate().toString(), liveVacationList!!)
-                        val intent = Intent(thisActivity, VacationDeleteActivity::class.java)
-                        intent.putExtra("vacation_cnt", vacationInfo?.vacation_cnt)
-                        intent.putExtra("vacation_content", vacationInfo?.vacation_content)
-                        intent.putExtra("vacation_date", vacationInfo?.vacation_date)
-                        intent.putExtra("_id", _id)
-                        intent.putExtra("vacation_id", vacationInfo?._id)
-                        startActivity(intent)
+                        setVacationListClick(true, liveCalendarList, liveVacationList, position)
                     } else {
                         // 휴가가 미등록되어있는 날짜를 클릭한 경우
-                        val intent = Intent(thisActivity, VacationRegisterActivity::class.java)
-                        intent.putExtra("_id", _id)
-                        intent.putExtra("date", liveCalendarList[position].getDate().toString())
-                        startActivity(intent)
+                        setVacationListClick(false, liveCalendarList, null, position)
                     }
 
                 }
@@ -220,9 +201,15 @@ class WorkerMainActivity : JWBaseActivity() {
                 recyclerview.layoutManager = LinearLayoutManager(thisActivity)
                 recyclerview.adapter = workerVacationListAdapter
 
-                with(workerViewModel){
+                workerVacationListAdapter.setItemClickListener(object : WorkerVacationListAdapter.ItemClickListener {
+                    override fun onItemClick(point: Int) {
+                        setVacationListClick(true, liveCalendarList, liveVacationList, position)
+                    }
+
+                })
+
+                with(workerViewModel) {
                     liveCalendarInfo.observe(thisActivity as LifecycleOwner, Observer {
-                        val liveCalendarInfo = it ?: return@Observer
                         liveCalendarList = this.liveCalendarList
                         liveVacationList = this.liveVacationList.value
 
@@ -365,6 +352,31 @@ class WorkerMainActivity : JWBaseActivity() {
         }
     }
 
+
+    /**
+     * 휴가리스트 클릭
+     */
+    private fun setVacationListClick(isVacation: Boolean, liveCalendarList: ArrayList<CalendarDayInfo>, liveVacationList: ArrayList<VacationList>?, position: Int) {
+        if (isVacation) {
+            val vacationInfo = UICommonUtil.getVacationInfo(liveCalendarList[position].getDate().toString(), liveVacationList!!)
+                    ?: liveVacationList[position]
+            val intent = Intent(thisActivity, VacationDeleteActivity::class.java).apply {
+                putExtra("vacation_cnt", vacationInfo.vacation_cnt)
+                putExtra("vacation_content", vacationInfo.vacation_content)
+                putExtra("vacation_date", vacationInfo.vacation_date)
+                putExtra("_id", _id)
+                putExtra("vacation_id", vacationInfo._id)
+            }
+            startActivity(intent)
+        } else {
+            val intent = Intent(thisActivity, VacationRegisterActivity::class.java).apply {
+                putExtra("_id", _id)
+                putExtra("date", liveCalendarList[position].getDate().toString())
+            }
+            startActivity(intent)
+        }
+    }
+
     /**
      * 휴가리스트 조회
      * jw4003
@@ -376,6 +388,14 @@ class WorkerMainActivity : JWBaseActivity() {
         jsonObject.addProperty("year", preYear)
         workerViewModel.findVacation(localDate, jsonObject)
 
+    }
+
+    private val requestActivity = registerForActivityResult(StartActivityForResult()) { activityResult ->
+        if (activityResult.data?.hasExtra("WORKER_DELETE") == true) {
+            if ("Y" == activityResult.data?.getStringExtra("WORKER_DELETE").toString()) {
+                finish()
+            }
+        }
     }
 
     fun onClickWorkerMain(view: View) {
