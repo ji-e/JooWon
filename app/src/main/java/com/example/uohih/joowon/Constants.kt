@@ -2,6 +2,8 @@ package com.example.uohih.joowon
 
 object Constants {
 
+    const val SUBSCRIBE_BIRTH = "SUBSCRIBE_BIRTH"
+
     const val SERVICE_ADMIN = "admin"
     const val SERVICE_EMPLOYEE = "employee"
     const val SERVICE_EMPLOYEE_UPLOAD = "employee/upload"
@@ -10,9 +12,7 @@ object Constants {
     const val JW1002 = "JW1002"   // 회원가입
     const val JW1003 = "JW1003"
     const val JW1004 = "JW1004"
-    const val JW1005 = "JW1005"   // 회원정보
-
-    // 업데이트
+    const val JW1005 = "JW1005"   // 회원정보업데이트
     const val JW1006 = "JW1006"   // 이메일및네이버ID중복확인
     const val JW2001 = "JW2001"   // 로그인
     const val JW2002 = "JW2002"   // 로그아웃
@@ -36,6 +36,7 @@ object Constants {
     const val passwordTemp = "passwordTemp"
     const val PREFERENCE_AUTO_SIGNIN_TOKEN = "PREFERENCE_AUTO_SIGNIN_TOKEN"
     const val PREFERENCE_APP_INSTANCE_ID = "PREFERENCE_APP_INSTANCE_ID"
+    const val PREFERENCE_FCM_TOKEN = "PREFERENCE_FCM_TOKEN"
 
     // 정규식
     const val PHONE_NUM_PATTERN = "(\\d{3})(\\d{3,4})(\\d{4})"

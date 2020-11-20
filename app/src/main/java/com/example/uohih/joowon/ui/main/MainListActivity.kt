@@ -26,6 +26,8 @@ import com.example.uohih.joowon.ui.setting.SettingActivity
 import com.example.uohih.joowon.ui.worker.WorkerInsertActivity
 import com.example.uohih.joowon.ui.worker.WorkerMainActivity
 import com.example.uohih.joowon.util.LogUtil
+import com.example.uohih.joowon.util.UICommonUtil
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.list_item_main_list.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,6 +51,8 @@ class MainListActivity : JWBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_list)
+
+//        fcmToken()
 
         // back key exit 초기화
         backPressCloseHandler = BackPressCloseHandler(this)
@@ -236,6 +240,22 @@ class MainListActivity : JWBaseActivity() {
 //
 //                }
             }
+        }
+    }
+
+    /**
+     * fcmToken
+     */
+    private fun fcmToken() {
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                LogUtil.w(task.exception.toString())
+                return@addOnCompleteListener
+            }
+
+            val token = task.result?.token.toString()
+            UICommonUtil.setPreferencesData(Constants.PREFERENCE_FCM_TOKEN, token)
+            LogUtil.d("fcmToken:   ", token.toString())
         }
     }
 }
