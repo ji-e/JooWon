@@ -3,6 +3,7 @@ package com.example.uohih.joowon
 object Constants {
 
     const val SUBSCRIBE_BIRTH = "SUBSCRIBE_BIRTH"
+    const val NOTIFICATION_CHANNEL_ID = "NOTIFICATION_CHANNEL_ID"
 
     const val SERVICE_ADMIN = "admin"
     const val SERVICE_EMPLOYEE = "employee"
@@ -37,6 +38,7 @@ object Constants {
     const val PREFERENCE_AUTO_SIGNIN_TOKEN = "PREFERENCE_AUTO_SIGNIN_TOKEN"
     const val PREFERENCE_APP_INSTANCE_ID = "PREFERENCE_APP_INSTANCE_ID"
     const val PREFERENCE_FCM_TOKEN = "PREFERENCE_FCM_TOKEN"
+    const val PREFERENCE_EMAIL = "PREFERENCE_EMAIL"
 
     // 정규식
     const val PHONE_NUM_PATTERN = "(\\d{3})(\\d{3,4})(\\d{4})"

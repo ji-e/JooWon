@@ -52,7 +52,9 @@ class MainListActivity : JWBaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_list)
 
-//        fcmToken()
+        if (intent.hasExtra("email")) {
+            UICommonUtil.setPreferencesData(Constants.PREFERENCE_EMAIL, intent.getStringExtra("email"))
+        }
 
         // back key exit 초기화
         backPressCloseHandler = BackPressCloseHandler(this)
@@ -216,7 +218,7 @@ class MainListActivity : JWBaseActivity() {
                                 jsonObject.addProperty("methodid", Constants.JW3004)
                                 jsonObject.addProperty("_id", mainListViewModel.searchEmployeeList[position]._id)
 
-                                with(mainListViewModel){
+                                with(mainListViewModel) {
                                     deleteEmployee(jsonObject, position)
 
                                     jw3004Data.observe(thisActivity, Observer {

@@ -1,8 +1,6 @@
 package com.example.uohih.joowon.ui.worker
 
 import android.app.Activity
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -17,30 +15,23 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.uohih.joowon.Constants
 import com.example.uohih.joowon.R
 import com.example.uohih.joowon.base.JWBaseActivity
-import com.example.uohih.joowon.base.JWBaseApplication
-import com.example.uohih.joowon.database.DBHelper
 import com.example.uohih.joowon.databinding.ActivityWorkerInsertBinding
-import com.example.uohih.joowon.ui.adapter.DialogListAdapter
-import com.example.uohih.joowon.ui.customView.*
-import com.example.uohih.joowon.ui.main.MainListActivity
-import com.example.uohih.joowon.util.DateCommonUtil
-import com.example.uohih.joowon.util.LogUtil
+import com.example.uohih.joowon.ui.customView.CalendarDialog
+import com.example.uohih.joowon.ui.customView.CustomDialog
+import com.example.uohih.joowon.ui.customView.CustomWhDialog
+import com.example.uohih.joowon.ui.customView.TopTitleView
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.btn_positive_bottom.view.*
 import okhttp3.MediaType
@@ -53,7 +44,7 @@ import java.io.IOException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.ArrayList
+import java.util.*
 
 /**
  * 직원추가

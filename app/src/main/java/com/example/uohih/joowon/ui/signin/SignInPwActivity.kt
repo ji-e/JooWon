@@ -191,7 +191,9 @@ class SignInPwActivity : JWBaseActivity() {
      * 메인으로 이동
      */
     private fun goMain() {
-        val intent = Intent(this, MainListActivity::class.java)
+        val intent = Intent(this, MainListActivity::class.java).apply {
+            putExtra("email", signInBundle.getString("email", ""))
+        }
         startActivity(intent)
 
         finish()

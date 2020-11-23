@@ -43,6 +43,8 @@ class IntroActivity : JWBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        LogUtil.e(intent.extras.toString())
+
         val binding = DataBindingUtil.setContentView<ActivityIntroBinding>(this, R.layout.activity_intro)
         binding.run {
             lifecycleOwner = thisActivity

@@ -265,7 +265,10 @@ class SignInActivity : JWBaseActivity() {
      * 메인으로이동
      */
     private fun goMain() {
-        startActivity(Intent(this, MainListActivity::class.java))
+        val intent = Intent(this, MainListActivity::class.java).apply {
+            putExtra("email", edtEmail.text.toString())
+        }
+        startActivity(intent)
         finish()
     }
 

@@ -121,7 +121,10 @@ class SignUpActivity : JWBaseActivity() {
      * 메인으로이동
      */
     private fun goMain() {
-        startActivity(Intent(this, MainListActivity::class.java))
+        val intent = Intent(this, MainListActivity::class.java).apply {
+            putExtra("email", signInBundle.getString("email", ""))
+        }
+        startActivity(intent)
         finish()
     }
 
