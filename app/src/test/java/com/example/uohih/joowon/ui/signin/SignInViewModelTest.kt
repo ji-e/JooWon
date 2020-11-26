@@ -8,9 +8,11 @@ import org.junit.Before
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.koin.core.context.startKoin
 import org.koin.test.inject
 import org.koin.test.mock.declareMock
 import org.mockito.BDDMockito.given
+import org.mockito.Mock
 
 class SignInViewModelTest : AbstrackKoinTest() {
 
@@ -19,11 +21,12 @@ class SignInViewModelTest : AbstrackKoinTest() {
     //    val signInRepository = declareMock<SignInRepository> {
 //        given()
 //    }
-    lateinit var signInRepository: SignInRepository
+    val signInRepository: SignInRepository by inject()
+
 
     @Before
     fun setUp() {
-        signInRepository = SignInRepositoryImpl()
+//        signInRepository = SignInRepositoryImpl()
     }
 
     @After
@@ -60,6 +63,11 @@ class SignInViewModelTest : AbstrackKoinTest() {
 
     @Test
     fun isEmailValid() {
+        val email = "jieun"
+
+        // todo.... 감이 안잡힌다.///
+        signInViewModel.isEmailValid(email)
+
     }
 
     @Test
