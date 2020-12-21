@@ -68,6 +68,7 @@ class SignInViewModelTest : AbstrackKoinTest() {
         // todo.... 감이 안잡힌다.///
         signInViewModel.isEmailValid(email)
 
+
     }
 
     @Test
